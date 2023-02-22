@@ -18,7 +18,11 @@ export const userSlice = createSlice({
         
         SignIn: (state, action) => {
             console.log(action.payload)
-            state = action.payload;
+            state.email = action.payload.email
+            state.name = action.payload.name
+            state.picture = action.payload.picture
+            state.iat = action.payload.iat
+            state.jti = action.payload.jti
             
         },
         SignOut: (state, ) => {

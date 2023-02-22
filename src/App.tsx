@@ -16,28 +16,29 @@ function App() {
   }
   const sosUser: Guser = useSelector(selectSosUser)
 
-  const handleCallback = (response: any) => {
-    console.log(response.credential)
-    const userSignObject:any = jwtDecode(response.credential);
-    console.log(userSignObject)
 
-    const userObject: Guser ={
-      name: userSignObject.family_name  + ' ' + userSignObject.given_name,
-      email: userSignObject.email,
-      picture: userSignObject.picture,
-      iat: userSignObject.iat,
-      iss:userSignObject.iss,
-      jti:userSignObject.jti
-    }
-
-    console.log(userObject)
-    dispatch(SignIn(userObject))
-  }
 
   const handleSignOut = () => {
     dispatch(SignOut())
   }
   useEffect(() => {
+    const handleCallback = (response: any) => {
+      console.log(response.credential)
+      const userSignObject:any = jwtDecode(response.credential);
+      console.log(userSignObject)
+  
+      const userObject: Guser ={
+        name: userSignObject.family_name  + ' ' + userSignObject.given_name,
+        email: userSignObject.email,
+        picture: userSignObject.picture,
+        iat: userSignObject.iat,
+        iss:userSignObject.iss,
+        jti:userSignObject.jti
+      }
+  
+      console.log(userObject)
+      dispatch(SignIn(userObject))
+    }
     google.accounts.id.initialize({
       client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
       callback: handleCallback
@@ -50,7 +51,7 @@ function App() {
         size: "large",
         type: "standard"
       })
-  }, [])
+  }, [dispatch])
   return (
     <div className="App">
       {/* {sosUser.email ? (<></>):( */}
