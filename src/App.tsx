@@ -9,23 +9,20 @@ import { Guser } from './app/model';
 import jwtDecode from 'jwt-decode';
 
 function App() {
+ 
   const dispatch = useDispatch();
-  interface Google {
-    client_id: String
-    callback: () => void
-  }
-  const sosUser: Guser = useSelector(selectSosUser)
+  // interface Google {
+  //   client_id: String
+  //   callback: () => void
+  // }
+   const sosUser: Guser = useSelector(selectSosUser)
+console.log(sosUser)
 
 
-
-  const handleSignOut = () => {
-    dispatch(SignOut())
-  }
   useEffect(() => {
     const handleCallback = (response: any) => {
-      console.log(response.credential)
       const userSignObject:any = jwtDecode(response.credential);
-      console.log(userSignObject)
+
   
       const userObject: Guser ={
         name: userSignObject.family_name  + ' ' + userSignObject.given_name,
@@ -36,10 +33,9 @@ function App() {
         jti:userSignObject.jti
       }
   
-      console.log(userObject)
       dispatch(SignIn(userObject))
     }
-    google.accounts.id.initialize({
+    window.google.accounts.id.initialize({
       client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
       callback: handleCallback
     })
@@ -54,55 +50,16 @@ function App() {
   }, [dispatch])
   return (
     <div className="App">
-      {/* {sosUser.email ? (<></>):( */}
-      < div id='signInDiv'></div>
-      <button onClick={(e)=>handleSignOut}>Sign Out</button>
-        {/* )} */}
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      {sosUser.email ?
+        (<>
+          <img src={sosUser.picture} alt={sosUser.name}  />
+          <button onClick={()=>dispatch(SignOut())}>
+            Sign Out</button>
+        </>)
+        : (
+        < div id='signInDiv'></div>
+      )}
+
     </div>
   );
 }
