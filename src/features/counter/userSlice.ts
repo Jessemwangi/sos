@@ -6,7 +6,8 @@ const initialState:Guser = {
     email: '',
     picture: '',
     iat: 0,
-    iss: ''
+    iss: '',
+    jti:''
 } 
 
 export const userSlice = createSlice({
@@ -20,8 +21,8 @@ export const userSlice = createSlice({
             state = action.payload;
             
         },
-        SignOut: (state, action) => {
-            
+        SignOut: (state, ) => {
+            state = initialState;
         },
         // RegisterUser: {
         //     reducer: (state, action) => {

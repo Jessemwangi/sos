@@ -5,6 +5,7 @@ export interface Guser{
     picture: string
     iat: number
     iss: string  
+    jti:string
 }
 
 export interface Profile{

@@ -4,7 +4,7 @@ import { Counter } from './features/counter/Counter';
 import { useDispatch, useSelector } from "react-redux";
 import './App.css';
 
-import { selectSosUser,SignIn } from './features/counter/userSlice';
+import { selectSosUser,SignIn,SignOut } from './features/counter/userSlice';
 import { Guser } from './app/model';
 import jwtDecode from 'jwt-decode';
 
@@ -17,13 +17,25 @@ function App() {
   const sosUser: Guser = useSelector(selectSosUser)
 
   const handleCallback = (response: any) => {
-    console.log(response.creditial, response)
-    const userSignObject = jwtDecode(response.creditial);
-    dispatch(SignIn(userSignObject))
+    console.log(response.credential)
+    const userSignObject:any = jwtDecode(response.credential);
+    console.log(userSignObject)
+
+    const userObject: Guser ={
+      name: userSignObject.family_name  + ' ' + userSignObject.given_name,
+      email: userSignObject.email,
+      picture: userSignObject.picture,
+      iat: userSignObject.iat,
+      iss:userSignObject.iss,
+      jti:userSignObject.jti
+    }
+
+    console.log(userObject)
+    dispatch(SignIn(userObject))
   }
 
-  const handleSignout = () => {
-    
+  const handleSignOut = () => {
+    dispatch(SignOut())
   }
   useEffect(() => {
     google.accounts.id.initialize({
@@ -41,8 +53,10 @@ function App() {
   }, [])
   return (
     <div className="App">
-      {sosUser.email ? (<></>):(
-        < div id='signInDiv'></div>)}
+      {/* {sosUser.email ? (<></>):( */}
+      < div id='signInDiv'></div>
+      <button onClick={(e)=>handleSignOut}>Sign Out</button>
+        {/* )} */}
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
