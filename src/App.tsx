@@ -3,11 +3,13 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import { useDispatch, useSelector } from "react-redux";
 import './App.css';
-import { selectSosUser } from './features/counter/userSlice';
+
+import { selectSosUser,SignIn } from './features/counter/userSlice';
 import { Guser } from './app/model';
+import jwtDecode from 'jwt-decode';
 
 function App() {
-  
+  const dispatch = useDispatch();
   interface Google {
     client_id: String
     callback: () => void
@@ -16,6 +18,8 @@ function App() {
 
   const handleCallback = (response: any) => {
     console.log(response.creditial, response)
+    const userSignObject = jwtDecode(response.creditial);
+    dispatch(SignIn(userSignObject))
   }
 
   const handleSignout = () => {
