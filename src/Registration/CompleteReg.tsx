@@ -19,11 +19,12 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RegistrationForm from './RegistrationForm';
 import PaymentForm from './RecipientEntryForm';
-import CustomTextForm from './CustomTextForm';
+import CustomTextForm from './CustomTextEntryForm';
 import { useSelector } from 'react-redux';
 import { selectSosUser } from '../features/counter/userSlice';
 import { Guser } from '../app/model';
 import CustomeSignals from './CustomeSignals';
+import WrapUp from './WrapUp';
 
 
 function Copyright() {
@@ -58,7 +59,7 @@ const steps = [
         case 3:
         return <CustomeSignals />;
         case 4:
-          return <Review />;
+          return <WrapUp />;
       default:
         throw new Error('Unknown step');
     }

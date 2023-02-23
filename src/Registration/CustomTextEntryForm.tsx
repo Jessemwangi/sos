@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import CustomeTextView from '../Components/CustomeTextView';
 
-export default function CustomTextForm() {
+export default function CustomTextEntryForm() {
   return (
     <React.Fragment>
       <CustomeTextView/>
