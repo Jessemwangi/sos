@@ -8,7 +8,7 @@ export default function CustomTextForm() {
   return (
     <React.Fragment>
       <CustomeTextView/>
-      <Typography variant="h6" gutterBottom>
+      <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
        Add more Customized Text
       </Typography>
       <Grid container spacing={3}>

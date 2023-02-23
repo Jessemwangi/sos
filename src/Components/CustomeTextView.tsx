@@ -19,7 +19,7 @@ const CustomeTextView = () => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.cstTextId}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
              

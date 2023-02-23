@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 // import Checkbox from '@mui/material/Checkbox';
 import RecipientsViews from '../Components/RecipientsViews';
 
-export default function RecipientForm() {
+export default function RecipientEntryForm() {
 
   
 

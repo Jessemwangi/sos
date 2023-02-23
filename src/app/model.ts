@@ -46,7 +46,7 @@ export interface signals
       geoLocation: geoCoodes
 }
 export interface cutomTexts{
-    id:number
+    cstTextId:number
     message: string
     title:string
     }

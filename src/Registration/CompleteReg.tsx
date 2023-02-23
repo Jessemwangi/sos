@@ -18,11 +18,12 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RegistrationForm from './RegistrationForm';
-import PaymentForm from './RecipientForm';
-import Review from './CustomTextForm';
+import PaymentForm from './RecipientEntryForm';
+import CustomTextForm from './CustomTextForm';
 import { useSelector } from 'react-redux';
 import { selectSosUser } from '../features/counter/userSlice';
 import { Guser } from '../app/model';
+import CustomeSignals from './CustomeSignals';
 
 
 function Copyright() {
@@ -44,7 +45,7 @@ const steps = [
   , { name: 'Recipients', icon: <GroupAddIcon />, },
   { name: 'Custom Text', icon: <ForumIcon />, },
   { name: 'Custom Signals', icon: <SosIcon />, },
-  { name: 'Review', icon: <AssignmentTurnedInIcon />, }];
+  { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }];
   
   function getStepContent(step:number, sosUser:Guser) {
     switch (step) {
@@ -53,7 +54,11 @@ const steps = [
       case 1:
         return <PaymentForm />;
       case 2:
-        return <Review />;
+        return <CustomTextForm />;
+        case 3:
+        return <CustomeSignals />;
+        case 4:
+          return <Review />;
       default:
         throw new Error('Unknown step');
     }

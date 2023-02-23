@@ -99,11 +99,13 @@
   ],
   "custometext": [
     {
+      "title":"my title",
       "cstTextId": 1,
       "uid": "34i99jhjni87893",
       "message": "call me"
     },
     {
+      "title":"my title",
       "cstTextId": 2,
       "uid": "34i99jhjni87893",
       "message": "call me",
