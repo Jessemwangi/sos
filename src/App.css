@@ -1,6 +1,12 @@
 .App {
   text-align: center;
 }
+@media (min-width: 600px){
+
+  .css-nicjba-MuiContainer-root{
+    max-width: 900px !important;
+  }
+}
 
 .App-logo {
   height: 40vmin;

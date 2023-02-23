@@ -23,6 +23,7 @@ export const userSlice = createSlice({
             state.picture = action.payload.picture
             state.iat = action.payload.iat
             state.jti = action.payload.jti
+            state.iss = action.payload.iss
             
         },
         SignOut: (state,) => {
