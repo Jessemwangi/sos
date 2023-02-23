@@ -66,12 +66,12 @@ const router = createBrowserRouter(
 
 function App() {
   useEffect(() => {
-    document.title = 'Taste It';
+    document.title = 'SOS Help';
   }, []);
  
   const dispatch = useDispatch();
    const sosUser: Guser = useSelector(selectSosUser)
-console.log(sosUser)
+
 
 
   useEffect(() => {
