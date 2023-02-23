@@ -1,20 +1,75 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import { useDispatch, useSelector } from "react-redux";
 import './App.css';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 
 import { selectSosUser,SignIn,SignOut } from './features/counter/userSlice';
 import { Guser } from './app/model';
 import jwtDecode from 'jwt-decode';
+import Layout from './pages/Layout';
+import Dashboard from './pages/Dashboard';
+import EditProfile from './pages/EditProfile';
+import ManageRecipients from './pages/ManageRecipients';
+import CustomeMsgs from './pages/CustomeMsgs';
+import SetPinnedSignals from './pages/SetPinnedSignals';
+import HowTO from './HowTO';
+import AnsToSignals from './pages/AnsToSignals';
+import NotFound from './pages/NotFound';
+import AllSignals from './pages/AllSignals';
+import SignalDetails from './pages/SignalDetails';
+import CompleteReg from './Registration/CompleteReg';
+import Registration from './pages/Registration';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Dashboard />}></Route>
+      <Route path="/profile" element={<EditProfile />}>
+        Manage Profile
+      </Route>
+      <Route path="/recipients" element={<ManageRecipients/>}> Manage Recipients</Route>
+      <Route path="/Customemsg" element={<CustomeMsgs />}>
+        Custmize Messages
+      </Route>
+      <Route path="/pinsignals" element={<SetPinnedSignals />}>
+        View Recipe
+      </Route>
+      <Route path="/help" element={<HowTO/>}>
+        Help and docs
+      </Route>
+      <Route path="/allsignal" element={<AllSignals />}>
+        All Signal Status
+      </Route>
+      <Route path="/signaldetails" element={<SignalDetails/>}>
+        one Signal Details
+      </Route>
+      <Route path="/replytoSignal" element={<AnsToSignals />}>
+        Not Found
+      </Route>
+      <Route path="/regwizard" element={<CompleteReg />}>
+        Initial registration step by step
+      </Route>
+      <Route path="*" element={<NotFound />}>
+        Not Found
+      </Route>
+      <Route path="/register" element={<Registration />}>
+       create an account
+      </Route>
+    </Route>
+  )
+);
 
 function App() {
+  useEffect(() => {
+    document.title = 'Taste It';
+  }, []);
  
   const dispatch = useDispatch();
-  // interface Google {
-  //   client_id: String
-  //   callback: () => void
-  // }
    const sosUser: Guser = useSelector(selectSosUser)
 console.log(sosUser)
 
@@ -59,7 +114,7 @@ console.log(sosUser)
         : (
         < div id='signInDiv'></div>
       )}
-
+ <RouterProvider router={router} />
     </div>
   );
 }
