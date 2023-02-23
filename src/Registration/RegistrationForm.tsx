@@ -2,14 +2,16 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { Guser } from '../app/model';
 
-export default function AddressForm() {
+interface googleUser{
+  sosUser: Guser
+}
+export default function RegistrationForm( {sosUser}:googleUser) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Shipping address
+        
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -19,6 +21,7 @@ export default function AddressForm() {
             name="firstName"
             label="First name"
             fullWidth
+            value={sosUser.name.split(' ')[1]}
             autoComplete="given-name"
             variant="standard"
           />
@@ -30,7 +33,43 @@ export default function AddressForm() {
             name="lastName"
             label="Last name"
             fullWidth
+            value={sosUser.name.split(' ',1)}
             autoComplete="family-name"
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="Contact"
+            name="Contact"
+            label="Contacts"
+            fullWidth
+            autoComplete="Phone Number"
+            variant="standard"
+          />
+           </Grid>
+           <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="AltContact"
+            name="AltContact"
+            label="Alt Contacts"
+            fullWidth
+            autoComplete="Alt Phone Number"
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            id="Email"
+            name="emailaddress"
+            label="Email Address"
+            fullWidth
+          value={sosUser.email}
+           
+            autoComplete="Email Address"
             variant="standard"
           />
         </Grid>
@@ -41,7 +80,7 @@ export default function AddressForm() {
             name="address1"
             label="Address line 1"
             fullWidth
-            autoComplete="shipping address-line1"
+            autoComplete="Reachable address-line1"
             variant="standard"
           />
         </Grid>
@@ -51,7 +90,7 @@ export default function AddressForm() {
             name="address2"
             label="Address line 2"
             fullWidth
-            autoComplete="shipping address-line2"
+            autoComplete="Reachable address-line2"
             variant="standard"
           />
         </Grid>
@@ -62,7 +101,7 @@ export default function AddressForm() {
             name="city"
             label="City"
             fullWidth
-            autoComplete="shipping address-level2"
+            autoComplete="Reachable address-level2"
             variant="standard"
           />
         </Grid>
@@ -82,7 +121,7 @@ export default function AddressForm() {
             name="zip"
             label="Zip / Postal code"
             fullWidth
-            autoComplete="shipping postal-code"
+            autoComplete="Reachable postal-code"
             variant="standard"
           />
         </Grid>
@@ -93,16 +132,16 @@ export default function AddressForm() {
             name="country"
             label="Country"
             fullWidth
-            autoComplete="shipping country"
+            autoComplete="Resident country"
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <FormControlLabel
             control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
             label="Use this address for payment details"
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </React.Fragment>
   );

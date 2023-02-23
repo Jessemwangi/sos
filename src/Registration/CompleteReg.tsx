@@ -8,14 +8,21 @@ import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ForumIcon from '@mui/icons-material/Forum';
+import SosIcon from '@mui/icons-material/Sos';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AddressForm from './AddressForm';
-import PaymentForm from './PaymentForm';
-import Review from './Review';
-
+import RegistrationForm from './RegistrationForm';
+import PaymentForm from './RecipientForm';
+import Review from './CustomTextForm';
+import { useSelector } from 'react-redux';
+import { selectSosUser } from '../features/counter/userSlice';
+import { Guser } from '../app/model';
 
 
 function Copyright() {
@@ -32,12 +39,17 @@ function Copyright() {
     );
   }
   
-  const steps = ['Shipping address', 'Payment details', 'Review your order'];
+const steps = [
+  { name: 'Biography', icon: <PersonAddIcon />, }
+  , { name: 'Recipients', icon: <GroupAddIcon />, },
+  { name: 'Custom Text', icon: <ForumIcon />, },
+  { name: 'Custom Signals', icon: <SosIcon />, },
+  { name: 'Review', icon: <AssignmentTurnedInIcon />, }];
   
-  function getStepContent(step: number) {
+  function getStepContent(step:number, sosUser:Guser) {
     switch (step) {
       case 0:
-        return <AddressForm />;
+        return <RegistrationForm sosUser={sosUser} />;
       case 1:
         return <PaymentForm />;
       case 2:
@@ -50,6 +62,7 @@ function Copyright() {
   const theme = createTheme();
 
 const CompleteReg = () => {
+  const sosUser: Guser = useSelector(selectSosUser)
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = () => {
@@ -73,36 +86,34 @@ const CompleteReg = () => {
         >
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              Company name
+              HI {sosUser.name || ' Guest'}, Let get you set up and ready with few steps
             </Typography>
           </Toolbar>
         </AppBar>
         <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
           <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
             <Typography component="h1" variant="h4" align="center">
-              Checkout
+              Profile
             </Typography>
             <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
               {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
+                <Step key={label.name}>
+                  <StepLabel>{label.icon}{label.name} </StepLabel>
                 </Step>
               ))}
             </Stepper>
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
+                  Thank you for registering with sos online service.
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order
-                  confirmation, and will send you an update when your order has
-                  shipped.
+                  Your Profile has been created successfull you can now start sending SOS and also recieving them to help yuor friend when in need
                 </Typography>
               </React.Fragment>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)}
+                 {getStepContent(activeStep,sosUser)} 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   {activeStep !== 0 && (
                     <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>

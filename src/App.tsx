@@ -51,9 +51,6 @@ const router = createBrowserRouter(
       <Route path="/replytoSignal" element={<AnsToSignals />}>
         Not Found
       </Route>
-      <Route path="/replytoSignal" element={<AnsToSignals />}>
-        Not Found
-      </Route>
       <Route path="/regwizard" element={<CompleteReg />}>
         Initial registration step by step
       </Route>

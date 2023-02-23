@@ -44,4 +44,9 @@ export interface signals
       uid: string,
       createdAt: Date,
       geoLocation: geoCoodes
+}
+export interface cutomTexts{
+    id:number
+    message: string
+    title:string
     }

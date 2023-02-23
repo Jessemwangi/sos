@@ -1,10 +1,7 @@
 import React from 'react';
-import { Guser } from '../app/model';
-import { useSelector } from 'react-redux';
-import { selectSosUser } from '../features/counter/userSlice';
 
 const Registration = () => {
-    const sosUser: Guser = useSelector(selectSosUser)
+    // const sosUser: Guser = useSelector(selectSosUser)
 
     return (
         <div>
