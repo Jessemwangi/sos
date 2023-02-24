@@ -11,7 +11,7 @@ const init: Profile = {
   dob: null,
   uid: "",
   email: "",
-  userName: "",
+  username: "",
   addressline1: "",
   addressline2: "",
   city: "",

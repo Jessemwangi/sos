@@ -8,7 +8,7 @@ import { Guser, Profile } from '../app/model';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectProfile,addProfile } from '../features/Profile';
+import { selectProfile,addProfile } from '../features/ProfileSlice';
 
 interface googleUser{
   sosUser: Guser
@@ -18,7 +18,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
   const dispatch = useDispatch()
   const userProfile: Profile = useSelector(selectProfile)
   console.log(userProfile)
-  const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(
+  const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null | Date>(
     dayjs());
   
   React.useEffect(() => {
@@ -27,6 +27,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
         email: sosUser.email,
         firstname: sosUser.name.split(' ')[1],
         lastname: sosUser.name.split(' ')[0],
+        username:sosUser.name,
       }))
       
     }
@@ -71,11 +72,11 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             required
             id="Contact"
             name="contact"
+            value={userProfile.contact ? userProfile.contact :''}
             label="Contacts"
             fullWidth
             autoComplete="Phone Number"
             variant="standard"
-            value={userProfile.contact}
             onChange={(e) => handleChange(e)}
           />
            </Grid>
@@ -84,6 +85,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             required
             id="AltContact"
             name="altcontact"
+            value={userProfile.altcontact ? userProfile.altcontact :''}
             label="Alt Contacts"
             fullWidth
             autoComplete="Alt Phone Number"
@@ -96,6 +98,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             required
             id="occupation"
             name="occupation"
+            value={userProfile.occupation ? userProfile.occupation :''}
             label="occupation"
             fullWidth
             autoComplete="occupation"
@@ -110,8 +113,8 @@ export default function RegistrationForm({ sosUser }: googleUser) {
         label="Date of Birth"
           value={datePickerValue}
              onChange={(newValue) => {
-                 setDatePickerValue(newValue)
-                dispatch(addProfile({ dob:new Date(newValue!.toISOString()) }))
+                 setDatePickerValue(userProfile.dob ? userProfile.dob : newValue)
+                dispatch(addProfile({ dob:newValue}))
               }}
           renderInput={(params) => <TextField {...params} />}
         />
@@ -159,6 +162,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             required
             id="city"
             name="city"
+            value={userProfile.city ? userProfile.city :''}
             label="City"
             fullWidth
             autoComplete="Reachable address-level2"
@@ -170,6 +174,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
           <TextField
             id="state"
             name="state_province"
+            value={userProfile.state_province ? userProfile.state_province :''}
             label="State/Province/Region"
             fullWidth
             variant="standard"
@@ -181,6 +186,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             required
             id="zip"
             name="postalcode"
+            value={userProfile.postalcode ? userProfile.postalcode :''}
             label="Zip / Postal code"
             fullWidth
             autoComplete="Reachable postal-code"
@@ -193,6 +199,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             required
             id="country"
             name="country"
+            value={userProfile.country ? userProfile.country :''}
             label="Country"
             fullWidth
             autoComplete="Resident country"

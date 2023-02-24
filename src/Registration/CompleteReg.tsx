@@ -15,7 +15,6 @@ import ForumIcon from '@mui/icons-material/Forum';
 import SosIcon from '@mui/icons-material/Sos';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RegistrationForm from './RegistrationForm';
@@ -28,21 +27,6 @@ import WrapUp from './WrapUp';
 // import { selectProfile } from '../features/Profile';
 // import { saveProfile } from '../features/Profile';
 
-
-function Copyright() {
-
-    return (
-      <Typography variant="body2" color="text.secondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://mui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
-  
 const steps = [
   { name: 'Biography', icon: <PersonAddIcon />, }
   , { name: 'Recipients', icon: <GroupAddIcon />, },
@@ -142,7 +126,7 @@ const CompleteReg = () => {
               </React.Fragment>
             )}
           </Paper>
-          <Copyright />
+         
         </Container>
       </ThemeProvider>
     );
