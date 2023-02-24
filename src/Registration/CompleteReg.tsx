@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from "react-redux";
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,11 +21,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RegistrationForm from './RegistrationForm';
 import PaymentForm from './RecipientEntryForm';
 import CustomTextForm from './CustomTextEntryForm';
-import { useSelector } from 'react-redux';
 import { selectSosUser } from '../features/userSlice';
 import { Guser } from '../app/model';
 import CustomeSignals from './CustomeSignals';
 import WrapUp from './WrapUp';
+// import { selectProfile } from '../features/Profile';
+// import { saveProfile } from '../features/Profile';
 
 
 function Copyright() {
@@ -51,6 +53,7 @@ const steps = [
   function getStepContent(step:number, sosUser:Guser) {
     switch (step) {
       case 0:
+
         return <RegistrationForm sosUser={sosUser} />;
       case 1:
         return <PaymentForm />;
@@ -69,9 +72,11 @@ const steps = [
 
 const CompleteReg = () => {
   const sosUser: Guser = useSelector(selectSosUser)
+
     const [activeStep, setActiveStep] = React.useState(0);
 
-    const handleNext = () => {
+  const handleNext = () => {
+  
       setActiveStep(activeStep + 1);
     };
   
