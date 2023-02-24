@@ -9,13 +9,23 @@ export interface Guser{
 }
 
 export interface Profile{
+    id:number | null
+    firstname: string,
+    lastname:string,
+    contact: number | null,
+    altcontact:number | null,
+    occupation: string
+    dob: Date | null,
     uid: string,
     email: string,
     userName: string,
-    DOB: Date,
-    contact: number,
-    streetAddress: string,
-    occupation: string
+    addressline1: string,
+    addressline2: string,
+    city: string,
+    state_province: string,
+    postalcode: string
+    country: string
+    createdon:Date | null
 }
 
 interface Recipients{

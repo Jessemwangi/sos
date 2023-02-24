@@ -1,20 +1,41 @@
 {
   "profile": [
     {
+      "id":1,
+      "firstname":"jesse",
+      "lastname":"namae",
+      "contact": "12233445",
+      "altcontact":"098777893",
+      "occupation": "student",
+      "dob": "1990-03-21",
       "uid": "34i99jhjni87893",
       "email": "jesse@gmail.com",
-      "userName": "Jesse",
-      "DOB": "1990-03-21",
-      "contact": "12233445",
-      "streetAddress": "",
-      "occupation": "student"
+      "username": "Jesse",
+      "addressline1": "",
+      "addressline2": "",
+      "city":"helsinki",
+      "state_province":"uusima", 
+      "postalcode":"00510",
+      "country":"finland"
+
     },
     {
-      "uid": "34i99jhjnkhjhji87893",
-      "email": "faith@gmail.com",
-      "userName": "faith",
-      "DOB": "1992-03-21",
-      "image": "path to image"
+      "id":2,
+      "firstname":"jesse",
+      "lastname":"namae",
+      "contact": "12233445",
+      "altcontact":"098777893",
+      "occupation": "student",
+      "dob": "1990-03-21",
+      "uid": "34i99jhjni87893",
+      "email": "jesse@gmail.com",
+      "username": "Jesse",
+      "addressline1": "",
+      "addressline2": "",
+      "city":"helsinki",
+      "state_province":"uusima", 
+      "postalcode":"00510",
+      "country":"finland"
     }
   ],
   "recipients": [

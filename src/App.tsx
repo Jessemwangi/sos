@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { selectSosUser,SignIn,SignOut } from './features/counter/userSlice';
+import { selectSosUser,SignIn,SignOut } from './features/userSlice';
 import { Guser } from './app/model';
 import jwtDecode from 'jwt-decode';
 import Layout from './pages/Layout';
