@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Guser } from "../../app/model";
+import { Guser } from "../app/model";
 
 const init:Guser = {
     name: '',
@@ -28,21 +28,10 @@ export const userSlice = createSlice({
         },
         SignOut: (state,) => {
             console.log(init)
-            state = {...init};
+             state = {...init};
+          
         },
-        // RegisterUser: {
-        //     reducer: (state, action) => {
-              
-        //     },
-        //     prepare(text) {
-        //       const id = nanoid();
-        //       const active = true;
-        //       const dateCreated = new Date().toDateString();
-        //       const admin = false;
-      
-        //       return { payload: { name, id, active, dateCreated, admin } };
-        //     },
-        // },
+
     }
    
 });

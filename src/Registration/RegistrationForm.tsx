@@ -2,12 +2,18 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import dayjs, { Dayjs } from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Guser } from '../app/model';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 interface googleUser{
   sosUser: Guser
 }
 export default function RegistrationForm( {sosUser}:googleUser) {
+  const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(
+    dayjs() );
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -33,7 +39,7 @@ export default function RegistrationForm( {sosUser}:googleUser) {
             name="lastName"
             label="Last name"
             fullWidth
-            value={sosUser.name.split(' ',1)}
+            value={sosUser.name.split(' ')[0]}
             autoComplete="family-name"
             variant="standard"
           />
@@ -59,6 +65,27 @@ export default function RegistrationForm( {sosUser}:googleUser) {
             autoComplete="Alt Phone Number"
             variant="standard"
           />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="occupation"
+            name="occupation"
+            label="occupation"
+            fullWidth
+            autoComplete="occupation"
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'en'}>
+        <DatePicker 
+        label="Date of Birth"
+          value={datePickerValue}
+          onChange={(newValue) => setDatePickerValue(newValue)}
+          renderInput={(params) => <TextField {...params} />}
+        />
+         </LocalizationProvider>
         </Grid>
         <Grid item xs={12}>
           <TextField

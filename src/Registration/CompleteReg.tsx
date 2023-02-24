@@ -21,7 +21,7 @@ import RegistrationForm from './RegistrationForm';
 import PaymentForm from './RecipientEntryForm';
 import CustomTextForm from './CustomTextEntryForm';
 import { useSelector } from 'react-redux';
-import { selectSosUser } from '../features/counter/userSlice';
+import { selectSosUser } from '../features/userSlice';
 import { Guser } from '../app/model';
 import CustomeSignals from './CustomeSignals';
 import WrapUp from './WrapUp';
