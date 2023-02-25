@@ -18,7 +18,7 @@ export interface Profile{
     dob: Date | null,
     uid: string,
     email: string,
-    userName: string,
+    username: string,
     addressline1: string,
     addressline2: string,
     city: string,
