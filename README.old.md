@@ -1,3 +1,5 @@
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Jessemwangi_sos)
+
 ## What SOS
 
 SOS is a responsive web application build with typscript language and uses firestore as the database, the app is used to sent a distress signal when in need by pressing a button, then it broadcast the distress to the individual prioritized receipients,
