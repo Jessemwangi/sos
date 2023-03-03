@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { selectSosUser,SignIn,SignOut } from './features/userSlice';
+import { selectSosUser, SignIn, SignOut } from './features/userSlice';
 import { Guser } from './app/model';
 import jwtDecode from 'jwt-decode';
 import Layout from './pages/Layout';
@@ -32,20 +32,20 @@ const router = createBrowserRouter(
       <Route path="/profile" element={<EditProfile />}>
         Manage Profile
       </Route>
-      <Route path="/recipients" element={<ManageRecipients/>}> Manage Recipients</Route>
+      <Route path="/recipients" element={<ManageRecipients />}> Manage Recipients</Route>
       <Route path="/Customemsg" element={<CustomeMsgs />}>
         Custmize Messages
       </Route>
       <Route path="/pinsignals" element={<SetPinnedSignals />}>
         View Recipe
       </Route>
-      <Route path="/help" element={<HowTO/>}>
+      <Route path="/help" element={<HowTO />}>
         Help and docs
       </Route>
       <Route path="/allsignal" element={<AllSignals />}>
         All Signal Status
       </Route>
-      <Route path="/signaldetails" element={<SignalDetails/>}>
+      <Route path="/signaldetails" element={<SignalDetails />}>
         one Signal Details
       </Route>
       <Route path="/replytoSignal" element={<AnsToSignals />}>
@@ -58,7 +58,7 @@ const router = createBrowserRouter(
         Not Found
       </Route>
       <Route path="/register" element={<Registration />}>
-       create an account
+        create an account
       </Route>
     </Route>
   )
@@ -68,26 +68,26 @@ function App() {
   useEffect(() => {
     document.title = 'SOS Help';
   }, []);
- 
+
   const dispatch = useDispatch();
-   const sosUser: Guser = useSelector(selectSosUser)
+  const sosUser: Guser = useSelector(selectSosUser)
 
 
 
   useEffect(() => {
     const handleCallback = (response: any) => {
-      const userSignObject:any = jwtDecode(response.credential);
+      const userSignObject: any = jwtDecode(response.credential);
 
-  
-      const userObject: Guser ={
-        name: userSignObject.family_name  + ' ' + userSignObject.given_name,
+
+      const userObject: Guser = {
+        name: userSignObject.family_name + ' ' + userSignObject.given_name,
         email: userSignObject.email,
         picture: userSignObject.picture,
         iat: userSignObject.iat,
-        iss:userSignObject.iss,
-        jti:userSignObject.jti
+        iss: userSignObject.iss,
+        jti: userSignObject.jti
       }
-  
+
       dispatch(SignIn(userObject))
     }
     window.google.accounts.id.initialize({
@@ -107,14 +107,14 @@ function App() {
     <div className="App">
       {sosUser.email ?
         (<>
-          <img src={sosUser.picture} alt={sosUser.name}  />
-          <button onClick={()=>dispatch(SignOut())}>
+          <img src={sosUser.picture} alt={sosUser.name} />
+          <button onClick={() => dispatch(SignOut())}>
             Sign Out</button>
         </>)
         : (
-        < div id='signInDiv'></div>
-      )}
- <RouterProvider router={router} />
+          < div id='signInDiv'></div>
+        )}
+      <RouterProvider router={router} />
     </div>
   );
 }

@@ -32,7 +32,6 @@ const Layout = () => {
     //   }, []);
  console.log('Loading',Loading, 'error....',error, 'response.....',response)
     
-
     return (
         <div>
             <Header/>
