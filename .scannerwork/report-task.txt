@@ -1,6 +1,6 @@
-projectKey=group_5_soso
-serverUrl=http://localhost:8889
+projectKey=group5_SOS
+serverUrl=http://localhost:9000
 serverVersion=8.7.1.42226
-dashboardUrl=http://localhost:8889/dashboard?id=group_5_soso
-ceTaskId=AYaSYM5w7u_puqXiBkUZ
-ceTaskUrl=http://localhost:8889/api/ce/task?id=AYaSYM5w7u_puqXiBkUZ
+dashboardUrl=http://localhost:9000/dashboard?id=group5_SOS
+ceTaskId=AYadV8eCILLCrYB--8kj
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYadV8eCILLCrYB--8kj
