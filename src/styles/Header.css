@@ -1,0 +1,17 @@
+.header {
+    max-height: 20vh;
+
+}
+
+.appBar {
+    display: block;
+    background-color: var(--orange);
+}
+
+.toolBar {
+    display: flex;
+    border: solid 1px brown;
+    justify-content: space-around;
+    background-color: var(--orange);
+
+}
