@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Profile } from "../app/model";
 
+
+
 const init: Profile = {
   id: null,
   firstname: "",
@@ -11,7 +13,7 @@ const init: Profile = {
   dob: null,
   uid: "",
   email: "",
-  userName: "",
+  username: "",
   addressline1: "",
   addressline2: "",
   city: "",
