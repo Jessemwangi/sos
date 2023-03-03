@@ -77,8 +77,6 @@ function App() {
   useEffect(() => {
     const handleCallback = (response: any) => {
       const userSignObject: any = jwtDecode(response.credential);
-
-
       const userObject: Guser = {
         name: userSignObject.family_name + ' ' + userSignObject.given_name,
         email: userSignObject.email,
@@ -88,12 +86,14 @@ function App() {
         jti: userSignObject.jti
       }
 
-      dispatch(SignIn(userObject))
+      dispatch(SignIn(userObject));
     }
+
     window.google.accounts.id.initialize({
       client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
       callback: handleCallback
-    })
+    });
+
     const SignInButton = document.getElementById('signInDiv')!;
     google.accounts.id.renderButton(
       SignInButton,
@@ -102,17 +102,18 @@ function App() {
         size: "large",
         type: "standard"
       })
-  }, [dispatch])
+  }, [dispatch]);
+
   return (
     <div className="App">
       {sosUser.email ?
         (<>
           <img src={sosUser.picture} alt={sosUser.name} />
-          <button onClick={() => dispatch(SignOut())}>
+          <button id="signOutButton" onClick={() => dispatch(SignOut())}>
             Sign Out</button>
         </>)
         : (
-          < div id='signInDiv'></div>
+          <div id='signInDiv'></div>
         )}
       <RouterProvider router={router} />
     </div>

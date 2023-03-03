@@ -1,9 +1,20 @@
-import React from 'react';
+import '../styles/Header.css';
+import { AppBar, Avatar, Toolbar, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
+
 
 const Header = () => {
     return (
-        <div>
-            <h1>menu will be here</h1>
+        <div className='header'>
+            <AppBar className="appBar"><h1>Menu</h1>
+                <Toolbar className="toolBar">
+                    <Typography>Dashboard</Typography>
+                    <Typography>Contacts</Typography>
+                    <Avatar variant="rounded" />
+                </Toolbar>
+            </AppBar>
+
         </div>
     );
 };
