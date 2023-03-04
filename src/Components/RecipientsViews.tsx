@@ -5,10 +5,12 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import EditIcon from '@mui/icons-material/Edit';
+import { Popover } from '@mui/material';
 
 const RecipientsViews = () => {
 
-    // GEt data from firebase for the active user stored in userslice the map it
+  // GEt data from firebase for the active user stored in userslice the map it
   const rows = [
     {
       id: 0,
@@ -61,6 +63,16 @@ const RecipientsViews = () => {
       postalCode: "00510",
     },
   ];
+
+  /*
+    function closeHandler() {
+        console.log('close');
+    } */
+
+  function editHandler() {
+    //TODO: edit function opens popover
+    console.log('edit');
+  }
   return (
     <React.Fragment>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
@@ -87,10 +99,17 @@ const RecipientsViews = () => {
               <TableCell>{row.call}</TableCell>
               <TableCell align="center">${row.postalCode}</TableCell>
               <TableCell>{row.city}</TableCell>
+              <TableCell><EditIcon onClick={editHandler} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      {/* 
+            <Popover
+                id='contactDetails'
+                open={false}
+                onClose={closeHandler} /> */}
     </React.Fragment>
   );
 };
