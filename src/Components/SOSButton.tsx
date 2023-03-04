@@ -5,8 +5,13 @@ const SOSButton = () => {
 
     const sosButton = document.getElementById('sosButton');
 
+    function activeSosButton(){
+        sosButton!.classList.toggle('flash');
+        
+    }
+
     return (
-        <button className="sosButton" id="sosButton" onClick={() => sosButton!.classList.toggle('flash')}>
+        <button className="sosButton" id="sosButton" onClick={activeSosButton}>
             <span>SOS</span>
         </button>
     );
