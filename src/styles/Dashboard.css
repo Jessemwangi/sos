@@ -1,0 +1,16 @@
+.sosButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    width: 100vw;
+
+}
+
+.sosMenuContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 25vh;
+    background-color: var(--violet);
+}

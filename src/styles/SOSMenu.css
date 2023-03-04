@@ -1,0 +1,12 @@
+.sosMenu {
+    display: grid;
+    height: 150px;
+    width: 100%;
+    grid-template-columns: 5 1fr;
+    grid-template-rows: 1;
+}
+
+
+.sosMenuButton {
+    height: 100%;
+}
