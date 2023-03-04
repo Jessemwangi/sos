@@ -5,14 +5,18 @@ button.sosButton {
     border-radius: 50px;
     background-color: var(--red);
     color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 82px;
+
     display: flex;
     justify-content: center;
     text-align: center;
     margin: 1rem;
     border: solid 3px red;
+}
+
+button.sosButton span {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 82px;
 }
 
 button.sosButton:hover {
