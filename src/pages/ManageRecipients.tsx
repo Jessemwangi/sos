@@ -2,6 +2,7 @@ import { Popover } from '@mui/material';
 import React from 'react';
 import { recipients } from './recipients.js';
 import EditIcon from '@mui/icons-material/Edit';
+import RecipientsViews from '../Components/RecipientsViews.js';
 
 const ManageRecipients = () => {
     let recipientArray = recipients;
