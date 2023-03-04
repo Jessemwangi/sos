@@ -9,7 +9,7 @@ export const store = configureStore({
     counter: counterReducer,
     userSlice: userSlice,
     profile: profileSlice,
-    sosButton: sosButtonSlice,
+    activeSOS: sosButtonSlice,
   },
 });
 

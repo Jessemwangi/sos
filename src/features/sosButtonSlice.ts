@@ -8,7 +8,7 @@ const initialState: sosState = {
     active: false,
 };
 
-export const sosSlice = createSlice({
+export const sosButtonSlice = createSlice({
     name: 'activeSOS',
     initialState,
     reducers: {
@@ -18,5 +18,5 @@ export const sosSlice = createSlice({
 });
 
 
-export const { activate } = sosSlice.actions;
-export default sosSlice.reducer;
+export const { activate } = sosButtonSlice.actions;
+export default sosButtonSlice.reducer;
