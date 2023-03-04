@@ -6,7 +6,7 @@ const SOSButton = () => {
     const sosButton = document.getElementById('sosButton');
 
     return (
-        <button className="sosButton" id="sosButton" onClick={() => sosButton!.classList.add('flash')}>
+        <button className="sosButton" id="sosButton" onClick={() => sosButton!.classList.toggle('flash')}>
             <span>SOS</span>
         </button>
     );
