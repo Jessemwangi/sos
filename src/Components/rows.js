@@ -8,7 +8,7 @@ export const rowsArray = [
         address: "312.44",
         city: "helsinki",
         postalCode: "00510",
-    },
+    }/* ,
     {
         id: "1",
         createdAt: "16 Mar, 2019",
@@ -48,5 +48,5 @@ export const rowsArray = [
         address: "312.44",
         city: "helsinki",
         postalCode: "00510",
-    },
+    }, */
 ];
