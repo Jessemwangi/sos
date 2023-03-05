@@ -6,14 +6,49 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import EditIcon from '@mui/icons-material/Edit';
-import { Popover } from '@mui/material';
+import { Popover, Button } from '@mui/material';
+import { TurnedIn } from "@mui/icons-material";
+import { togglePopover } from '../features/manageRecipientsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const RecipientsViews = () => {
-
+  const dispatch = useDispatch();
+  const popoverState = useSelector((state: any) => state.manageRecipients.popoverState);
   // GEt data from firebase for the active user stored in userslice the map it
   const rows = [
     {
-      id: 0,
+      id: "0",
+      createdAt: "16 Mar, 2019",
+      name: "Vernon Presley",
+      residents: "Tupelo, MS",
+      call: "371956444",
+      address: "312.44",
+      city: "helsinki",
+      postalCode: "00510",
+    },
+    {
+      id: "1",
+      createdAt: "16 Mar, 2019",
+      name: "Lisa-Marie Presley",
+      residents: "Tupelo, MS",
+      call: "371956444",
+      address: "312.44",
+      city: "helsinki",
+      postalCode: "00510",
+    },
+    {
+      id: "2",
+      createdAt: "16 Mar, 2019",
+      name: "Gladys Presley",
+      residents: "Tupelo, MS",
+      call: "371956444",
+      address: "312.44",
+      city: "helsinki",
+      postalCode: "00510",
+    },
+    {
+      id: "3",
       createdAt: "16 Mar, 2019",
       name: "Elvis Presley",
       residents: "Tupelo, MS",
@@ -23,39 +58,9 @@ const RecipientsViews = () => {
       postalCode: "00510",
     },
     {
-      id: 1,
+      id: "4",
       createdAt: "16 Mar, 2019",
-      name: "Elvis Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: 2,
-      createdAt: "16 Mar, 2019",
-      name: "Elvis Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: 3,
-      createdAt: "16 Mar, 2019",
-      name: "Elvis Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: 4,
-      createdAt: "16 Mar, 2019",
-      name: "Elvis Presley",
+      name: "Priscilla Presley",
       residents: "Tupelo, MS",
       call: "371956444",
       address: "312.44",
@@ -64,15 +69,31 @@ const RecipientsViews = () => {
     },
   ];
 
-  /*
-    function closeHandler() {
-        console.log('close');
-    } */
-
-  function editHandler() {
-    //TODO: edit function opens popover
-    console.log('edit');
+  function closeHandler() {
+    console.log('close');
+    dispatch(togglePopover());
+    console.log(popoverState);
   }
+
+  function editHandler(e: any) {
+    console.log(e.target.id)
+    console.log('edit');
+    dispatch(togglePopover());
+    console.log(popoverState);
+
+  }
+
+  function saveEdits(): any {
+    console.log('save edits')
+  }
+
+  let open = popoverState;
+
+  /*   let anchorEl = () => {
+  
+    }
+    let popoverId = () => { } */
+
   return (
     <React.Fragment>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
@@ -99,17 +120,27 @@ const RecipientsViews = () => {
               <TableCell>{row.call}</TableCell>
               <TableCell align="center">${row.postalCode}</TableCell>
               <TableCell>{row.city}</TableCell>
-              <TableCell><EditIcon onClick={editHandler} /></TableCell>
+              <TableCell><EditIcon id={row.id} onClick={editHandler} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {/* 
-            <Popover
-                id='contactDetails'
-                open={false}
-                onClose={closeHandler} /> */}
+      <Popover
+        open={open}
+        onClose={closeHandler}
+        //anchorEl={anchorEl}
+        //id={popoverId}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}><div>
+          <label htmlFor="name" ></label><input id="name"></input>
+          <label htmlFor="call"></label><input id="call"></input>
+          <label htmlFor="address"></label><input id="address"></input>
+          <Button onClick={saveEdits}>Save</Button>
+          <Button onClick={closeHandler}>Close</Button></div>
+      </Popover>
     </React.Fragment>
   );
 };
