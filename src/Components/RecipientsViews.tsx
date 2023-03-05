@@ -11,6 +11,7 @@ import { Popover, Button } from '@mui/material';
 import { togglePopover, anchorElement } from '../features/manageRecipientsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import '../styles/RecipientsViews.css';
+import { rowsArray } from './rows';
 
 
 const RecipientsViews = () => {
@@ -18,7 +19,9 @@ const RecipientsViews = () => {
   const popoverState = useSelector((state: any) => state.manageRecipients.popoverState);
   const anchorElementState = useSelector((state: any) => state.manageRecipients.anchorElementState)
   // GEt data from firebase for the active user stored in userslice the map it
-  const rows = [
+  const rows = rowsArray;
+
+  /* const rows = [
     {
       id: "0",
       createdAt: "16 Mar, 2019",
@@ -69,7 +72,7 @@ const RecipientsViews = () => {
       city: "helsinki",
       postalCode: "00510",
     },
-  ];
+  ]; */
 
   function closeHandler() {
     console.log('close');
