@@ -1,0 +1,6 @@
+.editPopover input {
+    width: 600px;
+    height: 50px;
+    border: none;
+    border-bottom: 1px solid black;
+}

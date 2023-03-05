@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 /* export interface manageRecipientsState {
     id: string,
@@ -25,6 +25,7 @@ const initialState: manageRecipientsState = {
 
 const initialState = {
     popoverState: false,
+    anchorElementState: '0',
 
 }
 
@@ -32,12 +33,13 @@ export const manageRecipientsSlice = createSlice({
     name: "manageRecipients",
     initialState,
     reducers: {
-        togglePopover(state) { state.popoverState = !state.popoverState }
+        togglePopover: (state) => { state.popoverState = !state.popoverState },
+        anchorElement: (state, action: PayloadAction<string>) => { state.anchorElementState = action.payload }
+    },
 
 
-    }
 
 });
 
-export const { togglePopover } = manageRecipientsSlice.actions;
+export const { togglePopover, anchorElement } = manageRecipientsSlice.actions;
 export default manageRecipientsSlice.reducer

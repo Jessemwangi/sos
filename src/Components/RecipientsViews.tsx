@@ -8,13 +8,15 @@ import Typography from "@mui/material/Typography";
 import EditIcon from '@mui/icons-material/Edit';
 import { Popover, Button } from '@mui/material';
 import { TurnedIn } from "@mui/icons-material";
-import { togglePopover } from '../features/manageRecipientsSlice';
+import { togglePopover, anchorElement } from '../features/manageRecipientsSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import '../styles/RecipientsViews.css';
 
 
 const RecipientsViews = () => {
   const dispatch = useDispatch();
   const popoverState = useSelector((state: any) => state.manageRecipients.popoverState);
+  const anchorElementState = useSelector((state: any) => state.manageRecipients.anchorElementState)
   // GEt data from firebase for the active user stored in userslice the map it
   const rows = [
     {
@@ -77,8 +79,8 @@ const RecipientsViews = () => {
 
   function editHandler(e: any) {
     console.log(e.target.id)
-    console.log('edit');
     dispatch(togglePopover());
+    dispatch(anchorElement(e.target.id));
     console.log(popoverState);
 
   }
@@ -88,11 +90,9 @@ const RecipientsViews = () => {
   }
 
   let open = popoverState;
+  let anchorEl = document.getElementById(anchorElementState);
 
-  /*   let anchorEl = () => {
-  
-    }
-    let popoverId = () => { } */
+
 
   return (
     <React.Fragment>
@@ -113,24 +113,29 @@ const RecipientsViews = () => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.id} id={row.id}>
               <TableCell>{row.createdAt}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.address}</TableCell>
               <TableCell>{row.call}</TableCell>
               <TableCell align="center">${row.postalCode}</TableCell>
               <TableCell>{row.city}</TableCell>
-              <TableCell><EditIcon id={row.id} onClick={editHandler} /></TableCell>
+              <TableCell><EditIcon id={`icon${row.id}`} onClick={editHandler} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
       <Popover
+        className="editPopover"
         open={open}
         onClose={closeHandler}
-        //anchorEl={anchorEl}
+        anchorEl={anchorEl}
         //id={popoverId}
+        sx={{
+          height: '500px',
+          width: '800px',
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
