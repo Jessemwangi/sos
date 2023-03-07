@@ -4,6 +4,7 @@ import userSlice from '../features/userSlice';
 import profileSlice from '../features/ProfileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
+import headerSlice from '../features/headerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     profile: profileSlice,
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
+    header: headerSlice,
   },
 });
 
