@@ -3,6 +3,7 @@ import counterReducer from '../features/counter/counterSlice';
 import userSlice from '../features/userSlice';
 import profileSlice from '../features/ProfileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
+import manageRecipientsSlice from '../features/manageRecipientsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     userSlice: userSlice,
     profile: profileSlice,
     activeSOS: sosButtonSlice,
+    manageRecipients: manageRecipientsSlice,
   },
 });
 
