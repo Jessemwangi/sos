@@ -1,11 +1,11 @@
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React from 'react';
-import { cutomTexts } from '../app/model';
+import { customTexts } from '../app/model';
 
 const CustomeTextView = () => {
-    const rows:cutomTexts[] = []
-    return (
-<React.Fragment>
+  const rows: customTexts[] = []
+  return (
+    <React.Fragment>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Available Text
       </Typography>
@@ -22,13 +22,13 @@ const CustomeTextView = () => {
             <TableRow key={row.cstTextId}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
-             
+
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </React.Fragment>
-    );
+  );
 };
 
 export default CustomeTextView;
