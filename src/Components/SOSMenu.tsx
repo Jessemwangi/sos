@@ -10,7 +10,7 @@ const SOSMenu = () => {
     return (
         <div className="sosMenu">
             {emergencyList.map((item: string) => (
-                <div className="sosMenuButton">{item}</div>))}
+                <button>{item}</button>))}
 
 
 

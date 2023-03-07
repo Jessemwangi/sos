@@ -10,7 +10,7 @@ export const store = configureStore({
     counter: counterReducer,
     userSlice: userSlice,
     profile: profileSlice,
-    activeSOS: sosButtonSlice,
+    sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
   },
 });

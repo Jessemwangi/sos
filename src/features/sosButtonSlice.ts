@@ -4,15 +4,15 @@ export interface SosState {
     active: boolean;
 }
 
-const initialState: SosState = {
+const initialState = {
     active: false,
 };
 
 export const sosButtonSlice = createSlice({
-    name: 'activeSOS',
+    name: 'sosButton',
     initialState,
     reducers: {
-        activate(state) { state.active = true }
+        activate:(state)=>{ state.active = true }
     }
 
 });
