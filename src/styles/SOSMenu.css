@@ -14,13 +14,13 @@
     border: 3px solid;
     font-size: 32px;
     color: white;
-    font-weight:700;
+    font-weight: 700;
 }
 
 .sosMenu button:hover {
     border: 6px solid var(--purple);
 }
 
-.sosMenuButton.selected {
+.sosMenu button.selected {
     background-color: var(--purple);
 }

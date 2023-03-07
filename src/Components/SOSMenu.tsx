@@ -1,5 +1,7 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import "../styles/SOSMenu.css";
+import { selectSos } from "../features/sosMenuSlice";
 
 interface Emergency {
     text: string,
@@ -30,12 +32,17 @@ const emergencyList: Emergency[] = [{
 ]
 
 const SOSMenu = () => {
-    function clickHandler() { }
+    const dispatch = useDispatch();
+    function clickHandler(e: any) {
+        dispatch(selectSos(e.target.key));
+        e.target.classList.toggle('selected');
+
+    }
 
     return (
         <div className="sosMenu">
             {emergencyList.map((item) => (
-                <button onClick={clickHandler}>{item.text}</button>))}
+                <button key={item.emergencyId} onClick={clickHandler}>{item.text}</button>))}
 
 
 
