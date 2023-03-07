@@ -1,6 +1,7 @@
 .editPopover input {
-    width: 600px;
-    height: 50px;
+    width: 150px;
+    height: 30px;
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid darkgray;
+    border-top: 1px solid darkgray;
 }

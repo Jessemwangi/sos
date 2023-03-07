@@ -1,31 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Recipient } from '../app/model';
 
-/* export interface manageRecipientsState {
-    id: string,
-    createdAt: string,
-    name: string,
-    residents: string,
-    call: string,
-    address: string,
-    city: string,
-    postalCode: string,
 
-}
-
-const initialState: manageRecipientsState = {
+const recipient: Recipient = {
     id: "",
     createdAt: "",
     name: "",
-    residents: "",
-    call: "",
     address: "",
     city: "",
-    postalCode: "",
-}; */
+    phone: "",
+    postcode: "",
+};
 
 const initialState = {
     popoverState: false,
-    anchorElementState: '0',
+    currentAnchorElement: '0',
+    currentRecipient: recipient
 
 }
 
@@ -34,12 +24,11 @@ export const manageRecipientsSlice = createSlice({
     initialState,
     reducers: {
         togglePopover: (state) => { state.popoverState = !state.popoverState },
-        anchorElement: (state, action: PayloadAction<string>) => { state.anchorElementState = action.payload }
+        updateAnchorElement: (state, action: PayloadAction<string>) => { state.currentAnchorElement = action.payload },
+        setContact: (state, action: PayloadAction<object>) => { state.currentRecipient = { ...state.currentRecipient, ...action.payload } }
     },
-
-
 
 });
 
-export const { togglePopover, anchorElement } = manageRecipientsSlice.actions;
+export const { togglePopover, updateAnchorElement, setContact } = manageRecipientsSlice.actions;
 export default manageRecipientsSlice.reducer

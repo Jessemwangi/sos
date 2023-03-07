@@ -1,19 +1,19 @@
 
-export interface Guser{
+export interface Guser {
     name: string
     email: string
     picture: string
     iat: number
-    iss: string  
-    jti:string
+    iss: string
+    jti: string
 }
 
-export interface Profile{
-    id:number | null
+export interface Profile {
+    id: number | null
     firstname: string,
-    lastname:string,
+    lastname: string,
     contact: number | null,
-    altcontact:number | null,
+    altcontact: number | null,
     occupation: string
     dob: Date | null,
     uid: string,
@@ -25,38 +25,43 @@ export interface Profile{
     state_province: string,
     postalcode: string
     country: string
-    createdon:Date | null
+    createdon: Date | null
 }
 
-interface Recipients{
-    name:string
+export interface Recipient {
+    id: string,
+    createdAt: string,
+    name: string,
+    address: string,
+    phone: string,
+    city: string,
+    postcode: string,
+
 }
 
-export interface signalsList
-{
+export interface signalsList {
     signalId: number,
-    uid:string,
-    name:string,
-    recipient: Recipients[],
-    presetMsg:string,
-    cstTextId:number,
-    createdAt:Date
+    uid: string,
+    name: string,
+    recipient: Recipient[],
+    presetMsg: string,
+    cstTextId: number,
+    createdAt: Date
 }
 
-interface geoCoodes{
+interface geoCoodes {
     lat: number,
-    lgn:number
+    lon: number
 }
- 
-export interface signals
-    {
-      signalsId: number,
-      uid: string,
-      createdAt: Date,
-      geoLocation: geoCoodes
+
+export interface signals {
+    signalsId: number,
+    uid: string,
+    createdAt: Date,
+    geoLocation: geoCoodes
 }
-export interface cutomTexts{
-    cstTextId:number
+export interface customTexts {
+    cstTextId: number
     message: string
-    title:string
-    }
+    title: string
+}
