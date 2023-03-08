@@ -16,7 +16,7 @@ export const rowsArray = [
         address: "312.44",
         city: "helsinki",
         postcode: "00510",
-    }/*,
+    },
     {
         id: "2",
         createdAt: "16 Mar, 2019",
@@ -42,6 +42,6 @@ export const rowsArray = [
         phone: "371956444",
         address: "312.44",
         city: "helsinki",
-        postalCode: "00510",
-    }, */
+        postcode: "00510",
+    }
 ];

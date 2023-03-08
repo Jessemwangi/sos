@@ -43,13 +43,13 @@ export interface signalsList {
     signalId: number,
     uid: string,
     name: string,
-    recipient: Recipient[],
+    recipientId: string[],
     presetMsg: string,
     cstTextId: number,
     createdAt: Date
 }
 
-interface geoCoodes {
+interface geoCodes {
     lat: number,
     lon: number
 }
@@ -58,8 +58,9 @@ export interface signals {
     signalsId: number,
     uid: string,
     createdAt: Date,
-    geoLocation: geoCoodes
+    geoLocation: geoCodes
 }
+
 export interface customTexts {
     cstTextId: number
     message: string

@@ -1,46 +1,48 @@
-import React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import EditIcon from '@mui/icons-material/Edit';
+import React, { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Popover, Button, Grid, TextField } from '@mui/material';
-import { togglePopover, updateAnchorElement, setContact } from '../features/manageRecipientsSlice';
+import EditIcon from '@mui/icons-material/Edit';
+import { togglePopover, updateAnchorElementId, saveContact, updateCurrentIndex } from '../features/manageRecipientsSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Recipient } from '../app/model';
 import '../styles/RecipientsViews.css';
-import { rowsArray } from './rows';
 
 const RecipientsViews = () => {
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  const currentAnchorElement = useSelector((state: any) => state.manageRecipients.currentAnchorElement)
-  let anchorEl = document.getElementById(currentAnchorElement);
+  const currentAnchorElementId = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
+  let anchorEl = document.getElementById(currentAnchorElementId);
+  let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients)
+  let currentIndex = useSelector((state: any) => state.manageRecipients.currentIndex);
+
 
   // Get data from firebase for the active user
-  const rows = rowsArray;
+
+  const [contact, setContact] = useState(recipients[currentIndex]);
 
   function closeHandler() {
     dispatch(togglePopover());
   }
 
   function editHandler(e: any) {
-    console.log(e.target.id)
+    dispatch(updateAnchorElementId(e.target.id));
     dispatch(togglePopover());
-    dispatch(updateAnchorElement(e.target.id));
-
+    let index: number = Number(e.target.id.slice(4));
+    console.log(index);
+    dispatch(updateCurrentIndex(index))
   }
 
   function handleChange(e: any): any {
     console.log(e.target.value);
-    dispatch(setContact({ [e.target.name]: e.target.value }))
+    console.log(recipients[currentIndex]);
+    setContact({ ...contact, [e.target.name]: e.target.value });
+    console.log(contact);
   }
 
   function submitEdits(e: any): any {
     e.preventDefault();
-    //TODO send to firebase on submit
-    console.log('save edits')
-    console.log(rows[currentAnchorElement]);
+    console.log(recipients[currentIndex]);
+    dispatch(saveContact(contact))  //TODO send to firebase on submit
   }
 
   return (
@@ -57,15 +59,15 @@ const RecipientsViews = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id} id={row.id}>
+          {recipients.map((row) => (
+            <TableRow key={row.id} >
               <TableCell>{row.createdAt}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.address}</TableCell>
               <TableCell>{row.phone}</TableCell>
-              <TableCell align="center">${row.postcode}</TableCell>
+              <TableCell align="center">{row.postcode}</TableCell>
               <TableCell>{row.city}</TableCell>
-              <TableCell><EditIcon id={row.id} onClick={editHandler} /></TableCell>
+              <TableCell><EditIcon id={`icon${row.id}`} onClick={editHandler} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -86,7 +88,7 @@ const RecipientsViews = () => {
             name="name"
             label="Name"
             type="text"
-            defaultValue={rows[currentAnchorElement].name}
+            defaultValue={recipients[currentIndex].name}
             onChange={handleChange}
           /></Grid>
           <Grid item>
@@ -95,7 +97,7 @@ const RecipientsViews = () => {
               name="address"
               label="Address"
               type="text"
-              defaultValue={rows[currentAnchorElement].address}
+              defaultValue={recipients[currentIndex].address}
               onChange={handleChange}>
             </TextField></Grid>
           <Grid item>
@@ -104,7 +106,7 @@ const RecipientsViews = () => {
               name="phone"
               label="Phone"
               type="text"
-              defaultValue={rows[currentAnchorElement].phone}
+              defaultValue={recipients[currentIndex].phone}
               onChange={handleChange}>
             </TextField></Grid>
           <Grid item>
@@ -113,7 +115,7 @@ const RecipientsViews = () => {
               name="postcode"
               label="Postcode"
               type="text"
-              defaultValue={rows[currentAnchorElement].postcode}
+              defaultValue={recipients[currentIndex].postcode}
               onChange={handleChange}>
             </TextField></Grid>
           <Grid item>
@@ -122,7 +124,7 @@ const RecipientsViews = () => {
               name="city"
               label="City"
               type="text"
-              defaultValue={rows[currentAnchorElement].city}
+              defaultValue={recipients[currentIndex].city}
               onChange={handleChange}>
             </TextField></Grid>
 

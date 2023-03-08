@@ -11,6 +11,6 @@
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 25vh;
+    height: 130px;
     background-color: var(--violet);
 }
