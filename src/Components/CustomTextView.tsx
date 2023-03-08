@@ -18,13 +18,15 @@ const CustomTextView = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.length != 0 ? (rows.map((row) => (
             <TableRow key={row.cstTextId}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
-
             </TableRow>
-          ))}
+          )))
+            : <></>
+
+          }
         </TableBody>
       </Table>
     </React.Fragment>
