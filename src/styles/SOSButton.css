@@ -25,7 +25,7 @@ button.sosButton:hover {
 
 
 button.sosButton.flash {
-    animation: flash 0.5s linear 6;
+    animation: flash 0.5s linear infinite;
 }
 
 @keyframes flash {
