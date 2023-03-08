@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { activate } from '../features/sosButtonSlice';
 
 const SOSButton = () => {
-    const active = useSelector((state: any) => state.activeSOS.active);
+    const active = useSelector((state: any) => state.sosButton.active);
     const dispatch = useDispatch();
 
     console.log(active);

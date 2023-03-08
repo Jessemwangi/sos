@@ -4,14 +4,16 @@ import userSlice from '../features/userSlice';
 import profileSlice from '../features/ProfileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
+import headerSlice from '../features/headerSlice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     userSlice: userSlice,
     profile: profileSlice,
-    activeSOS: sosButtonSlice,
+    sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
+    header: headerSlice,
   },
 });
 
