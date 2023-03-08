@@ -14,12 +14,13 @@ export const headerSlice =
         name: 'header',
         initialState,
         reducers: {
-            togglePopover: (state: any, action: PayloadAction<object>) => { state.popoverState = { ...state.popoverState, ...action.payload } }
+            togglePopover: (state: any, action: PayloadAction<object>) => { state.popoverState = { ...state.popoverState, ...action.payload } },
+            closePopover: (state: any, action: PayloadAction<object>) => { state.popoverState = { ...state.popoverState, ...action.payload } }
 
         }
     },
 
     )
 
-export const { togglePopover } = headerSlice.actions;
+export const { togglePopover, closePopover } = headerSlice.actions;
 export default headerSlice.reducer;

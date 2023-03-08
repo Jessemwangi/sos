@@ -3,9 +3,8 @@ import { AppBar, Avatar, Toolbar, Typography, Stack, Button, Popover, MenuList, 
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { togglePopover } from '../features/headerSlice';
+import { togglePopover, closePopover } from '../features/headerSlice';
 import { Link } from 'react-router-dom';
-import { ClickAwayListener } from '@mui/base';
 import { SignIn, SignOut, selectSosUser } from '../features/userSlice';
 import { Guser } from '../app/model';
 import jwtDecode from 'jwt-decode';
@@ -15,20 +14,24 @@ import { useEffect } from 'react';
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const menuButton = document.getElementById('menuButton');
+    const menuButton = document.getElementById('mainMenu');
+    const avatar = document.getElementById('profileMenu');
     const sosUser: Guser = useSelector(selectSosUser)
     let openMainMenu = useSelector((state: any) => state.header.popoverState.mainMenu);
     let openProfileMenu = useSelector((state: any) => state.header.popoverState.profileMenu);
 
     function openMenu(e: any) {
-        dispatch(togglePopover({ [e.target.id]: true }));
-        console.log(e.target.id);
+        dispatch(togglePopover({ [e.currentTarget.id]: true }));
     }
 
-    function handleClickAway(popoverId: string) {
-        dispatch(togglePopover({ popoverId: false }));
-        //console.log(e.target.id);
+    function mainHandleClose() {
+        dispatch(closePopover({ mainMenu: false }));
+
     }
+    function profileHandleClose() {
+        dispatch(closePopover({ profileMenu: false }));
+    }
+
 
     useEffect(() => {
         const handleCallback = (response: any) => {
@@ -79,27 +82,20 @@ const Header = () => {
                             )}
                     </Stack>
 
-                    <ClickAwayListener onClickAway={() => handleClickAway("mainMenu")}>
-                        <Popover id="mainMenu" open={openMainMenu} anchorEl={menuButton}><MenuList>
-                            <Link to="/help"><MenuItem>How to use SOS</MenuItem></Link>
-                            <Link to=""><MenuItem>Custom Emergency Buttons</MenuItem></Link>
-                            <Link to=""><MenuItem></MenuItem></Link>
-                            <Link to=""><MenuItem></MenuItem></Link>
-                        </MenuList>
-                        </Popover>
-                    </ClickAwayListener>
+                    <Popover id="mainMenu" open={openMainMenu} anchorEl={menuButton} onClose={mainHandleClose}><MenuList>
+                        <Link to="/help"><MenuItem>How to use SOS</MenuItem></Link>
+                        <Link to="/customsignals"><MenuItem>Customize Emergency Buttons</MenuItem></Link>
+                        <Link to="/custommsg"><MenuItem>Customize Messages</MenuItem></Link>
+                        <Link to=""><MenuItem></MenuItem></Link>
+                    </MenuList>
+                    </Popover>
 
-                    <ClickAwayListener onClickAway={() => handleClickAway("profileMenu")}>
-                        <Popover id="profileMenu" open={openProfileMenu} anchorEl={menuButton}><MenuList>
-                            <Link to='/pages/EditProfile'><MenuItem>Edit Profile</MenuItem></Link>
-                            <Link to=""><MenuItem></MenuItem></Link>
-                            <Link to=""><MenuItem></MenuItem></Link>
-                        </MenuList>
-                        </Popover>
-                    </ClickAwayListener>
-
-
-
+                    <Popover open={openProfileMenu} anchorEl={avatar} onClose={profileHandleClose}><MenuList>
+                        <Link to='/profile'><MenuItem>Edit Profile</MenuItem></Link>
+                        <Link to="/register"><MenuItem>Register</MenuItem></Link>
+                        <Link to=""><MenuItem></MenuItem></Link>
+                    </MenuList>
+                    </Popover>
 
                 </Toolbar>
             </AppBar>

@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@m
 import React from 'react';
 import { customTexts } from '../app/model';
 
-const CustomeTextView = () => {
+const CustomTextView = () => {
   const rows: customTexts[] = []
   return (
     <React.Fragment>
@@ -31,4 +31,4 @@ const CustomeTextView = () => {
   );
 };
 
-export default CustomeTextView;
+export default CustomTextView;
