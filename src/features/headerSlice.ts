@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = { popoverState: false }
+const initialState = {
+    popoverState: {
+        mainMenu: false,
+        profileMenu: false
+    }
+}
+
 
 
 export const headerSlice =
@@ -8,9 +14,11 @@ export const headerSlice =
         name: 'header',
         initialState,
         reducers: {
-            togglePopover: (state, action: PayloadAction<boolean>) => { state.popoverState = action.payload },
+            togglePopover: (state: any, action: PayloadAction<object>) => { state.popoverState = { ...state.popoverState, ...action.payload } }
+
         }
-    }
+    },
+
     )
 
 export const { togglePopover } = headerSlice.actions;

@@ -15,8 +15,8 @@ interface googleUser {
 }
 
 export default function RegistrationForm({ sosUser }: googleUser) {
-  const dispatch = useDispatch()
-  const userProfile: Profile = useSelector(selectProfile)
+  const dispatch = useDispatch();
+  const userProfile: Profile = useSelector(selectProfile);
   console.log(userProfile)
   const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null | Date>(
     dayjs());

@@ -37,12 +37,8 @@ const router = createBrowserRouter(
       <Route path="/allsignal" element={<AllSignals />}>All Signal Status</Route>
       <Route path="/signaldetails" element={<SignalDetails />}>one Signal Details</Route>
       <Route path="/replytoSignal" element={<AnsToSignals />}> </Route>
-      <Route path="/regwizard" element={<CompleteReg />}>
-        Initial registration step by step
-      </Route>
-      <Route path="/register" element={<Registration />}>
-        create an account
-      </Route>
+      <Route path="/regwizard" element={<CompleteReg />}>Initial Setup</Route>
+      <Route path="/register" element={<Registration />}>Create an account</Route>
       <Route path="*" element={<NotFound />}></Route>
     </Route>
   )
@@ -53,11 +49,9 @@ function App() {
     document.title = 'SOS Help';
   }, []);
 
- 
 
   return (
     <div className="App">
-
       <RouterProvider router={router} />
     </div>
   );
