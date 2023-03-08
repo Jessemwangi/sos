@@ -22,7 +22,7 @@ import PaymentForm from './RecipientEntryForm';
 import CustomTextForm from './CustomTextEntryForm';
 import { selectSosUser } from '../features/userSlice';
 import { Guser } from '../app/model';
-import CustomeSignals from './CustomeSignals';
+import CustomeSignals from './CustomSignals';
 import WrapUp from './WrapUp';
 // import { selectProfile } from '../features/Profile';
 // import { saveProfile } from '../features/Profile';

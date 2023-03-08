@@ -11,11 +11,11 @@ import {
 import { selectSosUser, SignIn, SignOut } from './features/userSlice';
 import { Guser } from './app/model';
 import jwtDecode from 'jwt-decode';
-import Layout from './pages/Layout';
+import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
 import EditProfile from './pages/EditProfile';
 import ManageRecipients from './pages/ManageRecipients';
-import CustomeMsgs from './pages/CustomeMsgs';
+import CustomeMsgs from './pages/CustomMsgs';
 import SetPinnedSignals from './pages/SetPinnedSignals';
 import HowTo from './HowTo';
 import AnsToSignals from './pages/AnsToSignals';
