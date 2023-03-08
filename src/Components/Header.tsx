@@ -6,12 +6,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { togglePopover } from '../features/headerSlice';
 import { Link } from 'react-router-dom';
 import { ClickAwayListener } from '@mui/base';
+import { SignIn, SignOut, selectSosUser } from '../features/userSlice';
+import { Guser } from '../app/model';
+import jwtDecode from 'jwt-decode';
+import { useEffect } from 'react';
 
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const menuButton = document.getElementById('menuButton');
+    const sosUser: Guser = useSelector(selectSosUser)
     let open = useSelector((state: any) => state.header.popoverState);
 
     function openMenu() {
@@ -21,6 +26,39 @@ const Header = () => {
     function handleClickAway() {
         dispatch(togglePopover(false));
     }
+
+  
+  
+  
+    useEffect(() => {
+      const handleCallback = (response: any) => {
+        const userSignObject: any = jwtDecode(response.credential);
+        const userObject: Guser = {
+          name: userSignObject.family_name + ' ' + userSignObject.given_name,
+          email: userSignObject.email,
+          picture: userSignObject.picture,
+          iat: userSignObject.iat,
+          iss: userSignObject.iss,
+          jti: userSignObject.jti
+        }
+  
+        dispatch(SignIn(userObject));
+      }
+  
+      window.google.accounts.id.initialize({
+        client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
+        callback: handleCallback
+      });
+  
+      const SignInButton = document.getElementById('signInDiv')!;
+      google.accounts.id.renderButton(
+        SignInButton,
+        {
+          theme: "outline",
+          size: "large",
+          type: "standard"
+        })
+    }, [dispatch]);
 
     return (
         <div className='header'>
@@ -33,6 +71,15 @@ const Header = () => {
                         <Button onClick={() => navigate('/recipients')}>Manage Contacts</Button>
                         <Button id="menuButton" onClick={openMenu}><MenuIcon /></Button>
                         <Button><Avatar variant="rounded" onClick={() => navigate('/profile')} /></Button>
+                        {sosUser.email ?
+        (<>
+          <img src={sosUser.picture} alt={sosUser.name} />
+          <button id="signOutButton" onClick={() => dispatch(SignOut())}>
+            Sign Out</button>
+        </>)
+        : (
+          <div id='signInDiv'></div>
+        )}
                     </Stack>
 
                     <ClickAwayListener onClickAway={handleClickAway}>

@@ -53,52 +53,11 @@ function App() {
     document.title = 'SOS Help';
   }, []);
 
-  const dispatch = useDispatch();
-  const sosUser: Guser = useSelector(selectSosUser)
-
-
-
-  useEffect(() => {
-    const handleCallback = (response: any) => {
-      const userSignObject: any = jwtDecode(response.credential);
-      const userObject: Guser = {
-        name: userSignObject.family_name + ' ' + userSignObject.given_name,
-        email: userSignObject.email,
-        picture: userSignObject.picture,
-        iat: userSignObject.iat,
-        iss: userSignObject.iss,
-        jti: userSignObject.jti
-      }
-
-      dispatch(SignIn(userObject));
-    }
-
-    window.google.accounts.id.initialize({
-      client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
-      callback: handleCallback
-    });
-
-    const SignInButton = document.getElementById('signInDiv')!;
-    google.accounts.id.renderButton(
-      SignInButton,
-      {
-        theme: "outline",
-        size: "large",
-        type: "standard"
-      })
-  }, [dispatch]);
+ 
 
   return (
     <div className="App">
-      {sosUser.email ?
-        (<>
-          <img src={sosUser.picture} alt={sosUser.name} />
-          <button id="signOutButton" onClick={() => dispatch(SignOut())}>
-            Sign Out</button>
-        </>)
-        : (
-          <div id='signInDiv'></div>
-        )}
+
       <RouterProvider router={router} />
     </div>
   );

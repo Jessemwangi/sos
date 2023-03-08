@@ -10,16 +10,29 @@ import {
   addDoc,QuerySnapshot, DocumentData,
 } from "@firebase/firestore";
 import { db } from "../../DataLayer/FirestoreInit";
+import { LoadingState, Profile } from "../model";
 
 interface Data {
   [key: string]: any;
   response:DocumentData
 }
 
+interface DataResponse {
+  data: DocumentData[];
+}
+
+interface DataError {
+  message: string;
+}
+
+const initialLoadingState: LoadingState = true;
+
+
 const GetData = (collectionName:string) => {
   const [response, setResponse] = useState<DocumentData>([]);
   const [error, setError] = useState<unknown>({});
-  const [Loading, setLoading] = useState(true);
+
+  const [loadingState, setLoading] = useState<LoadingState>(initialLoadingState);
 
   useEffect(() => {
     async function fetchData() {
@@ -39,14 +52,14 @@ const GetData = (collectionName:string) => {
     fetchData();
   }, [collectionName]);
 
-  return { response, error, Loading };
+  return { response, error, loadingState };
 };
 
 const GetOneData = (collectionName:string, getId:string) => {
   // const db = getFirestore();
 
   const [response, setResponse] = useState<DocumentData | string>([]);
-  const [Loading, setLoading] = useState(true);
+  const [loadingState, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,12 +81,12 @@ const GetOneData = (collectionName:string, getId:string) => {
     };
     fetchData();
   }, [collectionName, getId]);
-  return { response, Loading };
+  return { response, loadingState };
 };
 
 const PostData = async (collectionName:string, data:any) => {
   const [response, setResponse] = useState({});
-  const [Loading, setLoading] = useState(true);
+  const [loadingState, setLoading] = useState(true);
 
   try {
     setLoading(true);
@@ -94,7 +107,7 @@ const PostData = async (collectionName:string, data:any) => {
     setLoading(false);
   }
 
-  return { response, Loading };
+  return { response, loadingState };
 };
 
 const PostData_With_Id = async (collectionName:string, data:any, idColName:number) => { 
@@ -102,7 +115,7 @@ const PostData_With_Id = async (collectionName:string, data:any, idColName:numbe
 
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadingState, setIsLoading] = useState(true);
   useEffect(() => {
     const postData = async () => {
       try {
@@ -120,12 +133,13 @@ const PostData_With_Id = async (collectionName:string, data:any, idColName:numbe
     postData();
   }, [collectionName, data, response]);
 
-  return { response, error, isLoading };
+  return { response, error, loadingState };
 };
 
-const Get_One = (collectionName:string, id:string, value:any) => {
+const Get_One = (collectionName: string, id: string, value: any) => {
+  console.log(collectionName,id,value)
   const [response, setResponse] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingState, setLoading] = useState(true);
   const [docId, setDocId] = useState<string>();
   const ref = collection(db, collectionName);
   const [error, setError] = useState<string>('');
@@ -139,6 +153,7 @@ const Get_One = (collectionName:string, id:string, value:any) => {
         const items: any = [];
         
         querySnapshot.forEach((doc) => {
+          console.log(doc)
           setDocId(doc.id);
           items.push(doc.data());
         });
@@ -152,14 +167,14 @@ const Get_One = (collectionName:string, id:string, value:any) => {
     } catch (error:any) {
       setError(` Error occured ${error.message}`);
     }
-  }, []);
-  return { response, docId, loading, error };
+  }, [id, value]);
+  return { response, docId, loadingState, error };
 };
 
 export const GetDataByTwoColumns = (collectionName: string, column1name: string, value1: string | number | boolean, column2name: string, value2: string | number | boolean) => {
   const [response, setResponse] = useState<DocumentData[]>([]);
   const [error, setError] = useState<unknown>({});
-  const [Loading, setLoading] = useState<boolean>(true);
+  const [loadingState, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getWithTwo = async () => {
@@ -167,8 +182,9 @@ export const GetDataByTwoColumns = (collectionName: string, column1name: string,
         setLoading(true);
         const q = query(collection(db, collectionName), where(column1name, '==', value1), where(column2name, '==', value2));
         const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-        console.log(querySnapshot);
+        console.log(querySnapshot.docs);
         const data = querySnapshot.docs.map(doc => doc.data());
+
         setResponse(data);
         setLoading(false);
       } catch (error:any) {
@@ -180,7 +196,45 @@ export const GetDataByTwoColumns = (collectionName: string, column1name: string,
     getWithTwo();
   }, [collectionName, column1name, column2name, value1, value2]);
 
-  return { response, error, Loading };
+  return { response, error, loadingState };
+};
+
+export const GetDataByTwoColumns2 = (
+  collectionName: string,
+  column1name: string,
+  value1: string | number | boolean,
+  column2name: string,
+  value2: string | number | boolean
+) => {
+  const [response, setResponse] = useState<DataResponse>({ data: [] });
+  const [error, setError] = useState<DataError>({ message: "" });
+  const [loadingState, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const getWithTwo = async () => {
+      try {
+        setLoading(true);
+        const q = query(
+          collection(db, collectionName),
+          where(column1name, "==", value1),
+          where(column2name, "==", value2)
+        );
+        const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+        console.log(querySnapshot.docs);
+        const data = querySnapshot.docs.map((doc) => doc.data());
+
+        setResponse({ data });
+        setLoading(false);
+      } catch (error:any) {
+        setError({ message: `Error getting data from Firestore: ${error.message}` });
+        console.error("Error getting data from Firestore:", error);
+        setLoading(false);
+      }
+    };
+    getWithTwo();
+  }, [collectionName, column1name, column2name, value1, value2]);
+
+  return { response, error, loadingState };
 };
 
 export {  GetData, GetOneData, PostData,PostData_With_Id , Get_One };

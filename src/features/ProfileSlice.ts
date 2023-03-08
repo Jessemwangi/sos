@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Profile } from "../app/model";
+import { LoadingState, Profile } from "../app/model";
+import { GetData, PostData } from "../app/functions/DbFunctions";
 
-
-
-const init: Profile = {
+const init: Profile= {
   id: null,
   firstname: "",
   lastname: "",
@@ -22,15 +21,75 @@ const init: Profile = {
   country: "",
   createdon: null,
 };
+
+const initialLoadingState: LoadingState =  true
+
+
+interface ProfileState {
+  userProfile: Profile;
+  loadingState: LoadingState;
+}
+
+interface DataFetchResponse {
+  response: Profile | null
+  error: string | null
+  loading:LoadingState
+}
+const initialState: ProfileState = {
+  userProfile: init,
+  loadingState: initialLoadingState,
+};
+
 export const profileSlice = createSlice({
   name: "profile",
     initialState: {
-        userProfile: init,
+      userProfile: initialState.userProfile,
+      loadingState: initialState.loadingState,
     } ,
 
-    reducers: {
+  reducers: {
+    GetProfile: (state) => {
+     
+        const { response, error, loadingState }= GetData('profile')
+        try {
+          if (response)
+          {
+            const UserProfile:Profile = {
+              id: response.id,
+              firstname: response.firstname,
+              lastname: response.lastname,
+              contact: response.contact,
+              altcontact: response.altcontact,
+              occupation: response.occupation,
+              dob: response.dob,
+              uid: response.uid,
+              email: response.email,
+              username: response.username,
+              addressline1: response.addressline1,
+              addressline2: response.addressline2,
+              city: response.city,
+              state_province: response.state_province,
+              postalcode: response.postalcode,
+              country: response.country,
+              createdon: response.createdon
+            }
+            state.userProfile = { ...UserProfile }
+            state.loadingState = loadingState
+          }
+          else
+            throw new Error("not loaded");
+            
+        } catch (error:any) {
+          throw new Error (error.message)
+          
+        }
+        
+      
+      },
         addProfile: (state, action) => {
-            state.userProfile = { ...state.userProfile,...action.payload ,createdon : new Date()};
+          state.userProfile = { ...state.userProfile, ...action.payload, createdon: new Date() };
+          PostData('profile', state.userProfile)
+          state.loadingState=false
       },
     saveProfile: {
       reducer: (state, action) => {

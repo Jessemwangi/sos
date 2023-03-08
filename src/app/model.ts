@@ -8,6 +8,8 @@ export interface Guser {
     jti: string
 }
 
+export type LoadingState = boolean 
+
 export interface Profile {
     id: number | null
     firstname: string,
