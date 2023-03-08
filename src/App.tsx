@@ -17,7 +17,7 @@ import EditProfile from './pages/EditProfile';
 import ManageRecipients from './pages/ManageRecipients';
 import CustomeMsgs from './pages/CustomeMsgs';
 import SetPinnedSignals from './pages/SetPinnedSignals';
-import HowTO from './HowTO';
+import HowTo from './HowTo';
 import AnsToSignals from './pages/AnsToSignals';
 import NotFound from './pages/NotFound';
 import AllSignals from './pages/AllSignals';
@@ -29,37 +29,21 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<Dashboard />}></Route>
-      <Route path="/profile" element={<EditProfile />}>
-        Manage Profile
-      </Route>
+      <Route path="/profile" element={<EditProfile />}> Manage Profile</Route>
       <Route path="/recipients" element={<ManageRecipients />}> Manage Recipients</Route>
-      <Route path="/Customemsg" element={<CustomeMsgs />}>
-        Custmize Messages
-      </Route>
-      <Route path="/pinsignals" element={<SetPinnedSignals />}>
-        View Recipe
-      </Route>
-      <Route path="/help" element={<HowTO />}>
-        Help and docs
-      </Route>
-      <Route path="/allsignal" element={<AllSignals />}>
-        All Signal Status
-      </Route>
-      <Route path="/signaldetails" element={<SignalDetails />}>
-        one Signal Details
-      </Route>
-      <Route path="/replytoSignal" element={<AnsToSignals />}>
-        Not Found
-      </Route>
+      <Route path="/Customemsg" element={<CustomeMsgs />}>Customize Messages</Route>
+      <Route path="/pinsignals" element={<SetPinnedSignals />}>View Recipe</Route>
+      <Route path="/help" element={<HowTo />}>Help and Documentation</Route>
+      <Route path="/allsignal" element={<AllSignals />}>All Signal Status</Route>
+      <Route path="/signaldetails" element={<SignalDetails />}>one Signal Details</Route>
+      <Route path="/replytoSignal" element={<AnsToSignals />}> </Route>
       <Route path="/regwizard" element={<CompleteReg />}>
         Initial registration step by step
-      </Route>
-      <Route path="*" element={<NotFound />}>
-        Not Found
       </Route>
       <Route path="/register" element={<Registration />}>
         create an account
       </Route>
+      <Route path="*" element={<NotFound />}></Route>
     </Route>
   )
 );

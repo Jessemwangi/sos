@@ -2,47 +2,76 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import "../styles/SOSMenu.css";
 import { selectSos } from "../features/sosMenuSlice";
+import { signalsList } from '../app/model';
 
-interface Emergency {
-    text: string,
-    emergencyId: number
-}
+
+
+const emergencyList: signalsList[] = [
+    {
+        signalId: 0,
+        uid: '',
+        name: 'Fire',
+        recipientId: ['0', '1'],
+        presetMsg: 'string',
+        cstTextId: 0,
+        createdAt: new Date()
+    },
+    {
+        signalId: 1,
+        uid: '',
+        name: 'Medical Emergency',
+        recipientId: ['0', '1', '3'],
+        presetMsg: 'string',
+        cstTextId: 0,
+        createdAt: new Date()
+    },
+
+    {
+        signalId: 2,
+        uid: '',
+        name: 'Home Invasion',
+        recipientId: ['0', '1', '3'],
+        presetMsg: 'string',
+        cstTextId: 0,
+        createdAt: new Date()
+    },
+    {
+        signalId: 3,
+        uid: '',
+        name: 'Domesetic Violence',
+        recipientId: ['0', '1', '3'],
+        presetMsg: 'string',
+        cstTextId: 0,
+        createdAt: new Date()
+    }, {
+        signalId: 4,
+        uid: '4',
+        name: 'Custom Field',
+        recipientId: ['0', '1', '3'],
+        presetMsg: 'string',
+        cstTextId: 0,
+        createdAt: new Date()
+    }
+]
+
 
 //TODO: fetch emergency list from db
-const emergencyList: Emergency[] = [{
-    text: "Fire",
-    emergencyId: 0
-},
-{
-    text: "Home Invasion",
-    emergencyId: 1
-},
-{
-    text: "Domestic Violence",
-    emergencyId: 2
-},
-{
-    text: "Medical Emergency",
-    emergencyId: 3
-},
-{
-    text: "Custom Field",
-    emergencyId: 4
-},
-]
+
 
 const SOSMenu = () => {
     const dispatch = useDispatch();
+
     function clickHandler(e: any) {
         dispatch(selectSos(e.target.key));
         e.target.classList.toggle('selected');
-
     }
+
+
 
     return (
         <div className="sosMenu">
             {emergencyList.map((item) => (
-                <button key={item.emergencyId} onClick={clickHandler}>{item.text}</button>))}
+                <button key={item.signalId} onClick={clickHandler}>{item.name}</button>))}
 
 
 
