@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@m
 import React from 'react';
 import { customTexts } from '../app/model';
 
-const CustomeTextView = () => {
+const CustomTextView = () => {
   const rows: customTexts[] = []
   return (
     <React.Fragment>
@@ -18,17 +18,19 @@ const CustomeTextView = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.length != 0 ? (rows.map((row) => (
             <TableRow key={row.cstTextId}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
-
             </TableRow>
-          ))}
+          )))
+            : <></>
+
+          }
         </TableBody>
       </Table>
     </React.Fragment>
   );
 };
 
-export default CustomeTextView;
+export default CustomTextView;

@@ -1,11 +1,13 @@
 import React from 'react';
+import CustomTextView from '../Components/CustomTextView';
 
-const CustomeMsgs = () => {
+const CustomMsgs = () => {
     return (
         <div>
+            <CustomTextView />
             
         </div>
     );
 };
 
-export default CustomeMsgs;
+export default CustomMsgs;

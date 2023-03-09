@@ -26,14 +26,13 @@ export const userSlice = createSlice({
       state.users.jti = action.payload.jti;
       state.users.iss = action.payload.iss;
     },
-     GetUserPRofile: (state)=>{
-       const dispatch = useDispatch();
+    GetUserPRofile: (state) => {
+      const dispatch = useDispatch();
       //  dispatch(GetProfile())
-       
+
     },
     SignOut: (state) => {
-     
-      state.users = { ...init };
+      state.users = {...init};
     },
   },
 });

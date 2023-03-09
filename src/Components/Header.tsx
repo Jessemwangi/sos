@@ -3,9 +3,8 @@ import { AppBar, Avatar, Toolbar, Typography, Stack, Button, Popover, MenuList, 
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { togglePopover } from '../features/headerSlice';
+import { togglePopover, closePopover } from '../features/headerSlice';
 import { Link } from 'react-router-dom';
-import { ClickAwayListener } from '@mui/base';
 import { SignIn, SignOut, selectSosUser } from '../features/userSlice';
 import { Guser } from '../app/model';
 import jwtDecode from 'jwt-decode';
@@ -15,82 +14,89 @@ import { useEffect } from 'react';
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const menuButton = document.getElementById('menuButton');
+    const menuButton = document.getElementById('mainMenu');
+    const avatar = document.getElementById('profileMenu');
     const sosUser: Guser = useSelector(selectSosUser)
-    let open = useSelector((state: any) => state.header.popoverState);
+    let openMainMenu = useSelector((state: any) => state.header.popoverState.mainMenu);
+    let openProfileMenu = useSelector((state: any) => state.header.popoverState.profileMenu);
 
-    function openMenu() {
-        dispatch(togglePopover(true));
+    function openMenu(e: any) {
+        dispatch(togglePopover({ [e.currentTarget.id]: true }));
     }
 
-    function handleClickAway() {
-        dispatch(togglePopover(false));
+    function mainHandleClose() {
+        dispatch(closePopover({ mainMenu: false }));
+
+    }
+    function profileHandleClose() {
+        dispatch(closePopover({ profileMenu: false }));
     }
 
-  
-  
-  
+
     useEffect(() => {
-      const handleCallback = (response: any) => {
-        const userSignObject: any = jwtDecode(response.credential);
-        const userObject: Guser = {
-          name: userSignObject.family_name + ' ' + userSignObject.given_name,
-          email: userSignObject.email,
-          picture: userSignObject.picture,
-          iat: userSignObject.iat,
-          iss: userSignObject.iss,
-          jti: userSignObject.jti
+        const handleCallback = (response: any) => {
+            const userSignObject: any = jwtDecode(response.credential);
+            const userObject: Guser = {
+                name: userSignObject.family_name + ' ' + userSignObject.given_name,
+                email: userSignObject.email,
+                picture: userSignObject.picture,
+                iat: userSignObject.iat,
+                iss: userSignObject.iss,
+                jti: userSignObject.jti
+            }
+
+            dispatch(SignIn(userObject));
         }
-  
-        dispatch(SignIn(userObject));
-      }
-  
-      window.google.accounts.id.initialize({
-        client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
-        callback: handleCallback
-      });
-  
-      const SignInButton = document.getElementById('signInDiv')!;
-      google.accounts.id.renderButton(
-        SignInButton,
-        {
-          theme: "outline",
-          size: "large",
-          type: "standard"
-        })
+
+        window.google.accounts.id.initialize({
+            client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
+            callback: handleCallback
+        });
+
+        const SignInButton = document.getElementById('signInDiv')!;
+
+        google.accounts.id.renderButton(
+            SignInButton,
+            {
+                theme: "outline",
+                size: "large",
+                type: "standard"
+            })
     }, [dispatch]);
 
     return (
         <div className='header'>
             <AppBar className="appBar" position="static"><h1>Menu</h1>
                 <Toolbar className="toolBar">
-
-                    <Link to='/'><Typography variant="h5" sx={{color: 'white'}}>SOS Service</Typography></Link>
+                    <Link to='/'><Typography variant="h5" sx={{ color: 'white' }}>SOS Service</Typography></Link>
                     <Stack direction="row">
+                        <Button><MenuIcon id="mainMenu" onClick={openMenu} /></Button>
                         <Button onClick={() => navigate('/')}>Dashboard</Button>
                         <Button onClick={() => navigate('/recipients')}>Manage Contacts</Button>
-                        <Button id="menuButton" onClick={openMenu}><MenuIcon /></Button>
-                        <Button><Avatar variant="rounded" onClick={() => navigate('/profile')} /></Button>
-                        {sosUser.email ?
-        (<>
-          <img src={sosUser.picture} alt={sosUser.name} />
-          <button id="signOutButton" onClick={() => dispatch(SignOut())}>
-            Sign Out</button>
-        </>)
-        : (
-          <div id='signInDiv'></div>
-        )}
+                        <Button><Avatar id="profileMenu" variant="rounded" onClick={openMenu} /></Button>
+                        {sosUser.email !== "" ?
+                            (<><Button id="signOutButton" onClick={() => dispatch(SignOut())}><img className="userImage" src={sosUser.picture} alt={sosUser.name} />Sign Out</Button>
+                            </>)
+                            : (
+                                <Button id='signInDiv'></Button>
+                            )}
                     </Stack>
 
-                    <ClickAwayListener onClickAway={handleClickAway}>
-                        <Popover open={open} anchorEl={menuButton}><MenuList>
-                            <Link to="/help"><MenuItem>How to use SOS</MenuItem></Link>
-                            <Link to=""><MenuItem>Custom Emergency Buttons</MenuItem></Link>
-                            <Link to=""><MenuItem></MenuItem></Link>
-                            <Link to=""><MenuItem></MenuItem></Link>
-                        </MenuList>
-                        </Popover>
-                    </ClickAwayListener>
+                    <Popover id="mainMenu" open={openMainMenu} anchorEl={menuButton} onClose={mainHandleClose}><MenuList>
+                        <Link to="/help"><MenuItem>How to use SOS</MenuItem></Link>
+                        <Link to="/customsignals"><MenuItem>Customize Emergency Buttons</MenuItem></Link>
+                        <Link to="/custommsg"><MenuItem>Customize Messages</MenuItem></Link>
+                        <Link to=""><MenuItem></MenuItem></Link>
+                    </MenuList>
+                    </Popover>
+
+                    <Popover open={openProfileMenu} anchorEl={avatar} onClose={profileHandleClose}><MenuList>
+                        <Link to='/profile'><MenuItem>Edit Profile</MenuItem></Link>
+                        <Link to="/register"><MenuItem>Register</MenuItem></Link>
+                        <Link to=""><MenuItem></MenuItem></Link>
+                    </MenuList>
+                    </Popover>
+
                 </Toolbar>
             </AppBar>
         </div>
