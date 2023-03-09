@@ -6,12 +6,13 @@ export interface Guser {
     iat: number
     iss: string
     jti: string
+    sub: number | string
 }
 
 export type LoadingState = boolean 
 
 export interface Profile {
-    id: number | null
+    id: number | string
     firstname: string,
     lastname: string,
     contact: number | null,

@@ -33,8 +33,8 @@ const RecipientsViews = () => {
   }
 
   function handleChange(e: any): any {
-    console.log(e.target.value);
-    console.log(recipients[currentIndex]);
+    // console.log(e.target.value);
+    // console.log(recipients[currentIndex]);
     setContact({ ...contact, [e.target.name]: e.target.value });
     console.log(contact);
   }

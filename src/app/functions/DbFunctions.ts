@@ -84,30 +84,32 @@ const GetOneData = (collectionName:string, getId:string) => {
   return { response, loadingState };
 };
 
-const PostData = async (collectionName:string, data:any) => {
-  const [response, setResponse] = useState({});
-  const [loadingState, setLoading] = useState(true);
-
+ const PostData = async (collectionName:string, data:any):Promise<string>=> {
+  // const [response, setResponse] = useState({});
+  // const [loadingState, setLoading] = useState(true);
+   let rt: string = '';
   try {
-    setLoading(true);
+    // setLoading(true);
     await addDoc(collection(db, collectionName), data).then((docRef) => {
-      setResponse({
-        message: "Document has been added successfully",
-        responseCode: 200,
-        ref: docRef.id,
-      });
-      setLoading(false);
+      // setResponse({
+      //   message: "Document has been added successfully",
+      //   responseCode: 200,
+      //   ref: docRef.id,
+      // });
+      // setLoading(false);
+      rt = "Document has been added successfully";
     });
-  } catch (error) {
-    setResponse({
-      message: Error(`An error occured...", ${error}`),
-      responseCode: 500,
-      ref: 0,
-    });
-    setLoading(false);
+  } catch (error:any) {
+    // setResponse({
+    //   message: Error(`An error occured...", ${error}`),
+    //   responseCode: 500,
+    //   ref: 0,
+    // });
+    // setLoading(false);
+    rt= error.message
   }
-
-  return { response, loadingState };
+   return rt;
+  // return { response, loadingState };
 };
 
 const PostData_With_Id = async (collectionName:string, data:any, idColName:number) => { 
@@ -137,7 +139,7 @@ const PostData_With_Id = async (collectionName:string, data:any, idColName:numbe
 };
 
 const Get_One = (collectionName: string, id: string, value: any) => {
-  console.log(collectionName,id,value)
+  // console.log(collectionName,id,value)
   const [response, setResponse] = useState(null);
   const [loadingState, setLoading] = useState(true);
   const [docId, setDocId] = useState<string>();
@@ -153,7 +155,7 @@ const Get_One = (collectionName: string, id: string, value: any) => {
         const items: any = [];
         
         querySnapshot.forEach((doc) => {
-          console.log(doc)
+          // console.log(doc)
           setDocId(doc.id);
           items.push(doc.data());
         });
@@ -182,7 +184,7 @@ export const GetDataByTwoColumns = (collectionName: string, column1name: string,
         setLoading(true);
         const q = query(collection(db, collectionName), where(column1name, '==', value1), where(column2name, '==', value2));
         const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-        console.log(querySnapshot.docs);
+        // console.log(querySnapshot.docs);
         const data = querySnapshot.docs.map(doc => doc.data());
 
         setResponse(data);
@@ -199,42 +201,32 @@ export const GetDataByTwoColumns = (collectionName: string, column1name: string,
   return { response, error, loadingState };
 };
 
-export const GetDataByTwoColumns2 = (
+export const GetDataByTwoColumns2 = async (
   collectionName: string,
   column1name: string,
   value1: string | number | boolean,
   column2name: string,
   value2: string | number | boolean
 ) => {
-  const [response, setResponse] = useState<DataResponse>({ data: [] });
-  const [error, setError] = useState<DataError>({ message: "" });
-  const [loadingState, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const getWithTwo = async () => {
+  // const [response, setResponse] = useState<DataResponse>({ data: [] });
+  // const [error, setError] = useState<DataError>({ message: "" });
+  // const [loadingState, setLoading] = useState<boolean>(true);
+  let response: string | DataResponse | DataError = '';
       try {
-        setLoading(true);
         const q = query(
           collection(db, collectionName),
           where(column1name, "==", value1),
           where(column2name, "==", value2)
         );
         const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-        console.log(querySnapshot.docs);
+        // console.log(querySnapshot.docs);
         const data = querySnapshot.docs.map((doc) => doc.data());
 
-        setResponse({ data });
-        setLoading(false);
+        response={ data };
       } catch (error:any) {
-        setError({ message: `Error getting data from Firestore: ${error.message}` });
-        console.error("Error getting data from Firestore:", error);
-        setLoading(false);
+        response = { message: `Error getting data from Firestore: ${error.message}` }
       }
-    };
-    getWithTwo();
-  }, [collectionName, column1name, column2name, value1, value2]);
-
-  return { response, error, loadingState };
+  return  response
 };
 
 export {  GetData, GetOneData, PostData,PostData_With_Id , Get_One };
