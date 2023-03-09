@@ -15,8 +15,8 @@ const Layout = () => {
     //   const { response, docId, loadingState, error } =  Get_One('users', 'age',"12") ;
     // const age: number = 12;
     // const { response, loadingState} =GetOneData('users','dqFH6J3A9EHy2HkDvXrG')
-    // const { response, error, loadingState } = GetData('users');
-     const { response, error, loadingState } =  GetDataByTwoColumns2('users', 'age','30','name','jesse',) ;
+    const { response, error, loadingState } = GetData('users');
+    //  const { response, error, loadingState } =  GetDataByTwoColumns2('users', 'age','30','name','jesse',) ;
 
     // React.useEffect(() => {
     //     const FetchData = async () => {
@@ -32,7 +32,7 @@ const Layout = () => {
     //     };
     //     FetchData();
     //   }, []);
-     console.log('Loading', loadingState, 'error....', error, 'response.....', response)
+    //console.log('Loading', loadingState, 'error....', error, 'response.....', response)
     // console.log('Loading', loadingState,  'response.....', response)
     return (
         <div className="layout">

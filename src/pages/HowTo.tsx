@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import './styles/HowTo.css';
+import '../styles/HowTo.css';
 
 const HowTo = () => {
     return (
