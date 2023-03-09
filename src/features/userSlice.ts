@@ -10,6 +10,7 @@ const init: Guser = {
   iat: 0,
   iss: "",
   jti: "",
+  sub:'',
 };
 
 export const userSlice = createSlice({
@@ -25,11 +26,12 @@ export const userSlice = createSlice({
       state.users.iat = action.payload.iat;
       state.users.jti = action.payload.jti;
       state.users.iss = action.payload.iss;
+      state.users.sub = action.payload.sub;
     },
-    GetUserPRofile: (state) => {
-      const dispatch = useDispatch();
-      //  dispatch(GetProfile())
-
+     GetUserPRofile: (state)=>{
+       const dispatch = useDispatch();
+        // dispatch(GetProfile())
+       
     },
     SignOut: (state) => {
       state.users = {...init};

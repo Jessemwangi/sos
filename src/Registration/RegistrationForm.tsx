@@ -9,15 +9,30 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile, addProfile } from '../features/ProfileSlice';
+import { Button } from '@mui/material';
+import { GetDataByTwoColumns2, PostData } from '../app/functions/DbFunctions';
 
 interface googleUser {
   sosUser: Guser
 }
 
 export default function RegistrationForm({ sosUser }: googleUser) {
-  const dispatch = useDispatch();
-  const userProfile: Profile = useSelector(selectProfile);
-  console.log(userProfile)
+  const FetchProfile = async () => {
+    const fireStoreUser = await GetDataByTwoColumns2('profile','id','107318021891132858963','email','jessejzee@gmail.com')
+ 
+    console.log(fireStoreUser)
+  }
+  React.useEffect(() => {
+    
+  
+    return () => {
+      FetchProfile()
+    }
+  }, [])
+  
+  const dispatch = useDispatch()
+  const userProfile: Profile = useSelector(selectProfile)
+  // console.log(userProfile)
   const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null | Date>(
     dayjs());
 
@@ -28,6 +43,8 @@ export default function RegistrationForm({ sosUser }: googleUser) {
         firstname: sosUser.name.split(' ')[1],
         lastname: sosUser.name.split(' ')[0],
         username: sosUser.name,
+        id: sosUser.sub,
+        uid:sosUser.sub,
       }))
 
     }
@@ -36,13 +53,22 @@ export default function RegistrationForm({ sosUser }: googleUser) {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     dispatch(addProfile({ [e.target.name]: e.target.value }))
   }
+
+  const HandlePostProfile = async () => {
+    if (userProfile.id) {
+      // UPdate()
+    }
+    else {
+      const response:string = await PostData('profile', userProfile)
+      console.log('response',response)
+    }
+  }
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
       </Typography>
       <Grid container spacing={3}>
-        <>{console.log(userProfile)}
-        </>
+       
         <Grid item xs={12} sm={6}>
           <TextField
             required
@@ -207,12 +233,15 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             onChange={(e) => handleChange(e)}
           />
         </Grid>
-        {/* <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
-          />
-        </Grid> */}
+        <Grid item xs={12}>
+        <Button
+                    variant="contained"
+                    onClick={HandlePostProfile}
+                    sx={{ mt: 3, ml: 1 }}
+                  >
+                  Post Profile
+                  </Button>
+        </Grid> 
       </Grid>
     </React.Fragment>
   );

@@ -3,7 +3,7 @@ import { LoadingState, Profile } from "../app/model";
 import { GetData, PostData } from "../app/functions/DbFunctions";
 
 const init: Profile= {
-  id: null,
+  id: '',
   firstname: "",
   lastname: "",
   contact: null,
@@ -50,7 +50,7 @@ export const profileSlice = createSlice({
   reducers: {
     GetProfile: (state) => {
      
-        const { response, error, loadingState }= GetData('profile')
+        const { response, error, loadingState }= GetData('profile',)
         try {
           if (response)
           {
@@ -87,13 +87,14 @@ export const profileSlice = createSlice({
       
       },
         addProfile: (state, action) => {
-          state.userProfile = { ...state.userProfile, ...action.payload, createdon: new Date() };
+          state.userProfile = { ...state.userProfile, ...action.payload, createdon: new Date()};
           PostData('profile', state.userProfile)
           state.loadingState=false
-      },
+    },
     saveProfile: {
       reducer: (state, action) => {
-        state.userProfile = { ...action.payload };
+        state.userProfile = { ...action.payload, id:Math.random().toString() };
+
       },
 
       prepare(data: Profile): any {
@@ -103,6 +104,7 @@ export const profileSlice = createSlice({
         // const altcontact = data.altcontact;
         // const occupation = data.occupation;
         // const dob = data.dob;
+        // const id = Math.random()
         // const uid = data.uid;
         // const email = data.email;
         // const userName = data.firstname + data.lastname;
@@ -146,6 +148,7 @@ export const profileSlice = createSlice({
             // city,
             // state_province,
             // country,
+            // id,
             createdon,
           },
         };
@@ -156,7 +159,8 @@ export const profileSlice = createSlice({
     },
     ClearProfile: (state, action) => {
         state.userProfile= { ...init };
-  }
+    },
+    
     },
 });
 
