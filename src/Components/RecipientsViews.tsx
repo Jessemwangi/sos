@@ -12,7 +12,7 @@ const RecipientsViews = () => {
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
   const currentAnchorElementId = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
   let anchorEl = document.getElementById(currentAnchorElementId);
-  let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients)
+  let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients);
   let currentIndex = useSelector((state: any) => state.manageRecipients.currentIndex);
 
 
@@ -25,7 +25,7 @@ const RecipientsViews = () => {
   }
 
   function editHandler(e: any) {
-    dispatch(updateAnchorElementId(e.target.id));
+    dispatch(updateAnchorElementId(e.currentTarget.id));
     dispatch(togglePopover());
     let index: number = Number(e.target.id.slice(4));
     console.log(index);

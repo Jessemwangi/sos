@@ -35,19 +35,23 @@ const Header = () => {
 
     useEffect(() => {
         const handleCallback = (response: any) => {
-<<<<<<< HEAD
+
             const userSignObject: any = jwtDecode(response.credential);
+            // console.log('response',userSignObject)
             const userObject: Guser = {
                 name: userSignObject.family_name + ' ' + userSignObject.given_name,
                 email: userSignObject.email,
                 picture: userSignObject.picture,
                 iat: userSignObject.iat,
                 iss: userSignObject.iss,
-                jti: userSignObject.jti
+                jti: userSignObject.jti,
+                sub: userSignObject.sub,
+
             }
 
             dispatch(SignIn(userObject));
         }
+
 
         window.google.accounts.id.initialize({
             client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
@@ -55,7 +59,6 @@ const Header = () => {
         });
 
         const SignInButton = document.getElementById('signInDiv')!;
-
         google.accounts.id.renderButton(
             SignInButton,
             {
@@ -63,39 +66,6 @@ const Header = () => {
                 size: "large",
                 type: "standard"
             })
-=======
-          
-            const userSignObject: any = jwtDecode(response.credential);
-            // console.log('response',userSignObject)
-        const userObject: Guser = {
-          name: userSignObject.family_name + ' ' + userSignObject.given_name,
-          email: userSignObject.email,
-          picture: userSignObject.picture,
-          iat: userSignObject.iat,
-          iss: userSignObject.iss,
-            jti: userSignObject.jti,
-            sub: userSignObject.sub,
-            
-        }
-  
-        dispatch(SignIn(userObject));
-      }
-  
-        
-      window.google.accounts.id.initialize({
-        client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
-        callback: handleCallback
-      });
-  
-      const SignInButton = document.getElementById('signInDiv')!;
-      google.accounts.id.renderButton(
-        SignInButton,
-        {
-          theme: "outline",
-          size: "large",
-          type: "standard"
-        })
->>>>>>> 751ce90 (post profile to firebase db)
     }, [dispatch]);
 
     return (
