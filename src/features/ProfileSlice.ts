@@ -87,7 +87,7 @@ export const profileSlice = createSlice({
       
       },
         addProfile: (state, action) => {
-          state.userProfile = { ...state.userProfile, ...action.payload, createdon: new Date()};
+          state.userProfile = { ...state.userProfile, ...action.payload, createdon: Date.now.toString()};
           PostData('profile', state.userProfile)
           state.loadingState=false
     },
