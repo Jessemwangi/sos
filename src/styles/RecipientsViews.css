@@ -5,3 +5,23 @@
     border-bottom: 1px solid darkgray;
     border-top: 1px solid darkgray;
 }
+
+.editContactForm {
+    height: 90px;
+    padding: 0.5rem;
+}
+
+.editContactForm label {
+    font-size: 1rem;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.editContactForm input {
+    height: calc(100% - 16px);
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    box-shadow: inset 0 0 2px gray;
+
+}
