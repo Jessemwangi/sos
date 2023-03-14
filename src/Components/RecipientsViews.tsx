@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
-import { Popover, Button, Grid, TextField } from '@mui/material';
+import { Popover, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { togglePopover, updateAnchorElementId, saveContact, updateCurrentIndex } from '../features/manageRecipientsSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,11 +12,11 @@ const RecipientsViews = () => {
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
   const currentAnchorElementId = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
   let anchorEl = document.getElementById(currentAnchorElementId);
-  let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients)
+  let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients);
   let currentIndex = useSelector((state: any) => state.manageRecipients.currentIndex);
 
 
-  // Get data from firebase for the active user
+  // TODO: Get data from firebase for the active user
 
   const [contact, setContact] = useState(recipients[currentIndex]);
 
@@ -25,10 +25,10 @@ const RecipientsViews = () => {
   }
 
   function editHandler(e: any) {
-    dispatch(updateAnchorElementId(e.target.id));
+    dispatch(updateAnchorElementId(e.currentTarget.id));
     dispatch(togglePopover());
     let index: number = Number(e.target.id.slice(4));
-    console.log(index);
+    console.log(index);//for debugging
     dispatch(updateCurrentIndex(index))
   }
 
@@ -82,57 +82,22 @@ const RecipientsViews = () => {
           vertical: 'top',
           horizontal: 'center',
         }}>
-        <form><Grid container direction="row" justifyContent="center" alignItems="center">
-          <Grid item> <TextField
-            id="nameInput"
-            name="name"
-            label="Name"
-            type="text"
-            defaultValue={recipients[currentIndex].name}
-            onChange={handleChange}
-          /></Grid>
-          <Grid item>
-            <TextField
-              id="addressInput"
-              name="address"
-              label="Address"
-              type="text"
-              defaultValue={recipients[currentIndex].address}
-              onChange={handleChange}>
-            </TextField></Grid>
-          <Grid item>
-            <TextField
-              id="phoneInput"
-              name="phone"
-              label="Phone"
-              type="text"
-              defaultValue={recipients[currentIndex].phone}
-              onChange={handleChange}>
-            </TextField></Grid>
-          <Grid item>
-            <TextField
-              id="postcodeInput"
-              name="postcode"
-              label="Postcode"
-              type="text"
-              defaultValue={recipients[currentIndex].postcode}
-              onChange={handleChange}>
-            </TextField></Grid>
-          <Grid item>
-            <TextField
-              id="city"
-              name="city"
-              label="City"
-              type="text"
-              defaultValue={recipients[currentIndex].city}
-              onChange={handleChange}>
-            </TextField></Grid>
+        <form className="editContactForm">
+          <label htmlFor="name">Name</label><input defaultValue={recipients[currentIndex].name} type="text" name="name" id="nameInput" onChange={handleChange}></input>
+          <label htmlFor="address">Address</label><input defaultValue={recipients[currentIndex].address} type="text" name="address" id="addressInput" onChange={handleChange}></input>
+          <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={recipients[currentIndex].phone}
+            onChange={handleChange}></input>
+          <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={recipients[currentIndex].postcode}
+            onChange={handleChange}></input>
+          <label htmlFor="city"></label>City<input type="text" name="city" id="city"
+            defaultValue={recipients[currentIndex].city}
+            onChange={handleChange}></input>
 
           <Button type="submit" onClick={submitEdits}>Save</Button>
           <Button onClick={closeHandler}>Close</Button>
-        </Grid></form>
-      </Popover>
-    </React.Fragment>
+        </form>
+      </Popover >
+    </React.Fragment >
   );
 };
 

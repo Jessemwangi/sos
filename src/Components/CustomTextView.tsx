@@ -25,7 +25,6 @@ const CustomTextView = () => {
             </TableRow>
           )))
             : <></>
-
           }
         </TableBody>
       </Table>
