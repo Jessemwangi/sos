@@ -35,7 +35,6 @@ const Header = () => {
 
     useEffect(() => {
         const handleCallback = (response: any) => {
-
             const userSignObject: any = jwtDecode(response.credential);
             // console.log('response',userSignObject)
             const userObject: Guser = {
@@ -45,8 +44,7 @@ const Header = () => {
                 iat: userSignObject.iat,
                 iss: userSignObject.iss,
                 jti: userSignObject.jti,
-                sub: userSignObject.sub,
-
+                sub: userSignObject.sub
             }
 
             dispatch(SignIn(userObject));
