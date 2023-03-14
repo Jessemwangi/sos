@@ -18,7 +18,7 @@
 }
 
 .editContactForm input {
-    height: calc(100% -16px);
+    height: calc(100% - 16px);
     padding: 0.5rem;
     font-size: 1rem;
     border: none;
