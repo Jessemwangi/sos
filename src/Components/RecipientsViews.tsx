@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Popover, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+
 import { togglePopover, updateAnchorElementId, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { Recipient } from '../app/model';
 import '../styles/RecipientsViews.css';
 
-const generateID: string = Math.floor(Math.random() * 1000000).toString(); //simulate id
+//const generateID: string = Math.floor(Math.random() * 1000000).toString(); //simulate id
 
 const RecipientsViews = () => {
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  const currentAnchorElementId = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
+  const currentAnchorElementId: string = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
   let anchorEl = document.getElementById(currentAnchorElementId);
 
   let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients);

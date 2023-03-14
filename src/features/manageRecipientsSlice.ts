@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-//import { Recipient } from '../app/model';
-//import recipient data from db here?
-import { rowsArray } from '../Components/rows';
-console.log('rows array first item:', rowsArray[0]);
+import { collection, getDocs } from "@firebase/firestore";
 
-const recipients: object[] = rowsArray;
+//import { Recipient } from '../app/model';
+//import { rowsArray } from '../Components/rows';
+import { db } from "../DataLayer/FirestoreInit";
+
+
+//const recipients: object[] = rowsArray;
+const recipients = collection(db, 'recipients');
 
 const initialState = {
     popoverState: false,

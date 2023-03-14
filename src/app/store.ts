@@ -5,6 +5,7 @@ import profileSlice from '../features/ProfileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
+import firestoreDataSlice from '../features/firestoreDataSlice';
 
 
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,
+    firestoreData: firestoreDataSlice
   },
 });
 

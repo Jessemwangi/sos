@@ -33,12 +33,12 @@ export interface Profile {
 
 export interface Recipient {
     id: string,
-    createdAt: string,
+    createdAt?: string,
     name: string,
-    address: string,
+    address?: string,
     phone: string,
-    city: string,
-    postcode: string,
+    city?: string,
+    postcode?: string,
 
 }
 
