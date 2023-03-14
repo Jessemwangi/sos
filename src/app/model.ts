@@ -9,7 +9,7 @@ export interface Guser {
     sub: number | string
 }
 
-export type LoadingState = boolean 
+export type LoadingState = boolean
 
 export interface Profile {
     id: number | string

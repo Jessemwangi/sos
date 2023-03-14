@@ -1,10 +1,7 @@
-import React from 'react';
 import RecipientsViews from '../Components/RecipientsViews';
 import { Typography } from '@mui/material';
 
-
 const ManageRecipients = () => {
-
 
     return (
         <div>

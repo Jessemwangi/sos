@@ -6,6 +6,8 @@ import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
 
+
+
 export const store = configureStore({
   reducer: {
     counter: counterReducer,

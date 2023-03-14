@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Recipient } from '../app/model';
+//import { Recipient } from '../app/model';
 //import recipient data from db here?
 import { rowsArray } from '../Components/rows';
+console.log('rows array first item:', rowsArray[0]);
 
-const recipients: Recipient[] = rowsArray;
+const recipients: object[] = rowsArray;
 
 const initialState = {
     popoverState: false,
     currentAnchorElementId: '',
     recipients: recipients,
-    currentIndex: 0
+    currentId: 0
 
 }
 
@@ -19,11 +20,12 @@ export const manageRecipientsSlice = createSlice({
     reducers: {
         togglePopover: (state) => { state.popoverState = !state.popoverState },
         updateAnchorElementId: (state, action: PayloadAction<string>) => { state.currentAnchorElementId = action.payload },
-        saveContact: (state: any, action: PayloadAction<object>) => { state.recipients = [...state.recipients, { ...action.payload }] },
-        updateCurrentIndex: (state, action) => { state.currentIndex = action.payload }
-    },
+        /* saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = [...state.recipients, { ...action.payload }] }, */
 
+        saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = action.payload },
+        updateCurrentId: (state, action) => { state.currentId = action.payload }
+    },
 });
 
-export const { togglePopover, updateAnchorElementId, saveContact, updateCurrentIndex } = manageRecipientsSlice.actions;
+export const { togglePopover, updateAnchorElementId, saveContacts, updateCurrentId } = manageRecipientsSlice.actions;
 export default manageRecipientsSlice.reducer
