@@ -38,7 +38,7 @@ const steps = [
     switch (step) {
       case 0:
 
-        return <RegistrationForm sosUser={sosUser} />;
+        return <RegistrationForm />;
       case 1:
         return <PaymentForm />;
       case 2:

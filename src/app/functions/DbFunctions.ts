@@ -12,10 +12,9 @@ import {
 import { db } from "../../DataLayer/FirestoreInit";
 import { LoadingState, Profile } from "../model";
 
-interface Data {
-  [key: string]: any;
-  response:DocumentData
-}
+type DataResponse2<T> = {
+  data: T[];
+};
 
 interface DataResponse {
   data: DocumentData[];
@@ -173,32 +172,27 @@ const Get_One = (collectionName: string, id: string, value: any) => {
   return { response, docId, loadingState, error };
 };
 
-export const GetDataByTwoColumns = (collectionName: string, column1name: string, value1: string | number | boolean, column2name: string, value2: string | number | boolean) => {
-  const [response, setResponse] = useState<DocumentData[]>([]);
-  const [error, setError] = useState<unknown>({});
-  const [loadingState, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const getWithTwo = async () => {
-      try {
-        setLoading(true);
-        const q = query(collection(db, collectionName), where(column1name, '==', value1), where(column2name, '==', value2));
-        const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-        // console.log(querySnapshot.docs);
-        const data = querySnapshot.docs.map(doc => doc.data());
-
-        setResponse(data);
-        setLoading(false);
-      } catch (error:any) {
-        setError(`Error getting data from Firestore: ${error.message}`);
-        console.error('Error getting data from Firestore:', error);
-        setLoading(false);
-      }
-    };
-    getWithTwo();
-  }, [collectionName, column1name, column2name, value1, value2]);
-
-  return { response, error, loadingState };
+export const GetDataByTwoColumns = async <T>(
+  collectionName: string,
+  column1name: string,
+  value1: string | number | boolean,
+  column2name: string,
+  value2: string | number | boolean
+): Promise<DataResponse2<T> | DataError> => {
+  let response: DataResponse2<T> | DataError = { data: [] };
+  try {
+    const q = query(
+      collection(db, collectionName),
+      where(column1name, "==", value1),
+      where(column2name, "==", value2)
+    );
+    const querySnapshot: QuerySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => doc.data() as T);
+    response = { data };
+  } catch (error: any) {
+    response = { message: `Error getting data from Firestore: ${error.message}` };
+  }
+  return response;
 };
 
 export const GetDataByTwoColumns2 = async (
@@ -208,9 +202,6 @@ export const GetDataByTwoColumns2 = async (
   column2name: string,
   value2: string | number | boolean
 ) => {
-  // const [response, setResponse] = useState<DataResponse>({ data: [] });
-  // const [error, setError] = useState<DataError>({ message: "" });
-  // const [loadingState, setLoading] = useState<boolean>(true);
   let response: string | DataResponse | DataError = '';
       try {
         const q = query(

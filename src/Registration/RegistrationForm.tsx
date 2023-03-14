@@ -10,43 +10,79 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProfile, addProfile } from "../features/ProfileSlice";
 import { Button } from "@mui/material";
-import { GetDataByTwoColumns2, PostData } from "../app/functions/DbFunctions";
+import { GetDataByTwoColumns2, PostData ,GetDataByTwoColumns} from "../app/functions/DbFunctions";
 import { ToastContainer, toast ,ToastOptions} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { selectSosUser } from "../features/userSlice";
 
 interface googleUser {
   sosUser: Guser;
 }
-interface Props {
-  message: string;
-}
 
-export default function RegistrationForm({ sosUser }: googleUser) {
+
+export default function RegistrationForm() {
   const dispatch = useDispatch();
-  const userProfile: Profile = useSelector(selectProfile);
+  const sosUser: Guser = useSelector(selectSosUser)
+  const user_Profile: Profile = useSelector(selectProfile);
+  const [userProfile , setUserProfile]=React.useState<Profile>(user_Profile);
+  const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
+  const [currentProfile, setCurrentProfile] = React.useState<Profile>()
   // console.log(userProfile)
   const [datePickerValue, setDatePickerValue] = React.useState<
     Dayjs | null | Date
   >(dayjs());
 
+  const options: ToastOptions = {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
+   
+
   React.useEffect(() => {
-    if (sosUser.email) {
-      dispatch(
-        addProfile({
-          email: sosUser.email,
-          firstname: sosUser.name.split(" ")[1],
-          lastname: sosUser.name.split(" ")[0],
-          username: sosUser.name,
-          id: sosUser.sub,
-          uid: sosUser.sub,
-        })
-      );
+    if (sosUser.email && sosUser.sub) {
+      const Firestore_Profile = async () => {
+        const retrievedProfile = await GetDataByTwoColumns<Profile>(
+          "profile",
+          "email",
+          userProfile.email,
+          "id",
+          userProfile.id
+        );
+        if (retrievedProfile instanceof Error) {
+          toast.error(retrievedProfile.message);
+        } else if ("data" in retrievedProfile && retrievedProfile.data.length > 0) {
+          const profileData = retrievedProfile.data[0];
+          setCurrentProfile(profileData);
+          console.log(profileData);
+          
+          // dispatch(
+          //   addProfile({
+          //     ...profileData,...user_Profile
+          //   })
+            
+          // );
+          setButtonAction('Update Profile')
+        } else {
+          toast.info("No profile data found for You, Create One...");
+        }
+      }
+
+      Firestore_Profile();
     }
-  }, [dispatch, sosUser]);
+  }, [dispatch, sosUser.email, sosUser.sub, userProfile.email, userProfile.id, user_Profile]);
+
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
+    setUserProfile(user_Profile);
+    console.log(user_Profile);
     dispatch(addProfile({ [e.target.name]: e.target.value }));
   };
 
@@ -61,6 +97,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
       );
       console.log(Firestore_Profile);
       if (Firestore_Profile) {
+        setButtonAction('Update Profile')
         // UPdate()
         console.log("profile in our database");
       } else {
@@ -69,15 +106,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
         console.log("response", response);
       }
     } else {
-      const options: ToastOptions = {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      };
+
       toast.error("Oops, seems like we need you to log in first!", options);
     }
   };
@@ -256,7 +285,7 @@ export default function RegistrationForm({ sosUser }: googleUser) {
             onClick={HandlePostProfile}
             sx={{ mt: 3, ml: 1 }}
           >
-            Post Profile
+            {buttonAction}
           </Button>
         </Grid>
         <ToastContainer />
@@ -264,3 +293,4 @@ export default function RegistrationForm({ sosUser }: googleUser) {
     </React.Fragment>
   );
 }
+
