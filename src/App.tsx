@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, Provider } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
@@ -8,9 +8,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { selectSosUser, SignIn, SignOut } from './features/userSlice';
-import { Guser } from './app/model';
-import jwtDecode from 'jwt-decode';
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
 import EditProfile from './pages/EditProfile';
@@ -25,6 +22,10 @@ import SignalDetails from './pages/SignalDetails';
 import CompleteReg from './Registration/CompleteReg';
 import Registration from './pages/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
+
+import { store } from './app/store';
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,15 +48,19 @@ const router = createBrowserRouter(
 );
 
 function App() {
+
+
   useEffect(() => {
     document.title = 'SOS Help';
   }, []);
 
 
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <RouterProvider router={router} />
+      </div>
+    </Provider>
   );
 }
 

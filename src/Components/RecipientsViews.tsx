@@ -1,51 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Popover, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { togglePopover, updateAnchorElementId, saveContact, updateCurrentIndex } from '../features/manageRecipientsSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import { togglePopover, updateAnchorElementId, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
 import { Recipient } from '../app/model';
+import { useFetchRecipientsQuery, useSetRecipientMutation } from '../features/firestoreDataSlice';
 import '../styles/RecipientsViews.css';
 
+
 const RecipientsViews = () => {
+
+  const {
+    data,
+    isFetching,
+    error
+  } = useFetchRecipientsQuery();
+  console.log(data);
+
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  const currentAnchorElementId = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
+  const currentAnchorElementId: string = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
   let anchorEl = document.getElementById(currentAnchorElementId);
-  let recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients);
-  let currentIndex = useSelector((state: any) => state.manageRecipients.currentIndex);
+  let currentId = useSelector((state: any) => state.manageRecipients.currentId);
 
-
-  // TODO: Get data from firebase for the active user
-
-  const [contact, setContact] = useState(recipients[currentIndex]);
 
   function closeHandler() {
     dispatch(togglePopover());
   }
 
-  function editHandler(e: any) {
-    dispatch(updateAnchorElementId(e.currentTarget.id));
+  function editButtonHandler(e: any) {
+    dispatch(updateAnchorElementId(e.currentTarget.id));//for popover placement
     dispatch(togglePopover());
-    let index: number = Number(e.target.id.slice(4));
-    console.log(index);//for debugging
-    dispatch(updateCurrentIndex(index))
+    let ID: string = e.target.id.slice(4);
+    console.log(ID);//for debugging
+    dispatch(updateCurrentId(ID))
+  }
+
+  function deleteHandler(e: any) {
+    dispatch(updateAnchorElementId(e.currentTarget.id));
+    let ID: string = e.target.id.slice(6);
+    console.log(ID);//for debugging
+    dispatch(updateCurrentId(ID));
+
   }
 
   function handleChange(e: any): any {
-    // console.log(e.target.value);
-    // console.log(recipients[currentIndex]);
-    setContact({ ...contact, [e.target.name]: e.target.value });
-    console.log(contact);
+    /* setContact({[e.target.name]: e.target.value }); */
   }
 
   function submitEdits(e: any): any {
     e.preventDefault();
-    console.log(recipients[currentIndex]);
-    dispatch(saveContact(contact))  //TODO send to firebase on submit
+    //dispatch(saveContacts(contacts))  //TODO send to firebase on submit
   }
 
   return (
+
     <React.Fragment>
       <Table size="small">
         <TableHead>
@@ -59,15 +72,18 @@ const RecipientsViews = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {recipients.map((row) => (
-            <TableRow key={row.id} >
-              <TableCell>{row.createdAt}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.address}</TableCell>
-              <TableCell>{row.phone}</TableCell>
-              <TableCell align="center">{row.postcode}</TableCell>
-              <TableCell>{row.city}</TableCell>
-              <TableCell><EditIcon id={`icon${row.id}`} onClick={editHandler} /></TableCell>
+
+          {!isFetching && data && data.map((recipient) => (
+            <TableRow key={recipient.id} >
+              <TableCell>{recipient.createdAt}</TableCell>
+              <TableCell>{recipient.name}</TableCell>
+              <TableCell>{recipient.address}</TableCell>
+              <TableCell>{recipient.phone}</TableCell>
+              <TableCell>{recipient.postcode}</TableCell>
+              <TableCell>{recipient.city}</TableCell>
+              <TableCell><EditIcon id={`icon${recipient.id}`} onClick={editButtonHandler} />
+              </TableCell>
+              <TableCell> <DeleteIcon id={`delete${recipient.id}`} onClick={deleteHandler} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -82,23 +98,30 @@ const RecipientsViews = () => {
           vertical: 'top',
           horizontal: 'center',
         }}>
-        <form className="editContactForm">
-          <label htmlFor="name">Name</label><input defaultValue={recipients[currentIndex].name} type="text" name="name" id="nameInput" onChange={handleChange}></input>
-          <label htmlFor="address">Address</label><input defaultValue={recipients[currentIndex].address} type="text" name="address" id="addressInput" onChange={handleChange}></input>
-          <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={recipients[currentIndex].phone}
-            onChange={handleChange}></input>
-          <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={recipients[currentIndex].postcode}
-            onChange={handleChange}></input>
-          <label htmlFor="city"></label>City<input type="text" name="city" id="city"
-            defaultValue={recipients[currentIndex].city}
-            onChange={handleChange}></input>
+        {data && data.length > 0 ?
+          <form className="editContactForm" onChange={handleChange}>
+            <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
+            <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
+            <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
+            ></input>
+            <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={data![0].postcode}
+            ></input>
+            <label htmlFor="city"></label>City<input type="text" name="city" id="city"
+              defaultValue={data![0].city}
+            ></input>
 
-          <Button type="submit" onClick={submitEdits}>Save</Button>
-          <Button onClick={closeHandler}>Close</Button>
-        </form>
+
+            <Button type="submit" onClick={submitEdits}>Save</Button>
+            <Button onClick={closeHandler}>Close</Button>
+          </form>
+          : <p>Awaiting data</p>
+        }
       </Popover >
     </React.Fragment >
   );
+
+
 };
+
 
 export default RecipientsViews;

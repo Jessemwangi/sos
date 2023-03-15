@@ -10,8 +10,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProfile, addProfile } from "../features/ProfileSlice";
 import { Button } from "@mui/material";
-import { GetDataByTwoColumns2, PostData ,GetDataByTwoColumns} from "../app/functions/DbFunctions";
-import { ToastContainer, toast ,ToastOptions} from 'react-toastify';
+import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/functions/DbFunctions";
+import { ToastContainer, toast, ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { selectSosUser } from "../features/userSlice";
 
@@ -24,7 +24,7 @@ export default function RegistrationForm() {
   const dispatch = useDispatch();
   const sosUser: Guser = useSelector(selectSosUser)
   const user_Profile: Profile = useSelector(selectProfile);
-  const [userProfile , setUserProfile]=React.useState<Profile>(user_Profile);
+  const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
   const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
   const [currentProfile, setCurrentProfile] = React.useState<Profile>()
   // console.log(userProfile)
@@ -41,7 +41,7 @@ export default function RegistrationForm() {
     draggable: true,
     progress: undefined,
   };
-   
+
 
   React.useEffect(() => {
     if (sosUser.email && sosUser.sub) {
@@ -59,12 +59,12 @@ export default function RegistrationForm() {
           const profileData = retrievedProfile.data[0];
           setCurrentProfile(profileData);
           console.log(profileData);
-          
+
           // dispatch(
           //   addProfile({
           //     ...profileData,...user_Profile
           //   })
-            
+
           // );
           setButtonAction('Update Profile')
         } else {

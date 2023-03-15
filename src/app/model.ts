@@ -9,7 +9,7 @@ export interface Guser {
     sub: number | string
 }
 
-export type LoadingState = boolean 
+export type LoadingState = boolean
 
 export interface Profile {
     id: number | string
@@ -33,12 +33,12 @@ export interface Profile {
 
 export interface Recipient {
     id: string,
-    createdAt: string,
+    createdAt?: string,
     name: string,
-    address: string,
+    address?: string,
     phone: string,
-    city: string,
-    postcode: string,
+    city?: string,
+    postcode?: string,
 
 }
 

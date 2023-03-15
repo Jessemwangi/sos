@@ -50,7 +50,6 @@ const Header = () => {
             dispatch(SignIn(userObject));
         }
 
-
         window.google.accounts.id.initialize({
             client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
             callback: handleCallback
