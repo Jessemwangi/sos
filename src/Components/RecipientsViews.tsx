@@ -14,11 +14,6 @@ import '../styles/RecipientsViews.css';
 
 const RecipientsViews = () => {
 
-  type Recipients = Recipient[];
-  //let recipientData: Recipients = []
-
-  //const [recipients, setRecipients] = useState<Recipients>([])
-
   const {
     data,
     isFetching,
@@ -63,6 +58,7 @@ const RecipientsViews = () => {
   }
 
   return (
+
     <React.Fragment>
       <Table size="small">
         <TableHead>
@@ -77,7 +73,7 @@ const RecipientsViews = () => {
         </TableHead>
         <TableBody>
 
-          {data && data.map((recipient) => (
+          {!isFetching && data && data.map((recipient) => (
             <TableRow key={recipient.id} >
               <TableCell>{recipient.createdAt}</TableCell>
               <TableCell>{recipient.name}</TableCell>
@@ -102,20 +98,24 @@ const RecipientsViews = () => {
           vertical: 'top',
           horizontal: 'center',
         }}>
-        <form className="editContactForm" onChange={handleChange}>
-          <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
-          <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
-          <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
-          ></input>
-          <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={data![0].postcode}
-          ></input>
-          <label htmlFor="city"></label>City<input type="text" name="city" id="city"
-            defaultValue={data![0].city}
-          ></input>
+        {data && data.length > 0 ?
+          <form className="editContactForm" onChange={handleChange}>
+            <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
+            <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
+            <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
+            ></input>
+            <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={data![0].postcode}
+            ></input>
+            <label htmlFor="city"></label>City<input type="text" name="city" id="city"
+              defaultValue={data![0].city}
+            ></input>
 
-          <Button type="submit" onClick={submitEdits}>Save</Button>
-          <Button onClick={closeHandler}>Close</Button>
-        </form>
+
+            <Button type="submit" onClick={submitEdits}>Save</Button>
+            <Button onClick={closeHandler}>Close</Button>
+          </form>
+          : <p>Awaiting data</p>
+        }
       </Popover >
     </React.Fragment >
   );
