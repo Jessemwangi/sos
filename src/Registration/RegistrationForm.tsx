@@ -15,10 +15,6 @@ import { ToastContainer, toast ,ToastOptions} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { selectSosUser } from "../features/userSlice";
 
-interface googleUser {
-  sosUser: Guser;
-}
-
 
 export default function RegistrationForm() {
   const dispatch = useDispatch();

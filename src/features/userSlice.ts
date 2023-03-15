@@ -1,16 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Guser } from "../app/model";
+import { EncryptGuser } from "../app/model";
 import { useDispatch } from "react-redux";
 
 
-const init: Guser = {
-  name: "",
-  email: "",
-  picture: "",
-  iat: 0,
-  iss: "",
-  jti: "",
-  sub:'',
+const init: EncryptGuser = {
+  encryptedUserData: sessionStorage.getItem('encryptedUserData') ? sessionStorage.getItem('encryptedUserData') : '',
+
 };
 
 export const userSlice = createSlice({
@@ -20,13 +15,8 @@ export const userSlice = createSlice({
   },
   reducers: {
     SignIn: (state, action) => {
-      state.users.email = action.payload.email;
-      state.users.name = action.payload.name;
-      state.users.picture = action.payload.picture;
-      state.users.iat = action.payload.iat;
-      state.users.jti = action.payload.jti;
-      state.users.iss = action.payload.iss;
-      state.users.sub = action.payload.sub;
+
+      state.users.encryptedUserData = action.payload.encryptedUserData;
     },
      GetUserPRofile: (state)=>{
        const dispatch = useDispatch();

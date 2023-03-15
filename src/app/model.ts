@@ -8,7 +8,9 @@ export interface Guser {
     jti: string
     sub: number | string
 }
-
+export interface EncryptGuser{
+    encryptedUserData:string | null
+}
 export type LoadingState = boolean 
 
 export interface Profile {

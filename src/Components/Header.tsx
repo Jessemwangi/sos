@@ -9,6 +9,7 @@ import { SignIn, SignOut, selectSosUser } from '../features/userSlice';
 import { Guser } from '../app/model';
 import jwtDecode from 'jwt-decode';
 import { useEffect } from 'react';
+import { encryptUserData } from '../app/SecurityUtility';
 
 
 const Header = () => {
@@ -32,6 +33,17 @@ const Header = () => {
         dispatch(closePopover({ profileMenu: false }));
     }
 
+    // const handleSaveData = () => {
+    //     const encryptedData = encryptUserData('my user data');
+    //     sessionStorage.setItem('encryptedUserData', encryptedData);
+    //     setUserData('my user data');
+    //   };
+    
+    //   const handleRetrieveData = () => {
+    //     const encryptedData = sessionStorage.getItem('encryptedUserData');
+    //     const decryptedData = decryptUserData(encryptedData);
+    //     setUserData(decryptedData);
+    //   };
 
     useEffect(() => {
         const handleCallback = (response: any) => {
@@ -46,7 +58,9 @@ const Header = () => {
                 jti: userSignObject.jti,
                 sub: userSignObject.sub
             }
-
+            const encryptedUserData = encryptUserData(JSON.stringify(userObject));
+            sessionStorage.setItem('encryptedUserData', encryptedUserData);
+            console.log(encryptedUserData);
             dispatch(SignIn(userObject));
         }
 
