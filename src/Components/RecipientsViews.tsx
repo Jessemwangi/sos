@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
-/* import { db } from "../DataLayer/FirestoreInit";
-import { collection, getDocs, updateDoc, doc } from "@firebase/firestore"; */
-
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Popover, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,19 +32,6 @@ const RecipientsViews = () => {
   let anchorEl = document.getElementById(currentAnchorElementId);
   let currentId = useSelector((state: any) => state.manageRecipients.currentId);
 
-
-  /*     async function getData() {
-        const recipientSnapshot: any = await getDocs(collection(db, "recipients"));
-        recipientSnapshot.docs.forEach((doc: any) => {
-          recipientData.push({ recipientData, id: doc.id, ...doc.data() });
-        });
-        console.log(recipients);
-        return recipientData;
-      }   
-      useEffect(() => {
-        getData()
-          .then(res => setContacts(res));
-      }, []) */
 
   function closeHandler() {
     dispatch(togglePopover());
@@ -93,7 +77,7 @@ const RecipientsViews = () => {
         </TableHead>
         <TableBody>
 
-    {/*       {!isFetching && data.map((recipient) => (
+          {data && data.map((recipient) => (
             <TableRow key={recipient.id} >
               <TableCell>{recipient.createdAt}</TableCell>
               <TableCell>{recipient.name}</TableCell>
@@ -105,7 +89,7 @@ const RecipientsViews = () => {
               </TableCell>
               <TableCell> <DeleteIcon id={`delete${recipient.id}`} onClick={deleteHandler} /></TableCell>
             </TableRow>
-          ))} */}
+          ))}
         </TableBody>
       </Table>
 
@@ -118,7 +102,7 @@ const RecipientsViews = () => {
           vertical: 'top',
           horizontal: 'center',
         }}>
-{/*         <form className="editContactForm" onChange={handleChange}>
+        <form className="editContactForm" onChange={handleChange}>
           <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
           <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
           <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
@@ -131,7 +115,7 @@ const RecipientsViews = () => {
 
           <Button type="submit" onClick={submitEdits}>Save</Button>
           <Button onClick={closeHandler}>Close</Button>
-        </form> */}
+        </form>
       </Popover >
     </React.Fragment >
   );
