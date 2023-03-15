@@ -1,18 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { collection, getDocs } from "@firebase/firestore";
 
-//import { Recipient } from '../app/model';
+import { Recipient } from '../app/model';
 //import { rowsArray } from '../Components/rows';
-import { db } from "../DataLayer/FirestoreInit";
 
+//const recipients: Recipient[] = rowsArray;
 
-//const recipients: object[] = rowsArray;
-const recipients = collection(db, 'recipients');
 
 const initialState = {
     popoverState: false,
     currentAnchorElementId: '',
-    recipients: recipients,
+    recipients: [],
     currentId: 0
 
 }
@@ -27,6 +24,7 @@ export const manageRecipientsSlice = createSlice({
 
         saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = action.payload },
         updateCurrentId: (state, action) => { state.currentId = action.payload }
+
     },
 });
 

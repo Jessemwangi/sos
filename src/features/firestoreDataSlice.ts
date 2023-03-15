@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Recipient } from '../app/model';
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../DataLayer/FirestoreInit";
 import { collection, getDocs, updateDoc, doc } from "@firebase/firestore";
 
@@ -9,24 +9,27 @@ const initialState = {
 }
 type Recipients = Recipient[];
 
-//borrows code from Medium tutorial example on firebase query with RTK Query (author: Eduardo Motta de Moraes)
+/*borrows code from Medium tutorial example on firebase query with RTK Query (author: Eduardo Motta de Moraes)
+https://blog.bitsrc.io/how-to-use-firestore-with-redux-in-a-react-application-f127d35adf3e */
+
+
 export const firestoreApi = createApi({
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Recipients'],
+    reducerPath: "firestoreApi",
     endpoints: (builder) => ({
         fetchRecipients: builder.query<Recipients, void>({
             async queryFn() {
                 try {
                     const ref = collection(db, 'recipients');
                     const querySnapshot = await getDocs(ref);
-                    let recipients: Recipient[] = [];
+                    let recipients: Recipients = [];
                     querySnapshot?.forEach((doc) => {
                         recipients.push({ id: doc.id, ...doc.data() } as Recipient)
                     });
-                    return { data: recipients };
-                }
-                catch (error: any) {
-                    return { error: error.message };
+                    return { data: recipients }
+                } catch (error: any) {
+                    return { error: error.message }
                 }
             },
             providesTags: ['Recipients'],
@@ -43,10 +46,13 @@ export const firestoreApi = createApi({
                     return { error: error.message }
                 }
             },
-            invalidatesTags: ['Recipients']
+            invalidatesTags: ['Recipients'],
         })
     })
 });
+export const { useFetchRecipientsQuery, useSetRecipientMutation } = firestoreApi;
+
+
 
 export const firestoreDataSlice = createSlice({
     name: "fireStoreData",
@@ -56,8 +62,9 @@ export const firestoreDataSlice = createSlice({
 
     }
 });
-//export const { useFetchRecipientsQuery, useSetRecipientMutation } = firestoreApi;
+
 
 export const { setRecipientData } = firestoreDataSlice.actions;
 
 export default firestoreDataSlice.reducer;
+

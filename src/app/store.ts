@@ -5,8 +5,7 @@ import profileSlice from '../features/ProfileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
-import firestoreDataSlice from '../features/firestoreDataSlice';
-
+import firestoreDataSlice, { firestoreApi } from '../features/firestoreDataSlice';
 
 
 export const store = configureStore({
@@ -17,8 +16,11 @@ export const store = configureStore({
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,
-    firestoreData: firestoreDataSlice
+    firestoreData: firestoreDataSlice,
+    [firestoreApi.reducerPath]: firestoreApi.reducer
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(firestoreApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

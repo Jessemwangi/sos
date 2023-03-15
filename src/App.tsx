@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, Provider } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
@@ -8,12 +8,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { db } from "./DataLayer/FirestoreInit";
-import { collection, getDocs } from "@firebase/firestore";
-
-import { selectSosUser, SignIn, SignOut } from './features/userSlice';
-import { Guser } from './app/model';
-import jwtDecode from 'jwt-decode';
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
 import EditProfile from './pages/EditProfile';
@@ -29,11 +23,7 @@ import CompleteReg from './Registration/CompleteReg';
 import Registration from './pages/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
-import { Recipient } from './app/model';
-import { setRecipientData } from './features/firestoreDataSlice';
-
-
-
+import { store } from './app/store';
 
 
 
@@ -59,30 +49,18 @@ const router = createBrowserRouter(
 
 function App() {
 
-  const dispatch = useDispatch();
-  const recipientData: Recipient[] = [];
-
-  async function getData() {
-    const recipientSnapshot: any = await getDocs(collection(db, "recipients"));
-    recipientSnapshot.docs.forEach((doc: any) => {
-      recipientData.push(doc.data());
-    });
-    dispatch(setRecipientData(recipientData));
-
-  }
-
-
 
   useEffect(() => {
     document.title = 'SOS Help';
-    getData();
   }, []);
 
 
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <RouterProvider router={router} />
+      </div>
+    </Provider>
   );
 }
 
