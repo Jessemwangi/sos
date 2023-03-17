@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, Provider } from "react-redux";
+import { Provider } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
