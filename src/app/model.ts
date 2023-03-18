@@ -17,18 +17,18 @@ export interface Profile {
     lastname: string,
     contact: number | null,
     altcontact: number | null,
-    occupation: string
+    occupation?: string
     dob: Date | null,
     uid: string,
     email: string,
     username: string,
     addressline1: string,
-    addressline2: string,
+    addressline2?: string,
     city: string,
     state_province: string,
-    postalcode: string
+    postalcode?: string
     country: string
-    createdon: Date | null
+    createdAt: Date | null
 }
 
 export interface Recipient {
@@ -43,13 +43,13 @@ export interface Recipient {
 }
 
 export interface signalsList {
-    signalId: number,
+    signalId: string,
     uid: string,
     name: string,
     recipientId: string[],
     presetMsg: string,
-    cstTextId: number,
-    createdAt: Date
+    cstTextId?: string,
+    createdAt?: Date
 }
 
 interface geoCodes {
@@ -58,10 +58,10 @@ interface geoCodes {
 }
 
 export interface signals {
-    signalsId: number,
+    signalsId: string,
     uid: string,
     createdAt: Date,
-    geoLocation: geoCodes
+    geolocation: geoCodes
 }
 
 export interface customTexts {

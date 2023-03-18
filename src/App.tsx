@@ -18,13 +18,12 @@ import HowTo from './pages/HowTo';
 import AnsToSignals from './pages/AnsToSignals';
 import NotFound from './pages/NotFound';
 import AllSignals from './pages/AllSignals';
-import SignalDetails from './pages/SignalDetails';
+import SignalDetails from './pages/SignalHistory';
 import CompleteReg from './Registration/CompleteReg';
 import Registration from './pages/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
-
 
 
 const router = createBrowserRouter(
@@ -39,7 +38,7 @@ const router = createBrowserRouter(
       <Route path="/allsignal" element={<AllSignals />}>All Signal Status</Route>
       <Route path="/signaldetails" element={<SignalDetails />}>one Signal Details</Route>
       <Route path="/customsignals" element={<CustomSignalsView />}></Route>
-      <Route path="/replytoSignal" element={<AnsToSignals />}> </Route>
+      <Route path="/replytoSignal/:signalid" element={<AnsToSignals />}> </Route>
       <Route path="/regwizard" element={<CompleteReg />}>Initial Setup</Route>
       <Route path="/register" element={<Registration />}>Create an account</Route>
       <Route path="*" element={<NotFound />}></Route>
@@ -49,10 +48,10 @@ const router = createBrowserRouter(
 
 function App() {
 
-
   useEffect(() => {
     document.title = 'SOS Help';
   }, []);
+
 
 
   return (

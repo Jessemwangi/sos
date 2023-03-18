@@ -1,19 +1,15 @@
-.header {
-    max-height: 20vh;
-
+.appBar {
+    height: 25vh;
+    padding: 0;
 }
 
-.appBar {
-    display: block;
-    background-color: var(--orange);
+.signInDiv {
+    height: auto;
 }
 
 .toolBar {
-    display: flex;
-    border: solid 1px brown;
-    justify-content: space-around;
+    justify-content: space-between;
     background-color: var(--orange);
-
 }
 
 .userImage {
@@ -21,4 +17,36 @@
     width: 40px;
     border-radius: 50%;
     margin: 1rem;
+}
+
+#menuButton {
+    font-size: 56px;
+    color: white;
+
+}
+
+#menuPopover {
+    width: 90vw;
+
+}
+
+#signOutButton {
+    color: white;
+}
+
+@media screen and (min-width: 480px) {
+    #menuPopover {
+        width: 90vw;
+    }
+}
+
+@media screen and (min-width: 680px) {
+
+    .largeScreen {
+        display: inline-block;
+    }
+
+    #menuPopover {
+        width: 50vw;
+    }
 }

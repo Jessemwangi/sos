@@ -9,7 +9,7 @@ const initialState = {
 }
 type Recipients = Recipient[];
 
-/*borrows code from Medium tutorial example on firebase query with RTK Query (author: Eduardo Motta de Moraes)
+/*Uses code from Medium tutorial example on firebase query with RTK Query (author: Eduardo Motta de Moraes)
 https://blog.bitsrc.io/how-to-use-firestore-with-redux-in-a-react-application-f127d35adf3e */
 
 
