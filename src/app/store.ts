@@ -1,5 +1,4 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
 import userSlice from '../features/userSlice';
 import profileSlice from '../features/ProfileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
@@ -10,7 +9,6 @@ import firestoreDataSlice, { firestoreApi } from '../features/firestoreDataSlice
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     userSlice: userSlice,
     profile: profileSlice,
     sosButton: sosButtonSlice,

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { LoadingState, Profile } from "../app/model";
 import { GetData, PostData } from "../app/functions/DbFunctions";
 
-const init: Profile= {
+const init: Profile = {
   id: '',
   firstname: "",
   lastname: "",
@@ -19,10 +19,10 @@ const init: Profile= {
   state_province: "",
   postalcode: "",
   country: "",
-  createdon: null,
+  createdAt: null,
 };
 
-const initialLoadingState: LoadingState =  true
+const initialLoadingState: LoadingState = true
 
 
 interface ProfileState {
@@ -33,7 +33,7 @@ interface ProfileState {
 interface DataFetchResponse {
   response: Profile | null
   error: string | null
-  loading:LoadingState
+  loading: LoadingState
 }
 const initialState: ProfileState = {
   userProfile: init,
@@ -42,58 +42,57 @@ const initialState: ProfileState = {
 
 export const profileSlice = createSlice({
   name: "profile",
-    initialState: {
-      userProfile: initialState.userProfile,
-      loadingState: initialState.loadingState,
-    } ,
+  initialState: {
+    userProfile: initialState.userProfile,
+    loadingState: initialState.loadingState,
+  },
 
   reducers: {
     GetProfile: (state) => {
-     
-        const { response, error, loadingState }= GetData('profile',)
-        try {
-          if (response)
-          {
-            const UserProfile:Profile = {
-              id: response.id,
-              firstname: response.firstname,
-              lastname: response.lastname,
-              contact: response.contact,
-              altcontact: response.altcontact,
-              occupation: response.occupation,
-              dob: response.dob,
-              uid: response.uid,
-              email: response.email,
-              username: response.username,
-              addressline1: response.addressline1,
-              addressline2: response.addressline2,
-              city: response.city,
-              state_province: response.state_province,
-              postalcode: response.postalcode,
-              country: response.country,
-              createdon: response.createdon
-            }
-            state.userProfile = { ...UserProfile }
-            state.loadingState = loadingState
+
+      const { response, error, loadingState } = GetData('profile',)
+      try {
+        if (response) {
+          const UserProfile: Profile = {
+            id: response.id,
+            firstname: response.firstname,
+            lastname: response.lastname,
+            contact: response.contact,
+            altcontact: response.altcontact,
+            occupation: response.occupation,
+            dob: response.dob,
+            uid: response.uid,
+            email: response.email,
+            username: response.username,
+            addressline1: response.addressline1,
+            addressline2: response.addressline2,
+            city: response.city,
+            state_province: response.state_province,
+            postalcode: response.postalcode,
+            country: response.country,
+            createdAt: response.createdon
           }
-          else
-            throw new Error("not loaded");
-            
-        } catch (error:any) {
-          throw new Error (error.message)
-          
+          state.userProfile = { ...UserProfile }
+          state.loadingState = loadingState
         }
-        
-      
-      },
-        addProfile: (state, action) => {
-          state.userProfile = { ...state.userProfile, ...action.payload};
-          PostData('profile', state.userProfile)
-          state.loadingState=false
+        else
+          throw new Error("not loaded");
+
+      } catch (error: any) {
+        throw new Error(error.message)
+
+      }
+
+
+    },
+    addProfile: (state, action) => {
+      state.userProfile = { ...state.userProfile, ...action.payload };
+      PostData('profile', state.userProfile)
+      state.loadingState = false
     },
     saveProfile: {
       reducer: (state, action) => {
-        state.userProfile = { ...action.payload, id:Math.random().toString() };
+        state.userProfile = { ...action.payload, id: Math.random().toString() };
 
       },
 
@@ -113,24 +112,24 @@ export const profileSlice = createSlice({
         // const city = data.city;
         // const state_province = data.state_province;
         // const country = data.country;
-          const createdon = new Date().toDateString();
-          console.log(
-            // firstname,
-            // lastname,
-            // contact,
-            // altcontact,
-            // occupation,
-            // dob,
-            // uid,
-            // email,
-            // userName,
-            // addressline1,
-            // addressline2,
-            // city,
-            // state_province,
-            // country,
-            createdon,
-          )
+        const createdAt = new Date().toDateString();
+        console.log(
+          // firstname,
+          // lastname,
+          // contact,
+          // altcontact,
+          // occupation,
+          // dob,
+          // uid,
+          // email,
+          // userName,
+          // addressline1,
+          // addressline2,
+          // city,
+          // state_province,
+          // country,
+          createdAt,
+        )
 
         return {
           payload: {
@@ -149,21 +148,21 @@ export const profileSlice = createSlice({
             // state_province,
             // country,
             // id,
-            createdon,
+            createdAt,
           },
         };
       },
     },
-      updateProfile: (state, action) => {
-        
+    updateProfile: (state, action) => {
+
     },
     ClearProfile: (state, action) => {
-        state.userProfile= { ...init };
+      state.userProfile = { ...init };
     },
-    
-    },
+
+  },
 });
 
-export const {saveProfile,updateProfile,addProfile}= profileSlice.actions
+export const { saveProfile, updateProfile, addProfile } = profileSlice.actions
 export const selectProfile = (state: any) => state.profile.userProfile
 export default profileSlice.reducer

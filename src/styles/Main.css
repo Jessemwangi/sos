@@ -7,3 +7,8 @@ h3,
 h4 {
     color: var(--blue);
 }
+
+@media screen and (min-width: 480px) {}
+
+
+@media screen and (min-width: 680px) {}

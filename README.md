@@ -2,70 +2,68 @@
 
 ## About SOS
 
-SOS is a responsive web application build with typscript language and uses firestore as the database, the app is used to sent a distress signal when in need by pressing a button, then it broadcast the distress to the individual prioritized receipients,
+SOS is a mobile-first web application built with Typescript and a Firebase Firestore backend. The app's purpose is to provide a very simple and rapid way to send a distress signal via SMS to a pre-defined list of contacts. 
 
 ### How to use
 
-The user of this system first create an account, the goes to profile and create a list of people who can receive distress, and the type of distress each can recieve.
+#### Setup
 
-### how to sent a distress
+To use the system, the user must first authenticate their identity with OAuth and then create a profile containing their personal details. At least one emergency contact must also be provided at the time of registration. Optionally the user can also customise the signal types, ie emergency category, and content of the text message that will be sent. These can also be modifed at any time.
 
-The system has a buttons that is visible and easly pressed for preset SOS, one can have a maximum of 4 preset SOS and one custome sos that allows selecting individuals who will will receive the distress and also allows the creation of custom text, or pick text from a list of pre configured (max 5 text per individual)
+#### Sending a distress signal / SOS
 
-### distress signal
+The application dashboard contains a single large 'SOS' button. When pressed, the SOS distress is activated with a two-minute countdown timer. During this time the user has the option of defining their emergency type according to a maximum of five pre-defined categories. Each category has an associated list of contacts (maximum of five) who will be notified of the emergency. The recipients when will then recieve an SMS message notifiying them of the emergency type, or the user's custom text,  and the user's location. 
+If no emergency category is selected within two minutes, a 'generic emergency' will be issued. The user can define whether this signal will activate a call to emergency services (112 in Europe) or broadcast to a list of private contacts.
+The user may also cancel the signal before the count-down ends.  
 
-this signal is sent from distress person seeking aid to selected individuals, the recipient will accept the signal and do neccessary action, they can notify the sender or just act based on the signal type. an option / checkbox will be there as an option to notify the sender or not.
 
-### resource permission
+#### Receiving a distress signal
 
-Allow notification
-allow location
-internet connetctivity
-click to call
+When a recipient receives an SMS notification from the SOS service, they are requested to indicate their response. A link in the SMS message will display the location of the person in distress. A second link will direct the recipient to a simple response form in which they may indicate if or how they will respond to the emergency. The sender of the SOS will be notified of the recipient's response. 
+
+### Resource permissions
+
+The following  device capabilities and permissions are required:
+*Allow notification
+*Allow location
+*Internet connectivity
+*Click to call
 
 #### Storage
 
-this project will store data in database - cloud firestore in json format, a sample data will look like this
+This project stores json data in Firebase Firestore.  
+Sample data:
 
 ```json
 {
   "profile": [
     {
       "uid": "34i99jhjni87893",
-      "email": "jesse@gmail.com",
-      "userName": "Jesse",
-      "DOB": "1990-03-21",
-      "contact": "12233445",
-      "streetAddress": "",
-      "occupation": "student"
+      "email": "jcousteau@gmail.com",
+      "userName": "Jaques Cousteau",
+      "DOB": "1910-06-11",
+      "contact": "144334845",
+      "streetAddress": "12 Marine Parade",
+      "occupation": "oceanographer"
     },
-    {
-      "uid": "34i99jhjnkhjhji87893",
-      "email": "faith@gmail.com",
-      "userName": "faith",
-      "DOB": "1992-03-21",
-      "image": "path to image"
-    }
   ],
+
   "recipients": [
-    { "rcpId": 1, "uid": "34i99jhjni87893", "name": "john" },
+    { "rcpId": 1230280, 
+    "uid": "34i99jhjni87893",
+     "name": "John Moreau",
+     "phone": "+358987234567",
+     "email" },
 
     {
-      "rcpId": 2,
+      "rcpId": 2304958,
       "uid": "34i99jhjni87893",
-      "name": "doe",
-      "email": "doe@gmail.com"
+      "name": "Summer Robers",
+      "phone": "+3584562378944",
+      "email": "endlessSummer@gmail.com"
     },
-
-    {
-      "rcpId": 3,
-      "uid": "34i99jhjni87893",
-      "name": "Mary",
-      "email": "rcpfaith@gmail.com"
-    },
-
-    { "rcpId": 4, "uid": "34i99jhjni87893", "name": "Mom" }
   ],
+
   "statusCode": [
     {
       "name": "draft",
@@ -89,17 +87,17 @@ this project will store data in database - cloud firestore in json format, a sam
     {
       "signalId": 1,
       "uid": "34i99jhjni87893",
-      "name": "finances",
-      "recipient": ["john", "doe", "Mary", "Mom"],
-      "presetMsg": "in need of financial situation",
+      "name": "Mental Breakdown",
+      "recipient": ["1230280", "2304958"],
+      "presetMsg": "In need of urgent emotional support",
       "cstTextId": "",
       "createdAt": "timestamp"
     },
     {
       "signalId": 2,
       "uid": "34i99jhjni87893",
-      "name": "rescues",
-      "recipient": ["john", "doe", "Mom"],
+      "name": "Hiking Disaster",
+      "recipient": ["1230280", "2304958"],
       "presetMsg": "Locate me, I need help",
       "cstTextId": 2,
       "createdAt": "timestamp"
@@ -126,17 +124,16 @@ this project will store data in database - cloud firestore in json format, a sam
       }
     }
   ],
-  "custometext": [
+  "customText": [
     {
-      "cstTextId": 1,
+      "cstTextId": 19897323,
       "uid": "34i99jhjni87893",
-      "message": "call me"
+      "message": "Call me now"
     },
     {
-      "cstTextId": 2,
+      "cstTextId": 20923648,
       "uid": "34i99jhjni87893",
-      "message": "call me",
-      "otherDetails": "1234 1234"
+      "message": "I have had an accident",
     }
   ],
   "signalsStatus": [
@@ -166,31 +163,35 @@ this project will store data in database - cloud firestore in json format, a sam
 }
 ```
 
-#### profile
+## Application Pages
+### Profile
 
-will store individual profile and account information as fetched from google authenticator, user can enter as many field as possible,  for mvp we will use google authenticator, then afterward add others.
+Stores individual profile and account information, fetched from google authenticator data. 
 
-#### recipients
-contains a list of all recipients,  to get for an individual a filter of where uid ="individual", users can have an endless list of Receiptients.
+### Recipients
+Contains a list of all recipients the user has added to their application data. The recipient list is stored in firebase according the user uid. 
 
-#### statusCode
+### Status Codes
 
-distress signal code based on the delivery, sent, signal dispatched by a distressed person, 2 signal sent successful, resolved signal period completed, resolved can be done by the sender
+Indicates the status of a sent distress signal. For example
+1 =  signal dispatched, 
+2 =  signal received,
+3 =  request resolved (call for help accepted or rejectd by recipient)
 
-#### signalsList
+### Signals List
 
-A preset list of message and the number of recipient per pre defined message, that can be send quickly with a press of a button, only four signalsList button will be display, this can be set in the user profile, once a distress is send its is log in the "signalsStatus" which keep trackId of all signals from (signals , signalsId).
+A preset list of messages and recipients for each emergency category.  
+A maximum of five signals list buttons will be displayed on the dashboard.  This signals/categories can be set in the user profile.  When a distress signal is sent, the send event is logged in the "signalsStatus" list, which records the trackId of all signals from (signals , signalsId).
 
-for custome message it will create a new signalsList for you so that incase in future you can re-use it. all sent signals should have a signalsList created
+### Signals
 
-#### signals
+A list of sent signals with geographic coordinates and time sent.  To retrieve a list of sent signals for a particular user, the list can be filtered by uid and then used to query signals list by signals id to retrieve
+recipients and signalsStatus (signalsId).
 
-A list of sent signals with coordinates and time sent, to get a list of sent signal for an individual , filter by uid and then fetch signals signalsList(signalsId) to get recipients and signalsStatus (signalsId)
+### Custom Text
 
-#### custometext
+Allows the user to customise the text of the SMS that will be sent to their nominated recipients for each emergency category. The Signals List should have either cstTextId or typed text when sending a distress signal, when selected it will replace the "presetMsg", and also cstTextId. If the message is directly typed it replaces "cstTextId".
 
-text message that will be sent to recipient, signalsList should have either cstTextId or typed text when sending a distress signal, when select it will replace the "presetMsg", and also cstTextId, if message is directly typed it replaces "cstTextId"
+### Signal Status
 
-#### signalsStatus
-
-keeps statelog of all sent distress Signals ,transactedBy keeps changing based on recipients and sender. 
+Used to keep a state log of all sent distress signals. 

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectProfile, addProfile } from "../features/ProfileSlice";
 import { Button } from "@mui/material";
 import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/functions/DbFunctions";
-import { ToastContainer, toast, ToastOptions } from 'react-toastify';
+import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { selectSosUser } from "../features/userSlice";
 

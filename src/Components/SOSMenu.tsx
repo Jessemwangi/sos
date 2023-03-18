@@ -8,48 +8,48 @@ import { signalsList } from '../app/model';
 
 const emergencyList: signalsList[] = [
     {
-        signalId: 0,
+        signalId: '4',
         uid: '',
         name: 'Fire',
         recipientId: ['0', '1'],
         presetMsg: 'string',
-        cstTextId: 0,
+        cstTextId: '',
         createdAt: new Date()
     },
     {
-        signalId: 1,
+        signalId: '45',
         uid: '',
         name: 'Medical Emergency',
         recipientId: ['0', '1', '3'],
         presetMsg: 'string',
-        cstTextId: 0,
+        cstTextId: '',
         createdAt: new Date()
     },
 
     {
-        signalId: 2,
+        signalId: '657',
         uid: '',
         name: 'Home Invasion',
         recipientId: ['0', '1', '3'],
         presetMsg: 'string',
-        cstTextId: 0,
+        cstTextId: '',
         createdAt: new Date()
     },
     {
-        signalId: 3,
+        signalId: '456',
         uid: '',
         name: 'Domesetic Violence',
         recipientId: ['0', '1', '3'],
         presetMsg: 'string',
-        cstTextId: 0,
+        cstTextId: '',
         createdAt: new Date()
     }, {
-        signalId: 4,
+        signalId: '789',
         uid: '4',
         name: 'Custom Field',
         recipientId: ['0', '1', '3'],
         presetMsg: 'string',
-        cstTextId: 0,
+        cstTextId: '567sd',
         createdAt: new Date()
     }
 ]
@@ -72,9 +72,6 @@ const SOSMenu = () => {
         <div className="sosMenu">
             {emergencyList.map((item) => (
                 <button key={item.signalId} onClick={clickHandler}>{item.name}</button>))}
-
-
-
         </div>
     );
 };
