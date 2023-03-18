@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { LoadingState, Profile } from "../app/model";
 import { GetData, PostData } from "../app/functions/DbFunctions";
 
+//
+
 const init: Profile = {
   id: '',
   firstname: "",
@@ -17,7 +19,7 @@ const init: Profile = {
   addressline2: "",
   city: "",
   state_province: "",
-  postalcode: "",
+  postcode: "",
   country: "",
   createdAt: null,
 };
@@ -48,9 +50,9 @@ export const profileSlice = createSlice({
   },
 
   reducers: {
-    GetProfile: (state) => {
+    getProfile: (state) => {
 
-      const { response, error, loadingState } = GetData('profile',)
+      const { response, error, loadingState } = GetData('profile',) //call to firestore
       try {
         if (response) {
           const UserProfile: Profile = {
@@ -68,7 +70,7 @@ export const profileSlice = createSlice({
             addressline2: response.addressline2,
             city: response.city,
             state_province: response.state_province,
-            postalcode: response.postalcode,
+            postcode: response.postcode,
             country: response.country,
             createdAt: response.createdon
           }

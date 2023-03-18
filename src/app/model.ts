@@ -15,18 +15,18 @@ export interface Profile {
     id: number | string
     firstname: string,
     lastname: string,
-    contact: number | null,
-    altcontact: number | null,
+    contact: number | string | null,
+    altcontact?: number | string | null,
     occupation?: string
-    dob: Date | null,
+    dob?: Date | null,
     uid: string,
     email: string,
     username: string,
-    addressline1: string,
+    addressline1?: string,
     addressline2?: string,
     city: string,
-    state_province: string,
-    postalcode?: string
+    state_province?: string,
+    postcode?: string
     country: string
     createdAt: Date | null
 }

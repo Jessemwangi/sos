@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Recipient, Profile } from '../app/model';
+import { Profile } from '../app/model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../DataLayer/FirestoreInit";
 import { collection, getDocs, updateDoc, doc, getDoc } from "@firebase/firestore";
@@ -7,46 +7,25 @@ import { collection, getDocs, updateDoc, doc, getDoc } from "@firebase/firestore
 ////TOO: documents specific to current logged-in user only
 
 const initialState = {
-    recipientData: [],
-    signalsData: [],
+
     profileData: {},
 
 }
-type Recipients = Recipient[];
+
 
 
 const uid: string = 'adPz97i9O6N4WOxE467OFMhKwgC3'; //anna's uuid for testing
 
-/*Uses code from Medium tutorial example on firebase query with RTK Query (author: Eduardo Motta de Moraes)
-https://blog.bitsrc.io/how-to-use-firestore-with-redux-in-a-react-application-f127d35adf3e */
 
 
 export const firestoreApi = createApi({
     baseQuery: fakeBaseQuery(),
-    tagTypes: ['Recipients', 'Profile'],
+    tagTypes: ['Profile'],
     reducerPath: "firestoreApi",
     endpoints: (builder) => ({
-        fetchRecipients: builder.query<Recipients, void>({
-            async queryFn() {
-                try {
-                    const ref = collection(db, 'recipients');
-                    const querySnapshot = await getDocs(ref);
-                    let recipients: Recipients = [];
-                    querySnapshot?.forEach((doc) => {
-                        recipients.push({ id: doc.id, ...doc.data() } as Recipient)
-                    },
-                    );
-                    return { data: recipients }
-                } catch (error: any) {
-                    return { error: error.message }
-                }
-            },
-            providesTags: ['Recipients'],
-        }),
-        ///////////
         fetchProfile: builder.query<Profile, void>({
             async queryFn() {
-                let profile:Profile = {
+                let profile: Profile = {
                     id: "",
                     firstname: "",
                     lastname: "",
@@ -78,10 +57,10 @@ export const firestoreApi = createApi({
 
         }),
         /////////////
-        setRecipient: builder.mutation({
-            async queryFn({ recipientId, details }) {
+        setProfile: builder.mutation({
+            async queryFn({ id, details }) {
                 try {
-                    await updateDoc(doc(db, 'recipients', recipientId), {
+                    await updateDoc(doc(db, 'profile', id), {
                         details
                     });
                     return { data: null };
@@ -90,25 +69,25 @@ export const firestoreApi = createApi({
                     return { error: error.message }
                 }
             },
-            invalidatesTags: ['Recipients'],
+            invalidatesTags: ['Profile'],
         })
     })
 });
-export const { useFetchRecipientsQuery, useSetRecipientMutation } = firestoreApi;
+export const { useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
 
 
 
-export const firestoreDataSlice = createSlice({
-    name: "fireStoreData",
+export const firestoreProfileSlice = createSlice({
+    name: "fireStoreProfileData",
     initialState,
     reducers: {
-        setRecipientData: (state: any, action: PayloadAction<Recipient[]>) => { state.recipientData = action.payload }
+        setRecipientData: (state: any, action: PayloadAction<Profile>) => { state.recipientData = action.payload }
 
     }
 });
 
 
-export const { setRecipientData } = firestoreDataSlice.actions;
+export const { setRecipientData } = firestoreProfileSlice.actions;
 
-export default firestoreDataSlice.reducer;
+export default firestoreProfileSlice.reducer;
 

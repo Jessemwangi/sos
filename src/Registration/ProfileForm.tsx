@@ -13,17 +13,13 @@ import { Button } from "@mui/material";
 import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/functions/DbFunctions";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { selectSosUser } from "../features/userSlice";
-
-interface googleUser {
-  sosUser: Guser;
-}
+import { selectUser } from "../features/userSlice";
 
 
-export default function RegistrationForm() {
+export default function ProfileForm() {
   const dispatch = useDispatch();
-  const sosUser: Guser = useSelector(selectSosUser)
-  const user_Profile: Profile = useSelector(selectProfile);
+  const user: Guser = useSelector(selectUser) //from userSlice
+  const user_Profile: Profile = useSelector(selectProfile); //from profileSlice
   const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
   const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
   const [currentProfile, setCurrentProfile] = React.useState<Profile>()
@@ -44,7 +40,7 @@ export default function RegistrationForm() {
 
 
   React.useEffect(() => {
-    if (sosUser.email && sosUser.sub) {
+    if (user.email && user.sub) {
       const Firestore_Profile = async () => {
         const retrievedProfile = await GetDataByTwoColumns<Profile>(
           "profile",
@@ -74,7 +70,7 @@ export default function RegistrationForm() {
 
       Firestore_Profile();
     }
-  }, [dispatch, sosUser.email, sosUser.sub, userProfile.email, userProfile.id, user_Profile]);
+  }, [dispatch, user.email, user.sub, userProfile.email, userProfile.id, user_Profile]);
 
 
 
@@ -121,7 +117,7 @@ export default function RegistrationForm() {
             name="firstName"
             label="First name"
             fullWidth
-            value={sosUser.name.split(" ")[1]}
+            value={user.name.split(" ")[1]}
             autoComplete="given-name"
             variant="standard"
           />
@@ -133,7 +129,7 @@ export default function RegistrationForm() {
             name="lastName"
             label="Last name"
             fullWidth
-            value={sosUser.name.split(" ")[0]}
+            value={user.name.split(" ")[0]}
             autoComplete="family-name"
             variant="standard"
           />
@@ -199,7 +195,7 @@ export default function RegistrationForm() {
             name="emailaddress"
             label="Email Address"
             fullWidth
-            value={sosUser.email}
+            value={user.email}
             autoComplete="Email Address"
             variant="standard"
           />
@@ -257,8 +253,8 @@ export default function RegistrationForm() {
           <TextField
             required
             id="zip"
-            name="postalcode"
-            value={userProfile.postalcode ? userProfile.postalcode : ""}
+            name="postcode"
+            value={userProfile.postcode ? userProfile.postcode : ""}
             label="Zip / Postal code"
             fullWidth
             autoComplete="Reachable postal-code"

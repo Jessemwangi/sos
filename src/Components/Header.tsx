@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from
 import MenuIcon from '@mui/icons-material/Menu';
 import jwtDecode from 'jwt-decode';
 
-import { SignIn, SignOut, selectSosUser } from '../features/userSlice';
+import { signIn, signOut, selectUser } from '../features/userSlice';
 import { togglePopover, closePopover } from '../features/headerSlice';
 import { Guser } from '../app/model';
 import '../styles/Header.css';
@@ -13,8 +13,9 @@ import '../styles/Header.css';
 
 const Header = () => {
     const dispatch = useDispatch();
+    const CLIENT_ID = '127054368864-db825ognn1j3bdg4rl224ums2j7k2g07';
     const menuButton = document.getElementById('menuButton');
-    const sosUser: Guser = useSelector(selectSosUser)
+    const sosUser: Guser = useSelector(selectUser);
     let openMenuPopover = useSelector((state: any) => state.header.popoverState.mainMenu);
 
     const sxStyles = {
@@ -46,10 +47,12 @@ const Header = () => {
                 sub: userSignObject.sub
             }
 
-            dispatch(SignIn(userObject));
+            dispatch(signIn(userObject));
         }
+
+
         window.google.accounts.id.initialize({
-            client_id: "127054368864-db825ognn1j3bdg4rl224ums2j7k2g07.apps.googleusercontent.com",
+            client_id: `${CLIENT_ID}.apps.googleusercontent.com`,
             callback: handleCallback,
             cancel_on_tap_outside: true
         });
@@ -69,9 +72,9 @@ const Header = () => {
         <div className='header'>
             <AppBar className="appBar" sx={{ position: 'static' }}>
                 <div className='signInDiv'>
-                    {sosUser.email !== "" ? (<Button id="signOutButton" onClick={() => dispatch(SignOut())}>
-                        <img className="userImage" src={sosUser.picture} alt={sosUser.name} />Sign Out</Button>
-                    ) : (<Button id='signInButton'></Button>)}
+                    {sosUser.email !== "" ? (<><Button id="signOutButton" onClick={() => dispatch(signOut())}>
+                        <img className="userImage" src={sosUser.picture} alt={sosUser.name} />Sign Out</Button></>
+                    ) : (<><Button id='signInButton'></Button></>)}
                 </div>
 
                 <Toolbar className="toolBar" sx={sxStyles}>
@@ -82,12 +85,12 @@ const Header = () => {
 
             <Popover id="menuPopover" open={openMenuPopover} anchorEl={menuButton} onClose={closeMenu}>
                 <MenuList>
-                    <Link to="/help"><MenuItem>How to use SOS</MenuItem></Link>
-                    <Link to="/customsignals"><MenuItem>Customize Emergency Signals</MenuItem></Link>
-                    <Link to="/custommsg"><MenuItem>Customize Messages</MenuItem></Link>
-                    <Link to='/profile'><MenuItem>Edit Profile</MenuItem></Link>
-                    <Link to="/register"><MenuItem>Register</MenuItem></Link>
-                    <Link to="/recipients"><MenuItem>Manage Contacts</MenuItem></Link>
+                    <Link to="/help"><MenuItem onClick={closeMenu}>How to use SOS</MenuItem></Link>
+                    <Link to="/customsignals"><MenuItem onClick={closeMenu}>Customize Emergency Signals</MenuItem></Link>
+                    <Link to="/custommsg"><MenuItem onClick={closeMenu}>Customize Messages</MenuItem></Link>
+                    <Link to='/profile'><MenuItem onClick={closeMenu}>Manage Profile</MenuItem></Link>
+                    <Link to="/register"><MenuItem onClick={closeMenu}>Register</MenuItem></Link>
+                    <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
                 </MenuList>
             </Popover>
         </div>
