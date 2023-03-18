@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react'
 import { useSelector } from "react-redux";
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
@@ -20,9 +20,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RegistrationForm from './ProfileForm';
 import PaymentForm from './RecipientEntryForm';
 import CustomTextForm from './CustomTextEntryForm';
-import { selectSosUser } from '../features/userSlice';
+import { selectUser } from '../features/userSlice';
 import { Guser } from '../app/model';
-import CustomeSignals from './CustomSignals';
+import CustomSignals from './CustomSignals';
 import WrapUp from './WrapUp';
 // import { selectProfile } from '../features/Profile';
 // import { saveProfile } from '../features/Profile';
@@ -44,7 +44,7 @@ function getStepContent(step: number, sosUser: Guser) {
     case 2:
       return <CustomTextForm />;
     case 3:
-      return <CustomeSignals />;
+      return <CustomSignals />;
     case 4:
       return <WrapUp />;
     default:
@@ -55,9 +55,9 @@ function getStepContent(step: number, sosUser: Guser) {
 const theme = createTheme();
 
 const CompleteReg = () => {
-  const sosUser: Guser = useSelector(selectSosUser)
+  const sosUser: Guser = useSelector(selectUser)
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
 

@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Recipient } from '../app/model';
-//import { rowsArray } from '../Components/rows';
-
-//const recipients: Recipient[] = rowsArray;
-
 
 const initialState = {
     popoverState: false,

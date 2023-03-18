@@ -28,7 +28,7 @@ export interface Profile {
     state_province?: string,
     postcode?: string
     country: string
-    createdAt: Date | null
+    createdAt?: Date | null
 }
 
 export interface Recipient {

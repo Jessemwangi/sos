@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Recipient, Profile } from '../app/model';
+import { Recipient } from '../app/model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../DataLayer/FirestoreInit";
 import { collection, getDocs, updateDoc, doc, getDoc } from "@firebase/firestore";
@@ -8,22 +8,16 @@ import { collection, getDocs, updateDoc, doc, getDoc } from "@firebase/firestore
 
 const initialState = {
     recipientData: [],
-    signalsData: [],
-    profileData: {},
-
 }
+
 type Recipients = Recipient[];
 
 
-const uid: string = 'adPz97i9O6N4WOxE467OFMhKwgC3'; //anna's uuid for testing
-
-/*Uses code from Medium tutorial example on firebase query with RTK Query (author: Eduardo Motta de Moraes)
-https://blog.bitsrc.io/how-to-use-firestore-with-redux-in-a-react-application-f127d35adf3e */
-
+//const uid: string = 'adPz97i9O6N4WOxE467OFMhKwgC3'; //anna's uuid for testing
 
 export const firestoreApi = createApi({
     baseQuery: fakeBaseQuery(),
-    tagTypes: ['Recipients', 'Profile'],
+    tagTypes: ['Recipients'],
     reducerPath: "firestoreApi",
     endpoints: (builder) => ({
         fetchRecipients: builder.query<Recipients, void>({
@@ -43,41 +37,6 @@ export const firestoreApi = createApi({
             },
             providesTags: ['Recipients'],
         }),
-        ///////////
-        fetchProfile: builder.query<Profile, void>({
-            async queryFn() {
-                let profile:Profile = {
-                    id: "",
-                    firstname: "",
-                    lastname: "",
-                    contact: "",
-                    uid: "",
-                    email: "",
-                    username: "",
-                    city: "",
-                    country: "",
-                    createdAt: new Date()
-                };
-                try {
-                    const docRef = doc(db, 'profile', uid);
-                    const docSnap = await getDoc(docRef);
-
-                    if (docSnap.exists()) {
-                        console.log("Document data:", docSnap.data());
-                        profile = { ...docSnap.data() };
-                        return { data: profile }
-                    }
-                }
-                catch (error: any) {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                    return { error: error.message };
-                }
-            },
-            providesTags: ['Profile'],
-
-        }),
-        /////////////
         setRecipient: builder.mutation({
             async queryFn({ recipientId, details }) {
                 try {

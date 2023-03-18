@@ -4,59 +4,62 @@ import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../DataLayer/FirestoreInit";
 import { collection, getDocs, updateDoc, doc, getDoc } from "@firebase/firestore";
 
-////TOO: documents specific to current logged-in user only
 
 const initialState = {
-
-    profileData: {},
-
+    profileData: {
+        id: "",
+        firstname: "",
+        lastname: "",
+        contact: "",
+        uid: "",
+        email: "",
+        username: "",
+        city: "",
+        country: ""
+    },
 }
 
 
-
 const uid: string = 'adPz97i9O6N4WOxE467OFMhKwgC3'; //anna's uuid for testing
+const id = uid;
 
-
-
-export const firestoreApi = createApi({
+export const firestoreProfileApi = createApi({
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Profile'],
-    reducerPath: "firestoreApi",
+    reducerPath: "firestoreProfileApi",
     endpoints: (builder) => ({
         fetchProfile: builder.query<Profile, void>({
             async queryFn() {
-                let profile: Profile = {
+            let profile: Profile = {
                     id: "",
                     firstname: "",
                     lastname: "",
                     contact: "",
-                    uid: "",
+                    uid: uid,
                     email: "",
                     username: "",
                     city: "",
-                    country: "",
-                    createdAt: new Date()
-                };
+                    country: ""
+                }; 
                 try {
-                    const docRef = doc(db, 'profile', uid);
+                    const docRef = doc(db, 'profile', id);
                     const docSnap = await getDoc(docRef);
-
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());
-                        profile = { ...docSnap.data() };
-                        return { data: profile }
+                        profile ={...profile, ...docSnap.data()}
+
                     }
+                     return { data: profile }
                 }
                 catch (error: any) {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
+                    console.log("No such document");
                     return { error: error.message };
                 }
             },
             providesTags: ['Profile'],
 
         }),
-        /////////////
+
         setProfile: builder.mutation({
             async queryFn({ id, details }) {
                 try {
@@ -73,15 +76,14 @@ export const firestoreApi = createApi({
         })
     })
 });
-export const { useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
+export const { useFetchProfileQuery, useSetProfileMutation } = firestoreProfileApi;
 
 
-
-export const firestoreProfileSlice = createSlice({
+export const firestoreProfileSlice = createSlice({ //use to send firebase data to store
     name: "fireStoreProfileData",
     initialState,
     reducers: {
-        setRecipientData: (state: any, action: PayloadAction<Profile>) => { state.recipientData = action.payload }
+        setRecipientData: (state: any, action: PayloadAction<Profile>) => { state.ProfileData = action.payload }
 
     }
 });

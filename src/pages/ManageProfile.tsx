@@ -2,9 +2,17 @@ import React from 'react';
 import RegistrationForm from '../Registration/ProfileForm';
 import { Guser, Profile } from '../app/model';
 import { useSelector } from 'react-redux';
+import { useFetchProfileQuery, useSetProfileMutation } from '../features/firestoreProfileSlice';
 
 
 const ManageProfile = () => {
+
+    const {
+        data,
+        isLoading, 
+        error
+    } = useFetchProfileQuery();
+    
     const user = useSelector((state: any) => state.userSlice.user);
     return (
         <div>
