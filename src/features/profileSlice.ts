@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { LoadingState, Profile } from "../app/model";
-import { GetData, PostData } from "../app/functions/DbFunctions";
+import { GetData, PostData } from "../app/services/DbFunctions";
 
 //
 

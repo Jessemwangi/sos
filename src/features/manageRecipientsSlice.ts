@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Recipient } from "../app/model";
 
 
 const initialState = {
@@ -18,7 +19,8 @@ export const manageRecipientsSlice = createSlice({
         /* saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = [...state.recipients, { ...action.payload }] }, */
 
         saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = action.payload },
-        updateCurrentId: (state, action) => { state.currentId = action.payload }
+        updateCurrentId: (state, action) => { state.currentId = action.payload },
+        setRecipientData: (state: any, action: PayloadAction<Recipient[]>) => { state.recipientData = action.payload },
 
     },
 });

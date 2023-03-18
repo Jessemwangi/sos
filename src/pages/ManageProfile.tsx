@@ -2,7 +2,7 @@ import React from 'react';
 import RegistrationForm from '../Registration/ProfileForm';
 import { Guser, Profile } from '../app/model';
 import { useSelector } from 'react-redux';
-import { useFetchProfileQuery, useSetProfileMutation } from '../features/firestoreProfileSlice';
+import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
 
 
 const ManageProfile = () => {
