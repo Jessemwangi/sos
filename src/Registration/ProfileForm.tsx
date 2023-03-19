@@ -1,29 +1,28 @@
 import * as React from "react";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Guser, Profile } from "../app/model";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfile, addProfile } from "../features/profileSlice";
-import { Button } from "@mui/material";
-import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/services/DbFunctions";
+import dayjs, { Dayjs } from "dayjs";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
+import {Grid, Button, Typography, TextField} from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import 'react-toastify/dist/ReactToastify.css';
-import { selectUser } from "../features/userSlice";
 
+import { Guser, Profile } from "../app/model";
+import {}  from "../features/profileSlice" //import reducer functions
+
+//import { selectProfile, addProfile } from "../features/profileSlice";
+//import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/services/DbFunctions";
 
 export default function ProfileForm() {
   const dispatch = useDispatch();
-  const user: Guser = useSelector(selectUser) //from userSlice
-  const user_Profile: Profile = useSelector(selectProfile); //from profileSlice
-  const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
+  const user = useSelector((state:any) => state.user.user);
+  const userProfile = useSelector((state:any) => state.profile.userProfile);
+/*   const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
   const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
-  const [currentProfile, setCurrentProfile] = React.useState<Profile>()
-  // console.log(userProfile)
+  const [currentProfile, setCurrentProfile] = React.useState<Profile>() */
+
+  console.log(userProfile); //debugging
+
   const [datePickerValue, setDatePickerValue] = React.useState<
     Dayjs | null | Date
   >(dayjs());
@@ -39,7 +38,7 @@ export default function ProfileForm() {
   };
 
 
-  React.useEffect(() => {
+/*   React.useEffect(() => {
     if (user.email && user.sub) {
       const Firestore_Profile = async () => {
         const retrievedProfile = await GetDataByTwoColumns<Profile>(
@@ -70,10 +69,14 @@ export default function ProfileForm() {
 
       Firestore_Profile();
     }
-  }, [dispatch, user.email, user.sub, userProfile.email, userProfile.id, user_Profile]);
+  }, [dispatch, user.email, user.sub, userProfile.email, userProfile.id, user_Profile]); */
+
+//////////////////////////
 
 
+//get profile from store:
 
+/* 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
@@ -106,6 +109,10 @@ export default function ProfileForm() {
       toast.error("Oops, seems like we need you to log in first!", options);
     }
   };
+
+ */
+
+  /////////////////////// FORM //////////////////////////////
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom></Typography>
@@ -144,7 +151,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Phone Number"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            //onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -157,7 +164,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Alt Phone Number"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            //onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -170,7 +177,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="occupation"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -182,7 +189,7 @@ export default function ProfileForm() {
                 setDatePickerValue(
                   userProfile.dob ? userProfile.dob : newValue
                 );
-                dispatch(addProfile({ dob: newValue }));
+               // dispatch(addProfile({ dob: newValue }));
               }}
               renderInput={(params) => <TextField {...params} />}
             />
@@ -210,7 +217,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable address-line1"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -222,7 +229,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable address-line2"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            //onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -235,7 +242,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable address-level2"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -246,7 +253,7 @@ export default function ProfileForm() {
             label="State/Province/Region"
             fullWidth
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -259,7 +266,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable postal-code"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -272,16 +279,16 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Resident country"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
           <Button
             variant="contained"
-            onClick={HandlePostProfile}
+           // onClick={HandlePostProfile}
             sx={{ mt: 3, ml: 1 }}
           >
-            {buttonAction}
+       {/*      {buttonAction} */}
           </Button>
         </Grid>
         <ToastContainer />

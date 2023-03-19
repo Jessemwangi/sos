@@ -14,7 +14,7 @@ const init: Guser = {
 };
 
 export const userSlice = createSlice({
-  name: "userSlice",
+  name: "user",
   initialState: {
     user: init,
   },
@@ -35,5 +35,5 @@ export const userSlice = createSlice({
   },
 });
 export const { signIn, signOut } = userSlice.actions;
-export const selectUser = (state: any) => state.userSlice.user;
+export const selectUser = (state: any) => state.user.user;
 export default userSlice.reducer;

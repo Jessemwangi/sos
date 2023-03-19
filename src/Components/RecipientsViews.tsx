@@ -25,7 +25,8 @@ const RecipientsViews = () => {
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
   const currentAnchorElementId: string = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
   let anchorEl = document.getElementById(currentAnchorElementId);
-  let currentId = useSelector((state: any) => state.manageRecipients.currentId);
+  let user = useSelector((state: any) => state.user.user);
+  console.log(user); //debugging
 
 
   function closeHandler() {

@@ -1,16 +1,13 @@
 import { Recipient, Profile } from '../model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../../DataLayer/FirestoreInit";
-import { collection, getDocs, updateDoc, doc, getDoc } from "@firebase/firestore";
+import {   onSnapshot, where, query, getDoc, collection, getDocs, doc, addDoc, updateDoc, QuerySnapshot, DocumentData, } from "@firebase/firestore";
 
-////TOO: documents specific to current logged-in user only
-
+//TOO: documents specific to current logged-in user only
 
 type Recipients = Recipient[];
 
-
-//const uid: string = 'adPz97i9O6N4WOxE467OFMhKwgC3'; //anna's uuid for testing
-const id:string = 'jbGnTqBog1n4WgvjxRKV';
+const id:string = 'jbGnTqBog1n4WgvjxRKV';//for testing
 
 export const firestoreApi = createApi({
     baseQuery: fakeBaseQuery(),
@@ -20,8 +17,14 @@ export const firestoreApi = createApi({
         fetchRecipients: builder.query<Recipients, void>({
             async queryFn() {
                 try {
-                    const ref = collection(db, 'recipients');
-                    const querySnapshot = await getDocs(ref);
+                    const q = query(
+                        collection(db, 'recipients'),
+                        where('userId', "==", id)
+                      );
+                      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+                      console.log(querySnapshot.docs);//debugging
+                    //const ref = collection(db, 'recipients');
+                    //const querySnapshot = await getDocs(ref);
                     let recipients: Recipients = [];
                     querySnapshot?.forEach((doc) => {
                         recipients.push({ id: doc.id, ...doc.data() } as Recipient)

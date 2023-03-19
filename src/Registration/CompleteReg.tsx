@@ -17,7 +17,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import RegistrationForm from './ProfileForm';
+import ProfileForm from './ProfileForm';
 import PaymentForm from './RecipientEntryForm';
 import CustomTextForm from './CustomTextEntryForm';
 import { selectUser } from '../features/userSlice';
@@ -38,7 +38,7 @@ function getStepContent(step: number, sosUser: Guser) {
   switch (step) {
     case 0:
 
-      return <RegistrationForm />;
+      return <ProfileForm />;
     case 1:
       return <PaymentForm />;
     case 2:

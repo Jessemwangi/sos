@@ -39,6 +39,7 @@ export interface Recipient {
     phone: string,
     city?: string,
     postcode?: string,
+    userId: string
 
 }
 

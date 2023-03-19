@@ -1,5 +1,5 @@
 import React from 'react';
-import RegistrationForm from '../Registration/ProfileForm';
+import ProfileForm from '../Registration/ProfileForm';
 import { Guser, Profile } from '../app/model';
 import { useSelector } from 'react-redux';
 import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
@@ -13,7 +13,10 @@ const ManageProfile = () => {
         error
     } = useFetchProfileQuery();
     
-    const user = useSelector((state: any) => state.userSlice.user);
+    const user = useSelector((state: any) => state.user.user);
+    const profile = useSelector((state: any) => state.profile.userProfile);
+    console.log(user); //debugging
+
     return (
         <div>
             <h1>Manage Profile</h1>
@@ -23,8 +26,8 @@ const ManageProfile = () => {
                 <p>{`Hi ${user.name}`}</p>
             </>)
 
-
             }
+<ProfileForm />
 
         </div>
     );

@@ -12,7 +12,7 @@ import profileSlice2 from '../features/profileSlice2';
 
 export const store = configureStore({
   reducer: {
-    userSlice: userSlice,
+    user: userSlice,
     profile: profileSlice,
     profile2: profileSlice2,
     sosButton: sosButtonSlice,
