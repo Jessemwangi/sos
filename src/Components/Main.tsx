@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import "../styles/Main.css";
 import React from 'react';
 import { toggleSigninModal, toggleSignupModal } from '../features/headerSlice';
+//import { getAuth, setPersistence, signInWithEmailAndPassword, browserSessionPersistence } from "firebase/auth";
 
 
 const Main = () => {
