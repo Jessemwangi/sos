@@ -16,8 +16,8 @@ export const headerSlice =
         reducers: {
             togglePopover: (state: any, action: PayloadAction<object>) => { state.popoverState = { ...state.popoverState, ...action.payload } },
             closePopover: (state: any, action: PayloadAction<object>) => { state.popoverState = { ...state.popoverState, ...action.payload } },
-            toggleSigninModal: (state:any)=> {state.signinModal = !state.signinModal},
-            toggleSignupModal: (state:any)=> {state.signupModal = !state.signupModal}
+            toggleSigninModal: (state:any, action: PayloadAction<boolean>)=> {state.signinModal = action.payload},
+            toggleSignupModal: (state:any, action: PayloadAction<boolean>)=> {state.signupModal = action.payload}
 
         }
     },

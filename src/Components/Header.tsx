@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import jwtDecode from 'jwt-decode';
@@ -17,7 +17,6 @@ console.log(GOOGLE_CLIENT_ID);
 
 const Header = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const menuButton = document.getElementById('menuButton');
     const user: Guser = useSelector((state:any) => state.user.user);
     let openMenuPopover = useSelector((state: any) => state.header.popoverState.mainMenu);
@@ -81,8 +80,8 @@ const Header = () => {
                     <img className="userImage" src={user.picture} alt={user.name} />Sign Out</Button>
                     </div>
                     <div>
-                    <Button style={{color: 'white'}} onClick={() => dispatch(toggleSignupModal)}>Create Account</Button>
-                    <Button style={{color: 'white'}} onClick={() => dispatch(toggleSigninModal)}>Sign In</Button>
+                    <Button style={{color: 'white'}} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
+                    <Button style={{color: 'white'}} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
                     </div>
                 </div>
                 
