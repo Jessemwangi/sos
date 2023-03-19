@@ -5,7 +5,7 @@ import { Guser } from "../app/model";
 
 const init: Guser = {
   name: "",
-  email: "",
+  email: null,
   picture: "",
   iat: 0,
   iss: "",
@@ -35,5 +35,4 @@ export const userSlice = createSlice({
   },
 });
 export const { signIn, signOut } = userSlice.actions;
-export const selectUser = (state: any) => state.user.user;
 export default userSlice.reducer;

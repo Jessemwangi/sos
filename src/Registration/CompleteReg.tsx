@@ -1,43 +1,34 @@
 import React, {useEffect, useState} from 'react'
 import { useSelector } from "react-redux";
 import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
-import Paper from '@mui/material/Paper';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import {AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography} from '@mui/material';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ForumIcon from '@mui/icons-material/Forum';
 import SosIcon from '@mui/icons-material/Sos';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import ProfileForm from './ProfileForm';
 import PaymentForm from './RecipientEntryForm';
 import CustomTextForm from './CustomTextEntryForm';
-import { selectUser } from '../features/userSlice';
 import { Guser } from '../app/model';
 import CustomSignals from './CustomSignals';
 import WrapUp from './WrapUp';
-// import { selectProfile } from '../features/Profile';
+
 // import { saveProfile } from '../features/Profile';
 
 const steps = [
-  { name: 'Biography', icon: <PersonAddIcon />, }
-  , { name: 'Recipients', icon: <GroupAddIcon />, },
+  { name: 'Biography', icon: <PersonAddIcon />, }, 
+  { name: 'Recipients', icon: <GroupAddIcon />, },
   { name: 'Custom Text', icon: <ForumIcon />, },
   { name: 'Custom Signals', icon: <SosIcon />, },
-  { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }];
+  { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }
+];
 
-function getStepContent(step: number, sosUser: Guser) {
+function getStepContent(step: number, user: Guser) {
   switch (step) {
     case 0:
-
       return <ProfileForm />;
     case 1:
       return <PaymentForm />;
@@ -55,22 +46,24 @@ function getStepContent(step: number, sosUser: Guser) {
 const theme = createTheme();
 
 const CompleteReg = () => {
-  const sosUser: Guser = useSelector(selectUser)
-
+  const user: Guser = useSelector((state:any)=>state.user.user);
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
-
     setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+
   return (
+   
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AppBar
+<CssBaseline />
+ { user.email === null ? ( <h1>Please signup with SOS service before registering your profile</h1>
+    ) : ( <><AppBar
         position="absolute"
         color="default"
         elevation={0}
@@ -81,7 +74,7 @@ const CompleteReg = () => {
       >
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            HI {sosUser.name || ' Guest'}, Let get you set up and ready with few steps
+            Hi {user.name || 'Guest'}, set up your account by providing the following information.
           </Typography>
         </Toolbar>
       </AppBar>
@@ -108,7 +101,7 @@ const CompleteReg = () => {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              {getStepContent(activeStep, sosUser)}
+              {getStepContent(activeStep, user)}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -128,7 +121,8 @@ const CompleteReg = () => {
         </Paper>
 
       </Container>
-    </ThemeProvider>
+      </>)} 
+   </ThemeProvider>
   );
 };
 

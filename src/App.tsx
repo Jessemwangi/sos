@@ -20,7 +20,7 @@ import NotFound from './pages/NotFound';
 import AllSignals from './pages/AllSignals';
 import SignalDetails from './pages/SignalHistory';
 import CompleteReg from './Registration/CompleteReg';
-import Registration from './pages/Registration';
+import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';

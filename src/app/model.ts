@@ -1,7 +1,7 @@
 
 export interface Guser {
     name: string
-    email: string
+    email: null | string
     picture: string
     iat: number
     iss: string
