@@ -1,33 +1,28 @@
 import * as React from "react";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Guser, Profile } from "../app/model";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfile, addProfile } from "../features/ProfileSlice";
-import { Button } from "@mui/material";
-import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/functions/DbFunctions";
+import dayjs, { Dayjs } from "dayjs";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
+import {Grid, Button, Typography, TextField} from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import 'react-toastify/dist/ReactToastify.css';
-import { selectSosUser } from "../features/userSlice";
 
-interface googleUser {
-  sosUser: Guser;
-}
+import { Guser, Profile } from "../app/model";
+import {}  from "../features/profileSlice" //import reducer functions
 
+//import { selectProfile, addProfile } from "../features/profileSlice";
+//import { GetDataByTwoColumns2, PostData, GetDataByTwoColumns } from "../app/services/DbFunctions";
 
-export default function RegistrationForm() {
+export default function ProfileForm() {
   const dispatch = useDispatch();
-  const sosUser: Guser = useSelector(selectSosUser)
-  const user_Profile: Profile = useSelector(selectProfile);
-  const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
+  const user = useSelector((state:any) => state.user.user);
+  const userProfile = useSelector((state:any) => state.profile.userProfile);
+/*   const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
   const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
-  const [currentProfile, setCurrentProfile] = React.useState<Profile>()
-  // console.log(userProfile)
+  const [currentProfile, setCurrentProfile] = React.useState<Profile>() */
+
+  console.log(userProfile); //debugging
+
   const [datePickerValue, setDatePickerValue] = React.useState<
     Dayjs | null | Date
   >(dayjs());
@@ -43,8 +38,8 @@ export default function RegistrationForm() {
   };
 
 
-  React.useEffect(() => {
-    if (sosUser.email && sosUser.sub) {
+/*   React.useEffect(() => {
+    if (user.email && user.sub) {
       const Firestore_Profile = async () => {
         const retrievedProfile = await GetDataByTwoColumns<Profile>(
           "profile",
@@ -74,10 +69,14 @@ export default function RegistrationForm() {
 
       Firestore_Profile();
     }
-  }, [dispatch, sosUser.email, sosUser.sub, userProfile.email, userProfile.id, user_Profile]);
+  }, [dispatch, user.email, user.sub, userProfile.email, userProfile.id, user_Profile]); */
+
+//////////////////////////
 
 
+//get profile from store:
 
+/* 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
@@ -110,6 +109,10 @@ export default function RegistrationForm() {
       toast.error("Oops, seems like we need you to log in first!", options);
     }
   };
+
+ */
+
+  /////////////////////// FORM //////////////////////////////
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom></Typography>
@@ -121,7 +124,7 @@ export default function RegistrationForm() {
             name="firstName"
             label="First name"
             fullWidth
-            value={sosUser.name.split(" ")[1]}
+            value={user.name.split(" ")[1]}
             autoComplete="given-name"
             variant="standard"
           />
@@ -133,7 +136,7 @@ export default function RegistrationForm() {
             name="lastName"
             label="Last name"
             fullWidth
-            value={sosUser.name.split(" ")[0]}
+            value={user.name.split(" ")[0]}
             autoComplete="family-name"
             variant="standard"
           />
@@ -148,7 +151,7 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="Phone Number"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            //onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -161,7 +164,7 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="Alt Phone Number"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            //onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -174,7 +177,7 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="occupation"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -186,7 +189,7 @@ export default function RegistrationForm() {
                 setDatePickerValue(
                   userProfile.dob ? userProfile.dob : newValue
                 );
-                dispatch(addProfile({ dob: newValue }));
+               // dispatch(addProfile({ dob: newValue }));
               }}
               renderInput={(params) => <TextField {...params} />}
             />
@@ -199,7 +202,7 @@ export default function RegistrationForm() {
             name="emailaddress"
             label="Email Address"
             fullWidth
-            value={sosUser.email}
+            value={user.email}
             autoComplete="Email Address"
             variant="standard"
           />
@@ -214,7 +217,7 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="Reachable address-line1"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -226,7 +229,7 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="Reachable address-line2"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            //onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -239,7 +242,7 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="Reachable address-level2"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -250,20 +253,20 @@ export default function RegistrationForm() {
             label="State/Province/Region"
             fullWidth
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
             id="zip"
-            name="postalcode"
-            value={userProfile.postalcode ? userProfile.postalcode : ""}
+            name="postcode"
+            value={userProfile.postcode ? userProfile.postcode : ""}
             label="Zip / Postal code"
             fullWidth
             autoComplete="Reachable postal-code"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -276,16 +279,16 @@ export default function RegistrationForm() {
             fullWidth
             autoComplete="Resident country"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+           // onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
           <Button
             variant="contained"
-            onClick={HandlePostProfile}
+           // onClick={HandlePostProfile}
             sx={{ mt: 3, ml: 1 }}
           >
-            {buttonAction}
+       {/*      {buttonAction} */}
           </Button>
         </Grid>
         <ToastContainer />

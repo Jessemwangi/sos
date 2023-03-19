@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { LoadingState, Profile } from "../app/model";
-import { GetData, PostData } from "../app/functions/DbFunctions";
+import {useSetProfileMutation} from '../app/services/firestoreAPI';
+
 
 const init: Profile = {
   id: '',
   firstname: "",
   lastname: "",
-  contact: null,
-  altcontact: null,
+  contact: "",
+  altcontact: "",
   occupation: "",
   dob: null,
   uid: "",
@@ -17,40 +18,24 @@ const init: Profile = {
   addressline2: "",
   city: "",
   state_province: "",
-  postalcode: "",
+  postcode: "",
   country: "",
   createdAt: null,
 };
 
 const initialLoadingState: LoadingState = true
 
-
-interface ProfileState {
-  userProfile: Profile;
-  loadingState: LoadingState;
-}
-
-interface DataFetchResponse {
-  response: Profile | null
-  error: string | null
-  loading: LoadingState
-}
-const initialState: ProfileState = {
-  userProfile: init,
-  loadingState: initialLoadingState,
-};
-
 export const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    userProfile: initialState.userProfile,
-    loadingState: initialState.loadingState,
+    userProfile: init, //firestoreAPI is keeping store subscribed to db
+    loadingState: initialLoadingState,
   },
 
-  reducers: {
-    GetProfile: (state) => {
+  reducers: {  //changing profile state in the store: call the reducers from within the profileForm
 
-      const { response, error, loadingState } = GetData('profile',)
+    /*  getProfile: (state) => {
+     const { response, error, loadingState } = GetData('profile',) //call to firestore
       try {
         if (response) {
           const UserProfile: Profile = {
@@ -68,7 +53,7 @@ export const profileSlice = createSlice({
             addressline2: response.addressline2,
             city: response.city,
             state_province: response.state_province,
-            postalcode: response.postalcode,
+            postcode: response.postcode,
             country: response.country,
             createdAt: response.createdon
           }
@@ -158,11 +143,14 @@ export const profileSlice = createSlice({
     },
     ClearProfile: (state, action) => {
       state.userProfile = { ...init };
-    },
+    }, */
 
   },
 });
 
-export const { saveProfile, updateProfile, addProfile } = profileSlice.actions
-export const selectProfile = (state: any) => state.profile.userProfile
+//export const { saveProfile, updateProfile, addProfile } = profileSlice.actions
+//export const selectProfile = (state: any) => state.profile.userProfile
+
+
+
 export default profileSlice.reducer

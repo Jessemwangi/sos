@@ -1,7 +1,7 @@
 
 export interface Guser {
     name: string
-    email: string
+    email: null | string
     picture: string
     iat: number
     iss: string
@@ -15,20 +15,20 @@ export interface Profile {
     id: number | string
     firstname: string,
     lastname: string,
-    contact: number | null,
-    altcontact: number | null,
+    contact: number | string | null,
+    altcontact?: number | string | null,
     occupation?: string
-    dob: Date | null,
+    dob?: Date | null,
     uid: string,
     email: string,
     username: string,
-    addressline1: string,
+    addressline1?: string,
     addressline2?: string,
     city: string,
-    state_province: string,
-    postalcode?: string
+    state_province?: string,
+    postcode?: string
     country: string
-    createdAt: Date | null
+    createdAt?: Date | null
 }
 
 export interface Recipient {
@@ -39,6 +39,7 @@ export interface Recipient {
     phone: string,
     city?: string,
     postcode?: string,
+    userId: string
 
 }
 

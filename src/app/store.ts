@@ -1,21 +1,24 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+
 import userSlice from '../features/userSlice';
-import profileSlice from '../features/ProfileSlice';
+import profileSlice from '../features/profileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
-import firestoreDataSlice, { firestoreApi } from '../features/firestoreDataSlice';
+import { firestoreApi } from './services/firestoreAPI';
+import profileSlice2 from '../features/profileSlice2';
+
 
 
 export const store = configureStore({
   reducer: {
-    userSlice: userSlice,
+    user: userSlice,
     profile: profileSlice,
+    profile2: profileSlice2,
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,
-    firestoreData: firestoreDataSlice,
-    [firestoreApi.reducerPath]: firestoreApi.reducer
+    [firestoreApi.reducerPath]: firestoreApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(firestoreApi.middleware),

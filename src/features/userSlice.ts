@@ -1,43 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Guser } from "../app/model";
-import { useDispatch } from "react-redux";
 
+//Saves data for signed in Google user
 
 const init: Guser = {
   name: "",
-  email: "",
+  email: null,
   picture: "",
   iat: 0,
   iss: "",
   jti: "",
-  sub:'',
+  sub: '',
 };
 
 export const userSlice = createSlice({
-  name: "userSlice",
+  name: "user",
   initialState: {
-    users: init,
+    user: init,
   },
   reducers: {
-    SignIn: (state, action) => {
-      state.users.email = action.payload.email;
-      state.users.name = action.payload.name;
-      state.users.picture = action.payload.picture;
-      state.users.iat = action.payload.iat;
-      state.users.jti = action.payload.jti;
-      state.users.iss = action.payload.iss;
-      state.users.sub = action.payload.sub;
+    signIn: (state, action) => {
+      state.user.email = action.payload.email;
+      state.user.name = action.payload.name;
+      state.user.picture = action.payload.picture;
+      state.user.iat = action.payload.iat;
+      state.user.jti = action.payload.jti;
+      state.user.iss = action.payload.iss;
+      state.user.sub = action.payload.sub;
     },
-     GetUserPRofile: (state)=>{
-       const dispatch = useDispatch();
-        // dispatch(GetProfile())
-       
-    },
-    SignOut: (state) => {
-      state.users = {...init};
+
+    signOut: (state) => {
+      state.user = { ...init };
     },
   },
 });
-export const { SignIn, SignOut } = userSlice.actions;
-export const selectSosUser = (state: any) => state.userSlice.users;
+export const { signIn, signOut } = userSlice.actions;
 export default userSlice.reducer;

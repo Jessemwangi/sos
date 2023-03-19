@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { togglePopover, updateAnchorElementId, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
 import { Recipient } from '../app/model';
-import { useFetchRecipientsQuery, useSetRecipientMutation } from '../features/firestoreDataSlice';
+import { useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
 
 
@@ -25,7 +25,8 @@ const RecipientsViews = () => {
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
   const currentAnchorElementId: string = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
   let anchorEl = document.getElementById(currentAnchorElementId);
-  let currentId = useSelector((state: any) => state.manageRecipients.currentId);
+  let user = useSelector((state: any) => state.user.user);
+  console.log(user); //debugging
 
 
   function closeHandler() {
@@ -36,14 +37,12 @@ const RecipientsViews = () => {
     dispatch(updateAnchorElementId(e.currentTarget.id));//for popover placement
     dispatch(togglePopover());
     let ID: string = e.target.id.slice(4);
-    console.log(ID);//for debugging
     dispatch(updateCurrentId(ID))
   }
 
   function deleteHandler(e: any) {
     dispatch(updateAnchorElementId(e.currentTarget.id));
     let ID: string = e.target.id.slice(6);
-    console.log(ID);//for debugging
     dispatch(updateCurrentId(ID));
 
   }
@@ -67,7 +66,7 @@ const RecipientsViews = () => {
             <TableCell>Name</TableCell>
             <TableCell>Address</TableCell>
             <TableCell>Phone</TableCell>
-            <TableCell align="right">Post Code</TableCell>
+            <TableCell>Post Code</TableCell>
             <TableCell>City</TableCell>
           </TableRow>
         </TableHead>

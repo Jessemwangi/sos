@@ -10,7 +10,7 @@ import {
 
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
-import EditProfile from './pages/EditProfile';
+import ManageProfile from './pages/ManageProfile';
 import ManageRecipients from './pages/ManageRecipients';
 import CustomMsgs from './pages/CustomMsgs';
 import SetPinnedSignals from './pages/SetPinnedSignals';
@@ -20,7 +20,7 @@ import NotFound from './pages/NotFound';
 import AllSignals from './pages/AllSignals';
 import SignalDetails from './pages/SignalHistory';
 import CompleteReg from './Registration/CompleteReg';
-import Registration from './pages/Registration';
+import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<Dashboard />}></Route>
-      <Route path="/profile" element={<EditProfile />}>Manage Profile</Route>
+      <Route path="/profile" element={<ManageProfile />}>Manage Profile</Route>
       <Route path="/recipients" element={<ManageRecipients />}>Manage Recipients</Route>
       <Route path="/custommsg" element={<CustomMsgs />}>Customize Messages</Route>
       <Route path="/pinsignals" element={<SetPinnedSignals />}></Route>
