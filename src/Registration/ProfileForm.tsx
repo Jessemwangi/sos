@@ -21,8 +21,6 @@ export default function ProfileForm() {
   const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
   const [currentProfile, setCurrentProfile] = React.useState<Profile>() */
 
-  console.log(userProfile); //debugging
-
   const [datePickerValue, setDatePickerValue] = React.useState<
     Dayjs | null | Date
   >(dayjs());

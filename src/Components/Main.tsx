@@ -1,21 +1,28 @@
+import React, { useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Dialog, Button, DialogActions, DialogContent, DialogContentText, DialogTitle,TextField } from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import "../styles/Main.css";
-import React from 'react';
+
 import { toggleSigninModal, toggleSignupModal } from '../features/headerSlice';
-//import { getAuth, setPersistence, signInWithEmailAndPassword, browserSessionPersistence } from "firebase/auth";
+import {createUserWithEmailAndPassword }  from "firebase/auth";
 
 
 const Main = () => {
+
     const dispatch = useDispatch();
     const signinModal = useSelector((state:any)=> state.header.signinModal)
     const signupModal = useSelector((state:any)=> state.header.signupModal)
     console.log(signinModal);//debugging
 
+    const emailField = useRef('email');
+    const passwordField = useRef('password');
+console.log(emailField.current)
+
     function handleSubmit(e:any){
         e.prevent.default();
         console.log('submitted')//debugging
+        ;
     }
 
 
@@ -41,6 +48,7 @@ const Main = () => {
             type="email"
             fullWidth
             variant="standard"
+           inputRef={emailField}
           />
            <TextField
             autoFocus
@@ -51,6 +59,7 @@ const Main = () => {
             type="password"
             fullWidth
             variant="standard"
+            inputRef={passwordField}
           />
         </DialogContent>
         <DialogActions>

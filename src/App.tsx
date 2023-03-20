@@ -7,6 +7,12 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { getAuth, 
+  setPersistence, 
+  signInWithEmailAndPassword, 
+  browserSessionPersistence, 
+  GoogleAuthProvider } from "firebase/auth";
+
 
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -24,6 +30,7 @@ import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
+import { app } from './DataLayer/FirestoreInit';
 
 
 const router = createBrowserRouter(
@@ -47,6 +54,8 @@ const router = createBrowserRouter(
 );
 
 function App() {
+
+  const auth = getAuth(app);
 
   useEffect(() => {
     document.title = 'SOS Help';
