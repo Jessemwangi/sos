@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
@@ -7,12 +7,17 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { getAuth, 
-  setPersistence, 
-  signInWithEmailAndPassword, 
-  browserSessionPersistence, 
-  GoogleAuthProvider } from "firebase/auth";
 
+import {
+  getAuth,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  browserSessionPersistence,
+  GoogleAuthProvider,
+  OAuthCredential
+} from "firebase/auth";
 
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -30,7 +35,6 @@ import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
-import { app } from './DataLayer/FirestoreInit';
 
 
 const router = createBrowserRouter(
@@ -55,7 +59,10 @@ const router = createBrowserRouter(
 
 function App() {
 
-  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  //const user = auth.currentUser;
+  //const user = useSelector((state:any) => state.auth.user);
 
   useEffect(() => {
     document.title = 'SOS Help';

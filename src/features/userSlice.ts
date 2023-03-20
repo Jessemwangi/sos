@@ -19,7 +19,7 @@ export const userSlice = createSlice({
     user: init,
   },
   reducers: {
-    signIn: (state, action) => {
+    signIn: (state, action) => {  
       state.user.email = action.payload.email;
       state.user.name = action.payload.name;
       state.user.picture = action.payload.picture;

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LoadingState, Profile } from "../app/model";
 
-
 const init: Profile = {
   id: '',
   firstname: "",

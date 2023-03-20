@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem} from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import jwtDecode from 'jwt-decode';
 
@@ -12,13 +12,13 @@ import '../styles/Header.css';
 
 //const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
-const GOOGLE_CLIENT_ID ='127054368864-db825ognn1j3bdg4rl224ums2j7k2g07';
+const GOOGLE_CLIENT_ID = '127054368864-db825ognn1j3bdg4rl224ums2j7k2g07';
 console.log(GOOGLE_CLIENT_ID);
 
 const Header = () => {
     const dispatch = useDispatch();
     const menuButton = document.getElementById('menuButton');
-    const user: Guser = useSelector((state:any) => state.user.user);
+    const user: Guser = useSelector((state: any) => state.user.user);
     let openMenuPopover = useSelector((state: any) => state.header.popoverState.mainMenu);
 
     const sxStyles = {
@@ -33,6 +33,10 @@ const Header = () => {
     function closeMenu(e: any) {
         dispatch(closePopover({ mainMenu: false }));
 
+    }
+
+    function googleButtonHandler() {
+        console.log('google button handler side effect, optional')
     }
 
     useEffect(() => {
@@ -66,7 +70,8 @@ const Header = () => {
             {
                 theme: "outline",
                 size: "large",
-                type: "standard"
+                type: "standard",
+                click_listener: googleButtonHandler
             })
     }, [dispatch]);
 
@@ -75,16 +80,16 @@ const Header = () => {
             <AppBar className="appBar" sx={{ position: 'static' }}>
                 <div className='signInDiv'>
                     <div>
-                    <Button id='signInButton' className={`app ${user.email !== null ? "noDisplay" : ""}`}></Button>
-                    <Button id="signOutButton" className={`app ${user.email === null ? "noDisplay" : ""}`} onClick={() => dispatch(signOut())}>
-                    <img className="userImage" src={user.picture} alt={user.name} />Sign Out</Button>
+                        <Button id='signInButton' className={`app ${user.email !== null ? "noDisplay" : ""}`}></Button>
+                        <Button id="signOutButton" className={`app ${user.email === null ? "noDisplay" : ""}`} onClick={() => dispatch(signOut())}>
+                            <img className="userImage" src={user.picture} alt={user.name} />Sign Out</Button>
                     </div>
                     <div>
-                    <Button style={{color: 'white'}} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
-                    <Button style={{color: 'white'}} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                        <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
+                        <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
                     </div>
                 </div>
-                
+
                 <Toolbar className="toolBar" sx={sxStyles}>
                     <Button><MenuIcon id="menuButton" onClick={openMenu} /></Button>
                     <Link to='/'><Typography variant="h3" sx={{ color: 'white' }}>SOS Service</Typography><p>To Dashboard</p></Link>
