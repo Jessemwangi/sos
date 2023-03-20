@@ -6,7 +6,7 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     OAuthCredential,
-    signOut
+    signOut, onAuthStateChanged
 } from "firebase/auth";
 
 import { app } from '../../DataLayer/FirestoreInit';
@@ -14,6 +14,14 @@ import { app } from '../../DataLayer/FirestoreInit';
 const provider = new GoogleAuthProvider();
 export const auth = initializeAuth(app, {
     persistence: browserSessionPersistence
+  });
+
+onAuthStateChanged(auth, (user)=>{
+    if(user){
+        console.log(user);
+    } else {
+        console.log('signed out');
+    }
   });
 
 

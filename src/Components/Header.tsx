@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,TextField } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import jwtDecode from 'jwt-decode';
+
 import { signIn, signOut } from '../features/userSlice';
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
 import { Guser } from '../app/model';
-
+import {googleSignIn, signInUser, createAccount, signOutUser} from '../app/services/firebaseAuth';
 import '../styles/Header.css';
 
 //const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -20,10 +22,23 @@ const Header = () => {
     const menuButton = document.getElementById('menuButton');
     const user: Guser = useSelector((state: any) => state.user.user);
     let openMenuPopover = useSelector((state: any) => state.header.popoverState.mainMenu);
+    const signinModal = useSelector((state:any)=> state.header.signinModal)
+    const signupModal = useSelector((state:any)=> state.header.signupModal)
+    console.log(signinModal);//debugging
 
-    const sxStyles = {
-        position: 'static',
-        height: '20vh'
+
+    const emailField = useRef('email');
+    const passwordField = useRef('password');
+console.log(emailField.current)
+
+const sxStyles = {
+    position: 'static',
+    height: '20vh'
+}
+
+    function handleSubmit(e:any){
+        e.prevent.default();
+        console.log('submitted')//debugging
     }
 
     function openMenu(e: any) {
@@ -40,7 +55,8 @@ const Header = () => {
     }
 
     function handleSignIn(){
-    
+     /*    dispatch()
+    signInUser(); */
 
         } 
         
@@ -83,8 +99,6 @@ const Header = () => {
             })
     }, [dispatch]);
 
-
-
     return (
         <div className='header'>
             <AppBar className="appBar" sx={{ position: 'static' }}>
@@ -95,13 +109,13 @@ const Header = () => {
                             <img className="userImage" src={user.picture} alt={user.name} />Sign Out</Button>
                     </div>
                     <div>
-                     {/*    <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button> */}
-                        <Button style={{ color: 'white' }} onClick={handleRegister}>Create Account</Button>
-                      {/*   <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button> */}
-                      <Button style={{ color: 'white' }} onClick={handleSignIn}>Sign In</Button>
+                      <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
+                      {/*   <Button style={{ color: 'white' }} onClick={handleRegister}>Create Account</Button> */}
+                      
+                      <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                   {/*    <Button style={{ color: 'white' }} onClick={handleSignIn}>Sign In</Button> */}
                     </div>
                 </div>
-
                 <Toolbar className="toolBar" sx={sxStyles}>
                     <Button><MenuIcon id="menuButton" onClick={openMenu} /></Button>
                     <Link to='/'><Typography variant="h3" sx={{ color: 'white' }}>SOS Service</Typography><p>To Dashboard</p></Link>
@@ -117,6 +131,85 @@ const Header = () => {
                     <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
                 </MenuList>
             </Popover>
+
+            <Dialog
+            open={signupModal}
+            onClose={()=>dispatch(toggleSignupModal(false))}
+            aria-labelledby="modal-register"
+            aria-describedby="modal-modal-description">
+                <DialogTitle>Sign Up with Email</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter a valid email address and create a password for your account.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="email"
+            name="email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+           inputRef={emailField}
+          />
+           <TextField
+            autoFocus
+            margin="dense"
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+            inputRef={passwordField}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
+            </Dialog>
+            
+            <Dialog
+            open={signinModal}
+            onClose={()=> dispatch(toggleSigninModal(false))}
+            aria-labelledby="modal-register"
+            aria-describedby="modal-modal-description">
+                <DialogTitle>Sign In with Email</DialogTitle>
+                <DialogContent>
+          <DialogContentText>Enter your account email and password</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="email"
+            name="email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+           inputRef={emailField}
+          />
+           <TextField
+            autoFocus
+            margin="dense"
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+            inputRef={passwordField}
+          />
+
+          </DialogContent>
+        <DialogActions>
+          <Button type="submit" onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
+            </Dialog>
+
+
+
+
         </div>
     );
 };
