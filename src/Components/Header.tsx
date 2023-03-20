@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import jwtDecode from 'jwt-decode';
-
 import { signIn, signOut } from '../features/userSlice';
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
 import { Guser } from '../app/model';
+
 import '../styles/Header.css';
 
 //const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -38,6 +38,14 @@ const Header = () => {
     function googleButtonHandler() {
         console.log('google button handler side effect, optional')
     }
+
+    function handleSignIn(){
+    
+
+        } 
+        
+
+    function handleRegister(){}
 
     useEffect(() => {
         const handleCallback = (response: any) => {
@@ -75,6 +83,8 @@ const Header = () => {
             })
     }, [dispatch]);
 
+
+
     return (
         <div className='header'>
             <AppBar className="appBar" sx={{ position: 'static' }}>
@@ -85,8 +95,10 @@ const Header = () => {
                             <img className="userImage" src={user.picture} alt={user.name} />Sign Out</Button>
                     </div>
                     <div>
-                        <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
-                        <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                     {/*    <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button> */}
+                        <Button style={{ color: 'white' }} onClick={handleRegister}>Create Account</Button>
+                      {/*   <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button> */}
+                      <Button style={{ color: 'white' }} onClick={handleSignIn}>Sign In</Button>
                     </div>
                 </div>
 

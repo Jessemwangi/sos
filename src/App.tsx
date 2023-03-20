@@ -8,16 +8,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import {
-  getAuth,
-  onAuthStateChanged,
-  setPersistence,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  browserSessionPersistence,
-  GoogleAuthProvider,
-  OAuthCredential
-} from "firebase/auth";
 
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -35,7 +25,6 @@ import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
-
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -59,9 +48,6 @@ const router = createBrowserRouter(
 
 function App() {
 
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  //const user = auth.currentUser;
   //const user = useSelector((state:any) => state.auth.user);
 
   useEffect(() => {
@@ -80,3 +66,5 @@ function App() {
 }
 
 export default App;
+
+

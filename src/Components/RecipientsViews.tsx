@@ -53,7 +53,10 @@ const RecipientsViews = () => {
 
   function submitEdits(e: any): any {
     e.preventDefault();
-    //dispatch(saveContacts(contacts))  //TODO send to firebase on submit
+//TODO: try:
+    //dispatch(saveContacts(contacts)) 
+    //1. update in store with dispatch(action(payload)
+    //2. when store value propates, update firestore with new value from useEffect()
   }
 
   return (
@@ -108,8 +111,6 @@ const RecipientsViews = () => {
             <label htmlFor="city"></label>City<input type="text" name="city" id="city"
               defaultValue={data![0].city}
             ></input>
-
-
             <Button type="submit" onClick={submitEdits}>Save</Button>
             <Button onClick={closeHandler}>Close</Button>
           </form>
