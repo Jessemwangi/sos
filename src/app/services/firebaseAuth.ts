@@ -6,7 +6,8 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     OAuthCredential,
-    signOut, onAuthStateChanged
+    signOut, onAuthStateChanged,
+    updateProfile
 } from "firebase/auth";
 
 import { app } from '../../DataLayer/FirestoreInit';

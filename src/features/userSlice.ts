@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "firebase/auth";
-import { Guser, Profile, sosUser } from "../app/model";
-import {auth} from '../app/services/firebaseAuth';
+import { Guser, Profile, SosUser } from "../app/model";
+import { auth } from '../app/services/firebaseAuth';
 
 //Saves data for signed in Google user
 
@@ -15,10 +15,9 @@ const init: Guser = {
   sub: '',
 };
 
-const user: sosUser = {
+const user: SosUser = {
 name: "",
-email:"",
-uid: ""
+email: ""
 }
 
 export const userSlice = createSlice({
@@ -40,7 +39,10 @@ export const userSlice = createSlice({
     signOutGuser: (state) => {
       state.Guser = { ...init };
     },
+    setUser: (state, action) => {
+      state.user.email = action.payload.email;
+    }
   },
 });
-export const { signInGuser, signOutGuser } = userSlice.actions;
+export const { signInGuser, signOutGuser, setUser } = userSlice.actions;
 export default userSlice.reducer;

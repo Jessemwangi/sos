@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,TextField } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -8,7 +8,7 @@ import jwtDecode from 'jwt-decode';
 
 import { signInGuser, signOutGuser } from '../features/userSlice';
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
-import { Guser, SignUp } from '../app/model';
+import { Guser, SignUp, SosUser } from '../app/model';
 import {googleSignIn, signInUser, createAccount, signOutUser} from '../app/services/firebaseAuth';
 import '../styles/Header.css';
 
@@ -18,30 +18,29 @@ const GOOGLE_CLIENT_ID = '127054368864-db825ognn1j3bdg4rl224ums2j7k2g07';
 
 const Header = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const menuButton = document.getElementById('menuButton');
     const Guser: Guser = useSelector((state: any) => state.user.Guser);
+    const user: SosUser = useSelector((state: any) => state.user.user)
     let openMenuPopover:boolean = useSelector((state: any) => state.header.popoverState.mainMenu);
 
     const init: SignUp = {
         email: "",
         password: ""
-
     }
 
     const [formData, setFormData] = useState(init);
-
-const sxStyles = {
-    position: 'static',
-    height: '20vh'
-}
-
-function openMenu(e: any) {
+    const sxStyles = {
+        position: 'static',
+        height: '20vh'
+    }
+    
+    function openMenu(e: any) {
         dispatch(togglePopover({ mainMenu: true }));
     }
 
     function closeMenu(e: any) {
         dispatch(closePopover({ mainMenu: false }));
-
     }
 
     function googleButtonHandler() {
@@ -50,7 +49,6 @@ function openMenu(e: any) {
 
     function changeHandler(e:any){
         setFormData({...formData, [e.currentTarget.name]:e.currentTarget.value});
-        console.log(formData);
     }
 
     function handleSignIn(e:any, formData:SignUp){
@@ -58,10 +56,14 @@ function openMenu(e: any) {
     signInUser(formData.email, formData.password); 
         } 
 
-    function handleSignUp(e:any, formData:SignUp){
+    async function handleSignUp(e:any, formData:SignUp){
         e.preventDefault();
-        console.log('submitted')//debugging){
-        createAccount(formData.email, formData.password)
+        createAccount(formData.email, formData.password);
+        if(user){navigate("/regwizard")}
+    }
+
+    function handleSignOut(){
+        signOutUser();
     }
 
     useEffect(() => {
@@ -102,7 +104,6 @@ function openMenu(e: any) {
 
 
 
-
     return (
         <div className='header'>
             <AppBar className="appBar" sx={{ position: 'static' }}>
@@ -112,12 +113,19 @@ function openMenu(e: any) {
                         <Button id="signOutButton" className={`app ${Guser.email === null ? "noDisplay" : ""}`} onClick={() => dispatch(signOutGuser())}>
                             <img className="userImage" src={Guser.picture} alt={Guser.name} />Sign Out</Button>
                     </div>
+                
                     <div>
-                      <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
-                      {/*   <Button style={{ color: 'white' }} onClick={handleRegister}>Create Account</Button> */}
+                    { !user.email ? (<>
+                        <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
                       <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
-                   {/*    <Button style={{ color: 'white' }} onClick={handleSignIn}>Sign In</Button> */}
+                      </> ) : ( <>
+                      <Button style={{ color: 'white' }} onClick={handleSignOut}>Sign Out</Button>
+                      </> 
+
+                      )}
                     </div>
+
+
                 </div>
                 <Toolbar className="toolBar" sx={sxStyles}>
                     <Button><MenuIcon id="menuButton" onClick={openMenu} /></Button>
