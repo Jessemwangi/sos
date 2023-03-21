@@ -57,7 +57,7 @@ export const firestoreApi = createApi({
                     id: "",
                     firstname: "",
                     lastname: "",
-                    contact: "",
+                    phone: "",
                     uid: "",
                     email: "",
                     username: "",

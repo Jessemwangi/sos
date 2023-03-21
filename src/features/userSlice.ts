@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Guser } from "../app/model";
+import { User } from "firebase/auth";
+import { Guser, Profile, sosUser } from "../app/model";
+import {auth} from '../app/services/firebaseAuth';
 
 //Saves data for signed in Google user
 
@@ -13,26 +15,32 @@ const init: Guser = {
   sub: '',
 };
 
+const user: sosUser = {
+name: "",
+email:"",
+uid: ""
+}
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: init,
+    Guser: init,
+    user: user
   },
   reducers: {
-    signIn: (state, action) => {  
-      state.user.email = action.payload.email;
-      state.user.name = action.payload.name;
-      state.user.picture = action.payload.picture;
-      state.user.iat = action.payload.iat;
-      state.user.jti = action.payload.jti;
-      state.user.iss = action.payload.iss;
-      state.user.sub = action.payload.sub;
+    signInGuser: (state, action) => {  
+      state.Guser.email = action.payload.email;
+      state.Guser.name = action.payload.name;
+      state.Guser.picture = action.payload.picture;
+      state.Guser.iat = action.payload.iat;
+      state.Guser.jti = action.payload.jti;
+      state.Guser.iss = action.payload.iss;
+      state.Guser.sub = action.payload.sub;
     },
-
-    signOut: (state) => {
-      state.user = { ...init };
+    signOutGuser: (state) => {
+      state.Guser = { ...init };
     },
   },
 });
-export const { signIn, signOut } = userSlice.actions;
+export const { signInGuser, signOutGuser } = userSlice.actions;
 export default userSlice.reducer;

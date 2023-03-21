@@ -6,7 +6,7 @@ const initialState = {
         profileMenu: false
     },
     signinModal: false,
-    singupModal: false
+    signupModal: false
 }
 
 export const headerSlice =

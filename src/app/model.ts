@@ -9,14 +9,20 @@ export interface Guser {
     sub: number | string
 }
 
+export interface sosUser {
+    name:string
+    email: null | string
+    uid: string
+}
+
 export type LoadingState = boolean
 
 export interface Profile {
     id: number | string
     firstname: string,
     lastname: string,
-    contact: number | string | null,
-    altcontact?: number | string | null,
+    phone: number | string | null,
+    altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
     uid: string,
@@ -24,10 +30,10 @@ export interface Profile {
     username: string,
     addressline1?: string,
     addressline2?: string,
-    city: string,
+    city?: string,
     state_province?: string,
     postcode?: string
-    country: string
+    country?: string
     createdAt?: Date | null
 }
 
