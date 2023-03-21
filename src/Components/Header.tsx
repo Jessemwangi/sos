@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
@@ -8,7 +8,7 @@ import jwtDecode from 'jwt-decode';
 
 import { signInGuser, signOutGuser } from '../features/userSlice';
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
-import { Guser } from '../app/model';
+import { Guser, SignUp } from '../app/model';
 import {googleSignIn, signInUser, createAccount, signOutUser} from '../app/services/firebaseAuth';
 import '../styles/Header.css';
 
@@ -22,18 +22,20 @@ const Header = () => {
     const Guser: Guser = useSelector((state: any) => state.user.Guser);
     let openMenuPopover:boolean = useSelector((state: any) => state.header.popoverState.mainMenu);
 
+    const init: SignUp = {
+        email: "",
+        password: ""
+
+    }
+
+    const [formData, setFormData] = useState(init);
+
 const sxStyles = {
     position: 'static',
     height: '20vh'
 }
 
-    function handleSubmit(e:any){
-        e.preventDefault();
-        console.log(e.currentTarget.value)
-        console.log('submitted')//debugging
-    }
-
-    function openMenu(e: any) {
+function openMenu(e: any) {
         dispatch(togglePopover({ mainMenu: true }));
     }
 
@@ -46,14 +48,21 @@ const sxStyles = {
         console.log('google button handler side effect, optional')
     }
 
-    function handleSignIn(){
-     /*    dispatch()
-    signInUser(); */
+    function changeHandler(e:any){
+        setFormData({...formData, [e.currentTarget.name]:e.currentTarget.value});
+        console.log(formData);
+    }
 
+    function handleSignIn(e:any, formData:SignUp){
+        e.preventDefault();
+    signInUser(formData.email, formData.password); 
         } 
-        
 
-    function handleRegister(){}
+    function handleSignUp(e:any, formData:SignUp){
+        e.preventDefault();
+        console.log('submitted')//debugging){
+        createAccount(formData.email, formData.password)
+    }
 
     useEffect(() => {
         const handleCallback = (response: any) => {
@@ -90,6 +99,9 @@ const sxStyles = {
                 click_listener: googleButtonHandler
             })
     }, [dispatch]);
+
+
+
 
     return (
         <div className='header'>
@@ -143,7 +155,7 @@ const sxStyles = {
             fullWidth
             variant="standard"
             autoComplete='email'
-            onChange={()=>{console.log('bla')}}
+            onChange={changeHandler}
           />
            <TextField
             autoFocus
@@ -155,11 +167,11 @@ const sxStyles = {
             fullWidth
             variant="standard"
             autoComplete='new-password'
-            onChange={()=>{console.log('to bla')}}
+            onChange={changeHandler}
               /></form>
         </DialogContent>
         <DialogActions>
-          <Button type="submit" onClick={handleSubmit}>Submit</Button>
+          <Button type="submit" onClick={(e)=>handleSignUp(e, formData )}>Submit</Button>
         </DialogActions>
             </Dialog>
             
@@ -182,6 +194,7 @@ const sxStyles = {
             fullWidth
             variant="standard"
             autoComplete='email'
+            onChange={changeHandler}
           
           />
            <TextField
@@ -194,12 +207,13 @@ const sxStyles = {
             fullWidth
             variant="standard"
             autoComplete='current-password'
-          
+            onChange={changeHandler}
+        
           />
 </form>
           </DialogContent>
         <DialogActions>
-          <Button type="submit" onClick={handleSubmit}>Submit</Button>
+          <Button type="submit" onClick={(e)=>handleSignIn(e, formData )}>Submit</Button>
         </DialogActions>
             </Dialog>
 

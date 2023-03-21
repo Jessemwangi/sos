@@ -15,6 +15,11 @@ export interface sosUser {
     uid: string
 }
 
+export interface SignUp {
+    email: string
+    password: string
+}
+
 export type LoadingState = boolean
 
 export interface Profile {
