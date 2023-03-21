@@ -9,10 +9,14 @@ export interface Guser {
     sub: number | string
 }
 
-export interface sosUser {
-    name:string
+export interface SosUser {
+    name?:string
     email: null | string
-    uid: string
+}
+
+export interface SignUp {
+    email: string
+    password: string
 }
 
 export type LoadingState = boolean

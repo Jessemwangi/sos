@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Provider, useSelector } from "react-redux";
+import { useDispatch } from 'react-redux';
+import { Provider } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
@@ -7,8 +8,11 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 
 
+import {auth} from './app/services/firebaseAuth';
+import {setUser} from './features/userSlice';
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
 import ManageProfile from './pages/ManageProfile';
@@ -47,6 +51,17 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  const dispatch = useDispatch();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      console.log('signed in:',uid);
+      dispatch(setUser(user.email));
+    } else {
+      // User is signed out
+    }
+  });
 
   //const user = useSelector((state:any) => state.auth.user);
 
