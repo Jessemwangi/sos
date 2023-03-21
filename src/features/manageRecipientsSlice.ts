@@ -15,12 +15,13 @@ export const manageRecipientsSlice = createSlice({
     initialState,
     reducers: {
         togglePopover: (state) => { state.popoverState = !state.popoverState },
-        updateAnchorElementId: (state, action: PayloadAction<string>) => { state.currentAnchorElementId = action.payload },
-        /* saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = [...state.recipients, { ...action.payload }] }, */
-
-        saveContacts: (state: any, action: PayloadAction<object[]>) => { state.recipients = action.payload },
+        updateAnchorElementId: (state, action: PayloadAction<string>) => { 
+            state.currentAnchorElementId = action.payload },
+        saveContacts: (state: any, action: PayloadAction<object>) => { 
+            state.recipients = action.payload },
         updateCurrentId: (state, action) => { state.currentId = action.payload },
-        setRecipientData: (state: any, action: PayloadAction<Recipient[]>) => { state.recipientData = action.payload },
+        setRecipientData: (state: any, action: PayloadAction<Recipient[]>) => { 
+            state.recipientData = action.payload },
 
     },
 });

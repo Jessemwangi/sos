@@ -1,14 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LoadingState, Profile } from "../app/model";
-import {useSetProfileMutation} from '../app/services/firestoreAPI';
-
 
 const init: Profile = {
   id: '',
   firstname: "",
   lastname: "",
-  contact: "",
-  altcontact: "",
+  phone: "",
+  altphone: "",
   occupation: "",
   dob: null,
   uid: "",

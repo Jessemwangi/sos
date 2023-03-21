@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
@@ -7,6 +7,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+
 
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -24,7 +25,6 @@ import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
-
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,6 +48,8 @@ const router = createBrowserRouter(
 
 function App() {
 
+  //const user = useSelector((state:any) => state.auth.user);
+
   useEffect(() => {
     document.title = 'SOS Help';
   }, []);
@@ -64,3 +66,5 @@ function App() {
 }
 
 export default App;
+
+
