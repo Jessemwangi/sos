@@ -24,7 +24,7 @@ import AnsToSignals from './pages/AnsToSignals';
 import NotFound from './pages/NotFound';
 import AllSignals from './pages/AllSignals';
 import SignalDetails from './pages/SignalHistory';
-import CompleteReg from './Registration/CompleteReg';
+import CompleteReg from './pages/CompleteReg';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';

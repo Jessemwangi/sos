@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProfileForm from '../Registration/ProfileForm';
 import PaymentForm from '../Registration/RecipientEntryForm';
 import CustomTextForm from '../Registration/CustomTextEntryForm';
-import { Guser } from '../app/model';
+import { Guser, SosUser } from '../app/model';
 import CustomSignals from '../Registration/CustomSignals';
 import WrapUp from '../Registration/WrapUp';
 
@@ -46,7 +46,10 @@ function getStepContent(step: number, user: Guser) {
 const theme = createTheme();
 
 const CompleteReg = () => {
-  const user: Guser = useSelector((state: any) => state.user.user);
+  const guser: Guser = useSelector((state: any) => state.user.Guser);
+  const user: SosUser = useSelector((state: any) => state.user.user);
+  console.log(user.email);
+
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -62,7 +65,7 @@ const CompleteReg = () => {
 
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {user.email === null ? (<h1>Please signup with SOS service before registering your profile</h1>
+      {user.email === null && guser.email === null ? (<h1>Please signup with SOS service before registering your profile</h1>
       ) : (<><AppBar
         position="absolute"
         color="default"
@@ -74,7 +77,7 @@ const CompleteReg = () => {
       >
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            Hi {user.name || 'Guest'}, set up your account by providing the following information.
+            Hi {guser.name || user.email}, set up your account by providing the following information.
           </Typography>
         </Toolbar>
       </AppBar>
@@ -101,7 +104,7 @@ const CompleteReg = () => {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep, user)}
+                {getStepContent(activeStep, guser)}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   {activeStep !== 0 && (
                     <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
