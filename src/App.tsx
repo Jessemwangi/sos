@@ -11,8 +11,8 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 
 
-import {auth} from './app/services/firebaseAuth';
-import {setUser} from './features/userSlice';
+import { auth } from './app/services/firebaseAuth';
+import { setUser } from './features/userSlice';
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
 import ManageProfile from './pages/ManageProfile';
@@ -25,7 +25,6 @@ import NotFound from './pages/NotFound';
 import AllSignals from './pages/AllSignals';
 import SignalDetails from './pages/SignalHistory';
 import CompleteReg from './Registration/CompleteReg';
-import Registration from './Components/Registration';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
@@ -44,7 +43,6 @@ const router = createBrowserRouter(
       <Route path="/customsignals" element={<CustomSignalsView />}></Route>
       <Route path="/replytoSignal/:signalid" element={<AnsToSignals />}> </Route>
       <Route path="/regwizard" element={<CompleteReg />}>Initial Setup</Route>
-      <Route path="/register" element={<Registration />}>Create an account</Route>
       <Route path="*" element={<NotFound />}></Route>
     </Route>
   )
@@ -56,7 +54,7 @@ function App() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const uid = user.uid;
-      console.log('signed in:',uid);
+      console.log('signed in:', uid);
       dispatch(setUser(user.email));
     } else {
       // User is signed out
@@ -68,7 +66,6 @@ function App() {
   useEffect(() => {
     document.title = 'SOS Help';
   }, []);
-
 
 
   return (
