@@ -42,12 +42,21 @@ function googleSignIn() {
         });
 }
 
-function signInUser(email:string, password:string){
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential)=>{
+async function signInUser(email:string, password:string){
+    await signInWithEmailAndPassword(auth, email, password)
+    .then(
+     (userCredential)=>{
         const user = userCredential.user;
-        console.log(user);
-    })
+      console.log(userCredential);
+    console.log(user.uid)
+  
+  
+  
+  
+  } 
+      
+        //connect to store here
+   )
     .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;

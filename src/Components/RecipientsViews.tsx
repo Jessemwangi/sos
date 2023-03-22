@@ -19,7 +19,7 @@ const RecipientsViews = () => {
     isFetching,
     error
   } = useFetchRecipientsQuery();
-  console.log(data);
+
 
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);

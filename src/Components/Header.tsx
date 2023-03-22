@@ -4,11 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import jwtDecode from 'jwt-decode';
 
-import { signInGuser, signOutGuser } from '../features/userSlice';
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
-import { Guser, SignUp, SosUser } from '../app/model';
+import { SignUp, SosUser } from '../app/model';
 import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/services/firebaseAuth';
 import '../styles/Header.css';
 
@@ -20,7 +18,6 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const menuButton = document.getElementById('menuButton');
-    const Guser: Guser = useSelector((state: any) => state.user.Guser);
     const user: SosUser = useSelector((state: any) => state.user.user)
     let openMenuPopover: boolean = useSelector((state: any) => state.header.popoverState.mainMenu);
 
@@ -29,7 +26,8 @@ const Header = () => {
         password: ""
     }
 
-    const [formData, setFormData] = useState(init);
+    const [signinData, setSigninData] = useState(init);
+
     const sxStyles = {
         position: 'static',
         height: '20vh'
@@ -43,22 +41,18 @@ const Header = () => {
         dispatch(closePopover({ mainMenu: false }));
     }
 
-    function googleButtonHandler() {
-        console.log('google button handler side effect, optional')
-    }
-
     function changeHandler(e: any) {
-        setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value });
+        setSigninData({ ...signinData, [e.currentTarget.name]: e.currentTarget.value });
     }
 
-    function handleSignIn(e: any, formData: SignUp) {
+    function handleSignIn(e: any, signinData: SignUp) {
         e.preventDefault();
-        signInUser(formData.email, formData.password);
+        signInUser(signinData.email, signinData.password);
     }
 
-    async function handleSignUp(e: any, formData: SignUp) {
+    async function handleSignUp(e: any, signinData: SignUp) {
         e.preventDefault();
-        createAccount(formData.email, formData.password);
+        createAccount(signinData.email, signinData.password)
         if (user) { navigate("/regwizard") }
     }
 
@@ -73,11 +67,7 @@ const Header = () => {
         <div className='header'>
             <AppBar className="appBar" sx={{ position: 'static' }}>
                 <div className='signInDiv'>
-                    <div>
-                        <Button id='signInButton' className={`app ${Guser.email !== null ? "noDisplay" : ""}`}></Button>
-                        <Button id="signOutButton" className={`app ${Guser.email === null ? "noDisplay" : ""}`} onClick={() => dispatch(signOutGuser())}>
-                            <img className="userImage" src={Guser.picture} alt={Guser.name} />Sign Out</Button>
-                    </div>
+
 
                     <div>
                         {!user.email ? (<>
@@ -144,7 +134,7 @@ const Header = () => {
                         /></form>
                 </DialogContent>
                 <DialogActions>
-                    <Button type="submit" onClick={(e) => handleSignUp(e, formData)}>Submit</Button>
+                    <Button type="submit" onClick={(e) => handleSignUp(e, signinData)}>Submit</Button>
                 </DialogActions>
             </Dialog>
 
@@ -186,7 +176,7 @@ const Header = () => {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button type="submit" onClick={(e) => handleSignIn(e, formData)}>Submit</Button>
+                    <Button type="submit" onClick={(e) => handleSignIn(e, signinData)}>Submit</Button>
                 </DialogActions>
             </Dialog>
 
