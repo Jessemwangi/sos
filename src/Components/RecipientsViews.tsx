@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
-import { Modal, Button } from '@mui/material';
+import { Modal, Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -86,13 +86,16 @@ const RecipientsViews = () => {
         </TableBody>
       </Table>
 
-      <Modal
-        className="editPopover"
+      <Dialog
+      className= "editContactsDialog"
         open={open}
         onClose={closeHandler}
+        PaperProps={{sx: {
+          height: '300px'
+        }}}
       >
         {data && data.length > 0 ?
-          <form className="editContactForm" onChange={handleChange}>
+          <form  className="editContactForm" onChange={handleChange}>
             <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
             <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
             <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
@@ -102,12 +105,13 @@ const RecipientsViews = () => {
             <label htmlFor="city"></label>City<input type="text" name="city" id="city"
               defaultValue={data![0].city}
             ></input>
-            <Button type="submit" onClick={submitEdits}>Save</Button>
-            <Button onClick={closeHandler}>Close</Button>
+            <div>  <Button type="submit" onClick={submitEdits}>Save</Button>
+            <Button onClick={closeHandler}>Close</Button></div>
+          
           </form>
           : <p>Awaiting data</p>
         }
-      </Modal >
+      </Dialog >
     </React.Fragment >
   );
 
