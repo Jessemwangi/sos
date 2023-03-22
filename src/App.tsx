@@ -11,7 +11,7 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 
 
-import { auth } from './app/services/firebaseAuth';
+import { auth } from './app/services/FirebaseAuth';
 import { setUser } from './features/userSlice';
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';

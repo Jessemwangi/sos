@@ -12,6 +12,7 @@ export interface Guser {
 export interface SosUser {
     name?:string
     email: null | string
+    uid: string
 }
 
 export interface SignUp {

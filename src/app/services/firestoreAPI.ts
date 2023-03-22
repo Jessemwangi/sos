@@ -2,6 +2,7 @@ import { Recipient, Profile } from '../model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../../DataLayer/FirestoreInit";
 import {   onSnapshot, where, query, getDoc, collection, getDocs, doc, addDoc, updateDoc, QuerySnapshot, DocumentData, setDoc} from "@firebase/firestore";
+import {useSelector} from 'react-redux';
 
 //TOO: documents specific to current logged-in user only
 
@@ -9,7 +10,11 @@ type Recipients = Recipient[];
 
 const id:string = 'jbGnTqBog1n4WgvjxRKV';//for testing
 
+//const id:string = useSelector((state:any)=>state.user.user.uid);
+//console.log('user id from store', id);
+
 export const firestoreApi = createApi({
+ 
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Recipients', 'Profile'],
     reducerPath: "firestoreApi",

@@ -27,9 +27,9 @@ interface DataError {
 const initialLoadingState: LoadingState = true;
 
 
-const createDocSetId = (collectionName:string, docId:string, payload:any)=>{
+const CreateDocSetId = (collectionName:string, docId:string, payload:any)=>{
   const [error, setError] = useState<unknown>({});
-  useEffect(() => {
+ useEffect(() => {
     async function postData() {
   
       try {
@@ -44,9 +44,9 @@ const createDocSetId = (collectionName:string, docId:string, payload:any)=>{
 
     postData();
   }, [collectionName]);
-}
+} 
 
-const getAllDocs = (collectionName:string) => {
+const GetAllDocs = (collectionName:string) => {
   const [response, setResponse] = useState<DocumentData>([]);
   const [error, setError] = useState<unknown>({});
   const [loadingState, setLoading] = useState<LoadingState>(initialLoadingState);
@@ -71,7 +71,7 @@ const getAllDocs = (collectionName:string) => {
   return { response, error, loadingState };
 };
 
-const getOneDoc = (collectionName:string, getId:string) => {
+const GetOneDoc = (collectionName:string, getId:string) => {
 
   const [response, setResponse] = useState<DocumentData | string>([]);
   const [loadingState, setLoading] = useState(true);
@@ -99,7 +99,7 @@ const getOneDoc = (collectionName:string, getId:string) => {
   return { response, loadingState };
 };
 
-const createDocAutoId = async (collectionName:string, data:any):Promise<string>=> {
+const CreateDocAutoId = async (collectionName:string, data:any):Promise<string>=> {
   const [response, setResponse] = useState({});
   const [loadingState, setLoading] = useState(true);
    let rt: string = '';
@@ -154,7 +154,7 @@ const PostData_With_Id = async (collectionName:string, data:any, idColName:numbe
   return { response, error, loadingState };
 };
 
-const getDocsById = (collectionName: string, id: string, value: any) => {
+const GetDocsById = (collectionName: string, id: string, value: any) => {
   const [response, setResponse] = useState(null);
   const [loadingState, setLoading] = useState(true);
   //const [docId, setDocId] = useState<string>();
@@ -210,7 +210,7 @@ export const getDocsByTwoColumns = async <T>(
   return response;
 };
 
-export const getAllDocsByTwoColumns = async (
+export const GetAllDocsByTwoColumns = async (
   collectionName: string,
   column1name: string,
   value1: string | number | boolean,
@@ -233,4 +233,4 @@ export const getAllDocsByTwoColumns = async (
   return  response
 };
 
-export {  getAllDocs, getOneDoc, createDocAutoId, PostData_With_Id, getDocsById, createDocSetId };
+export {  GetAllDocs, GetOneDoc, CreateDocAutoId, PostData_With_Id, GetDocsById, CreateDocSetId };

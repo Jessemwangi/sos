@@ -7,7 +7,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
 import { SignUp, SosUser } from '../app/model';
-import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/services/firebaseAuth';
+import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/services/FirebaseAuth';
+import {setUser} from '../features/userSlice';
 import '../styles/Header.css';
 
 //const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -53,14 +54,14 @@ const Header = () => {
     async function handleSignUp(e: any, signinData: SignUp) {
         e.preventDefault();
         createAccount(signinData.email, signinData.password)
-        if (user) { navigate("/regwizard") }
+  /*       if (user) { 
+            dispatch(setUser({email: user.email, uid: user.uid}));
+            navigate("/regwizard") } */
     }
 
     function handleSignOut() {
         signOutUser();
     }
-
-
 
 
     return (
@@ -70,7 +71,7 @@ const Header = () => {
 
 
                     <div>
-                        {!user.email ? (<>
+                        {!user? (<>
                             <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
                             <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
                         </>) : (<>
