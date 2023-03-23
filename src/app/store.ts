@@ -10,7 +10,7 @@ import { firestoreApi } from './services/firestoreAPI';
 
 export const store = configureStore({
   reducer: {
-user: userSlice,
+    user: userSlice,
     profile: profileSlice,
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,

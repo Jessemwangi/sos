@@ -9,7 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import  { AuthProvider} from './app/services/FirebaseContext';
+import { AuthProvider } from './app/services/FirebaseContext';
 
 
 import { auth } from './app/services/FirebaseAuth';
@@ -55,10 +55,10 @@ function App() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const uid = user.uid;
-      console.log('signed in:', uid);
+      console.log('signed in:', uid); //from firebase user object
       dispatch(setUser(user.email));
     } else {
-      // User is signed out
+
     }
   });
 
@@ -70,13 +70,15 @@ function App() {
 
 
   return (
-    <AuthProvider>
+
     <Provider store={store}>
-      <div className="App">
-        <RouterProvider router={router} />
-      </div>
-    </Provider>
-    </AuthProvider>
+      <AuthProvider>
+        <div className="App">
+          <RouterProvider router={router} />
+        </div>
+      </AuthProvider>
+     </Provider>
+
   );
 }
 
