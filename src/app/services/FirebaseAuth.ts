@@ -11,22 +11,13 @@ import {
 } from "firebase/auth";
 
 import { app } from '../../DataLayer/FirestoreInit';
-import {setUser} from '../../features/userSlice';
+//import {setUser} from '../../features/userSlice';
 
 
 const provider = new GoogleAuthProvider();
 
 export const auth = initializeAuth(app, {
   persistence: browserSessionPersistence
-});
-
-
-onAuthStateChanged(auth, (user)=>{
-  if(user){
-      console.log(user);
-  } else {
-      console.log('signed out');
-  }
 });
 
 
@@ -42,7 +33,7 @@ function googleSignIn() {
           const errorMessage = error.message;
           const credential = GoogleAuthProvider.credentialFromError(error);
           console.error(errorCode, errorMessage, credential);
-      });
+      })
 }
 
 async function signInUser(email:string, password:string){
@@ -51,8 +42,7 @@ async function signInUser(email:string, password:string){
    (userCredential)=>{
       const user = userCredential.user;
     console.log(userCredential);
-  console.log(user.uid)
-
+  console.log(user.uid);
 } 
     
       //connect to store here

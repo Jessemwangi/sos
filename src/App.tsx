@@ -9,6 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
+import  { AuthProvider} from './app/services/FirebaseContext';
 
 
 import { auth } from './app/services/FirebaseAuth';
@@ -69,11 +70,13 @@ function App() {
 
 
   return (
+    <AuthProvider>
     <Provider store={store}>
       <div className="App">
         <RouterProvider router={router} />
       </div>
     </Provider>
+    </AuthProvider>
   );
 }
 

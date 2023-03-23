@@ -13,7 +13,7 @@ const ManageProfile = () => {
         <div>
             <h1>Manage Profile</h1>
 
-            {user.name === "" ? (<><p>Please sign in to view your profile</p>
+            {user.uid === "" ? (<><p>Please sign in first or create an account to view your profile</p>
             </>) : (<>
                 <p>{`Hi ${user.name}`}</p>
             </>)

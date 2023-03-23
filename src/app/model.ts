@@ -15,9 +15,10 @@ export interface SosUser {
     uid: string
 }
 
-export interface SignUp {
+export interface SignUpData {
     email: string
     password: string
+    name: string
 }
 
 export type LoadingState = boolean
