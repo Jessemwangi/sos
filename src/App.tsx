@@ -46,11 +46,10 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const authenticated = useContext(AuthContext);
 
   useEffect(() => {
     document.title = 'SOS Help';
-    console.log(authenticated);
+
   }, []);
 
 
