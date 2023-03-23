@@ -7,11 +7,8 @@ import { useSelector } from 'react-redux';
 
 type Recipients = Recipient[];
 
-//const id: string = 'jbGnTqBog1n4WgvjxRKV';//for testing
-/* const id: string = useSelector((state: any) => state.user.userId); */
 
 export const firestoreApi = createApi({
-
 
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Recipients', 'Profile'],
@@ -55,8 +52,11 @@ export const firestoreApi = createApi({
             },
             invalidatesTags: ['Recipients'],
         }),
-        fetchProfile: builder.query<Profile, void>({
-            async queryFn() {
+        fetchProfile: builder.query<Profile, { para1: string }>({
+            async queryFn(arg) {
+                const { para1 } = arg;
+                console.log('arg', arg)
+
                 let profile: Profile = {
                     id: "",
                     firstname: "",
@@ -69,7 +69,7 @@ export const firestoreApi = createApi({
                     country: ""
                 };
                 try {
-                    const docRef = doc(db, 'profile', 'jbGnTqBog1n4WgvjxRKV');//TOFIX remove hardcoded id
+                    const docRef = doc(db, 'profile', para1);
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());

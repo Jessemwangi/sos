@@ -16,9 +16,6 @@ import { AuthContext } from "../app/services/FirebaseContext";
 const RecipientsViews = () => {
 
   const user = useContext(AuthContext);
-  /*  if (user){
-     const uid:string = user.uid;} */
-
 
   const {
     data,
