@@ -1,7 +1,8 @@
 import { Recipient, Profile } from '../model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../../DataLayer/FirestoreInit";
-import {   onSnapshot, where, query, getDoc, collection, getDocs, doc, addDoc, updateDoc, QuerySnapshot, DocumentData, } from "@firebase/firestore";
+import {   onSnapshot, where, query, getDoc, collection, getDocs, doc, addDoc, updateDoc, QuerySnapshot, DocumentData, setDoc} from "@firebase/firestore";
+import {useSelector} from 'react-redux';
 
 //TOO: documents specific to current logged-in user only
 
@@ -9,7 +10,11 @@ type Recipients = Recipient[];
 
 const id:string = 'jbGnTqBog1n4WgvjxRKV';//for testing
 
+//const id:string = useSelector((state:any)=>state.user.user.uid);
+//console.log('user id from store', id);
+
 export const firestoreApi = createApi({
+ 
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Recipients', 'Profile'],
     reducerPath: "firestoreApi",
@@ -22,9 +27,6 @@ export const firestoreApi = createApi({
                         where('userId', "==", id)
                       );
                       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-                      console.log(querySnapshot.docs);//debugging
-                    //const ref = collection(db, 'recipients');
-                    //const querySnapshot = await getDocs(ref);
                     let recipients: Recipients = [];
                     querySnapshot?.forEach((doc) => {
                         recipients.push({ id: doc.id, ...doc.data() } as Recipient)
@@ -65,7 +67,7 @@ export const firestoreApi = createApi({
                     country: ""
                 }; 
                 try {
-                    const docRef = doc(db, 'profile', 'jbGnTqBog1n4WgvjxRKV');
+                    const docRef = doc(db, 'profile', 'jbGnTqBog1n4WgvjxRKV');//TOFIX remove hardcoded id
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());
@@ -100,6 +102,10 @@ export const firestoreApi = createApi({
 
     })
 });
+
+
+
+
 export const { useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfileQuery, useSetProfileMutation  } = firestoreApi;
 
 

@@ -6,15 +6,12 @@ import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
 import { firestoreApi } from './services/firestoreAPI';
-import profileSlice2 from '../features/profileSlice2';
-
 
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
     profile: profileSlice,
-    profile2: profileSlice2,
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,

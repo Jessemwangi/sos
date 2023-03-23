@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
-import { Popover, Button } from '@mui/material';
+import { Modal, Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -19,31 +19,25 @@ const RecipientsViews = () => {
     isFetching,
     error
   } = useFetchRecipientsQuery();
-  console.log(data);
+
 
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  const currentAnchorElementId: string = useSelector((state: any) => state.manageRecipients.currentAnchorElementId);
-  let anchorEl = document.getElementById(currentAnchorElementId);
   let user = useSelector((state: any) => state.user.user);
-  console.log(user); //debugging
 
 
   function closeHandler() {
     dispatch(togglePopover());
   }
 
-  function editButtonHandler(e: any) {
-    dispatch(updateAnchorElementId(e.currentTarget.id));//for popover placement
+
+  function editButtonHandler(e: any, id: string) {
     dispatch(togglePopover());
-    let ID: string = e.target.id.slice(4);
-    dispatch(updateCurrentId(ID))
+    dispatch(updateCurrentId(id))
   }
 
-  function deleteHandler(e: any) {
-    dispatch(updateAnchorElementId(e.currentTarget.id));
-    let ID: string = e.target.id.slice(6);
-    dispatch(updateCurrentId(ID));
+  function deleteHandler(e: any, id: string) {
+
 
   }
 
@@ -53,7 +47,7 @@ const RecipientsViews = () => {
 
   function submitEdits(e: any): any {
     e.preventDefault();
-//TODO: try:
+    //TODO: try:
     //dispatch(saveContacts(contacts)) 
     //1. update in store with dispatch(action(payload)
     //2. when store value propates, update firestore with new value from useEffect()
@@ -83,25 +77,25 @@ const RecipientsViews = () => {
               <TableCell>{recipient.phone}</TableCell>
               <TableCell>{recipient.postcode}</TableCell>
               <TableCell>{recipient.city}</TableCell>
-              <TableCell><EditIcon id={`icon${recipient.id}`} onClick={editButtonHandler} />
+              <TableCell><EditIcon id={`icon${recipient.id}`}
+                onClick={(e) => editButtonHandler(e, recipient.id)} />
               </TableCell>
-              <TableCell> <DeleteIcon id={`delete${recipient.id}`} onClick={deleteHandler} /></TableCell>
+              <TableCell> <DeleteIcon id={`delete${recipient.id}`} onClick={(e) => deleteHandler(e, recipient.id)} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      <Popover
-        className="editPopover"
+      <Dialog
+      className= "editContactsDialog"
         open={open}
         onClose={closeHandler}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}>
+        PaperProps={{sx: {
+          height: '300px'
+        }}}
+      >
         {data && data.length > 0 ?
-          <form className="editContactForm" onChange={handleChange}>
+          <form  className="editContactForm" onChange={handleChange}>
             <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
             <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
             <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
@@ -111,12 +105,13 @@ const RecipientsViews = () => {
             <label htmlFor="city"></label>City<input type="text" name="city" id="city"
               defaultValue={data![0].city}
             ></input>
-            <Button type="submit" onClick={submitEdits}>Save</Button>
-            <Button onClick={closeHandler}>Close</Button>
+            <div>  <Button type="submit" onClick={submitEdits}>Save</Button>
+            <Button onClick={closeHandler}>Close</Button></div>
+          
           </form>
           : <p>Awaiting data</p>
         }
-      </Popover >
+      </Dialog >
     </React.Fragment >
   );
 

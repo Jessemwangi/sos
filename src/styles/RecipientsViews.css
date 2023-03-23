@@ -1,5 +1,7 @@
-.editPopover input {
-    width: 150px;
+
+
+.editContactsDialog input {
+    width: 80%;
     height: 30px;
     border: none;
     border-bottom: 1px solid darkgray;
@@ -7,7 +9,6 @@
 }
 
 .editContactForm {
-    height: 130px;
     padding: 0.5rem;
 }
 
@@ -15,10 +16,10 @@
     font-size: 1rem;
     padding: 0.5rem;
     text-align: left;
+    width: 200px;
 }
 
 .editContactForm input {
-    height: calc(50% - 16px);
     padding: 0.5rem;
     font-size: 1rem;
     border: none;
