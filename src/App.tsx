@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useContext } from 'react';
 import { Provider } from "react-redux";
 import './App.css';
 import {
@@ -8,12 +7,8 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { AuthProvider } from './app/services/FirebaseContext';
+import { AuthProvider } from './app/services/FirebaseProvider';
 
-
-import { auth } from './app/services/FirebaseAuth';
-import { setUser } from './features/userSlice';
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
 import ManageProfile from './pages/ManageProfile';
@@ -29,6 +24,7 @@ import CompleteReg from './pages/CompleteReg';
 import CustomSignalsView from './Components/CustomSignalsView';
 
 import { store } from './app/store';
+import { AuthContext } from './app/services/FirebaseContext';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,22 +46,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const dispatch = useDispatch();
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      console.log('signed in:', uid); //from firebase user object
-      dispatch(setUser(user.email));
-    } else {
-
-    }
-  });
-
-  //const user = useSelector((state:any) => state.auth.user);
+  const authenticated = useContext(AuthContext);
 
   useEffect(() => {
     document.title = 'SOS Help';
+    console.log(authenticated);
   }, []);
 
 
@@ -77,7 +62,7 @@ function App() {
           <RouterProvider router={router} />
         </div>
       </AuthProvider>
-     </Provider>
+    </Provider>
 
   );
 }
