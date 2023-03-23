@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from './FirebaseAuth';
-import { SosUser } from '../model';
 import { setUserStore } from '../../features/userSlice';
 import { AuthContext } from './FirebaseContext';
 
@@ -13,29 +11,27 @@ type Props = {
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
 
-    //const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [authState, setAuthState] = useState<User | null>(null);
-    const user = { authState };
+    const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
+
 
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                setAuthState(user);
+                setFirebaseUser(user);
                 const uid = user.uid;
                 console.log('signed in:', uid); //from firebase user object
                 dispatch(setUserStore({ name: user.displayName, email: user.email, uid: user.uid }));
             } else {
-                //navigate('/');
-                setAuthState(null);
+                setFirebaseUser(null);
             }
         });
     }, []);
 
     return (
-        <AuthContext.Provider value={user}>{children}</AuthContext.Provider>//this is type AuthState | null
+        <AuthContext.Provider value={firebaseUser}>{children}</AuthContext.Provider>//this is type AuthState | null
     )
 }
 

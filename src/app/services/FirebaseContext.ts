@@ -1,10 +1,8 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import { auth } from './FirebaseAuth';
 import { User } from "firebase/auth";
-import { setUserStore } from '../../features/userSlice';
 
+type AuthContextType = User | null;
 
-type AuthState = { user: User }
-
-export const AuthContext = React.createContext(<AuthState | null>(null));
+export const AuthContext = React.createContext<AuthContextType>(null);
 

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { User } from "firebase/auth";
 import { Profile, SosUser } from "../app/model";
 import { auth } from '../app/services/FirebaseAuth';

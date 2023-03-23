@@ -11,6 +11,7 @@ import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/ser
 import { setUserStore } from '../features/userSlice';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+//import {user} from '../app/services/FirebaseContext';
 import '../styles/Header.css';
 
 //const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
