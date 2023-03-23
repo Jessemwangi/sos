@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
-import { Modal, Button, Dialog } from '@mui/material';
+import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { togglePopover, updateAnchorElementId, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
+import { togglePopover, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
 import { Recipient } from '../app/model';
 import { useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
+import { AuthContext } from "../app/services/FirebaseContext";
 
 
 const RecipientsViews = () => {
+
+  const user = useContext(AuthContext);
+  /*  if (user){
+     const uid:string = user.uid;} */
+
 
   const {
     data,
     isFetching,
     error
-  } = useFetchRecipientsQuery();
+  } = useFetchRecipientsQuery({ para1: user?.uid });
 
 
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  let user = useSelector((state: any) => state.user.user);
+  //let user = useSelector((state: any) => state.sosUser);
+  console.log('sosUser from state:', user)
 
 
   function closeHandler() {
@@ -87,15 +94,17 @@ const RecipientsViews = () => {
       </Table>
 
       <Dialog
-      className= "editContactsDialog"
+        className="editContactsDialog"
         open={open}
         onClose={closeHandler}
-        PaperProps={{sx: {
-          height: '300px'
-        }}}
+        PaperProps={{
+          sx: {
+            height: '300px'
+          }
+        }}
       >
         {data && data.length > 0 ?
-          <form  className="editContactForm" onChange={handleChange}>
+          <form className="editContactForm" onChange={handleChange}>
             <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
             <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
             <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
@@ -106,8 +115,8 @@ const RecipientsViews = () => {
               defaultValue={data![0].city}
             ></input>
             <div>  <Button type="submit" onClick={submitEdits}>Save</Button>
-            <Button onClick={closeHandler}>Close</Button></div>
-          
+              <Button onClick={closeHandler}>Close</Button></div>
+
           </form>
           : <p>Awaiting data</p>
         }
