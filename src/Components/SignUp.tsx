@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setUserStore } from '../features/userSlice';
+import { setSosUser } from '../features/userSlice';
 import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/services/FirebaseAuth';
 import { SignUpData, SosUser } from '../app/model';
 import { toggleSignupModal } from '../features/headerSlice';

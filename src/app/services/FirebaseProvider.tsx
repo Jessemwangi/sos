@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from './FirebaseAuth';
-import { setUserStore, setLoggedIn } from '../../features/userSlice';
+import { setSosUser, setLoggedIn } from '../../features/userSlice';
 import { AuthContext } from './FirebaseContext';
+import { redirect } from "react-router-dom";
 
 
 type Props = {
@@ -16,48 +17,25 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
     const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
 
-
-
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
-            if (user) {
+            if (auth.currentUser) {
                 setFirebaseUser(user);
-                const uid = user.uid;
-                console.log('signed in:', uid); //from firebase user object
-                dispatch(setUserStore({ name: user.displayName, email: user.email, uid: user.uid }));
+                dispatch(setSosUser({
+                    name: auth.currentUser.displayName,
+                    email: auth.currentUser.email,
+                    uid: auth.currentUser.uid
+                }));
                 dispatch(setLoggedIn(true))
             } else {
                 setFirebaseUser(null);
                 dispatch(setLoggedIn(false));
+                redirect('/');
             }
         });
-    }, []);
+    }, [dispatch]);
 
     return (
-        <AuthContext.Provider value={firebaseUser}>{children}</AuthContext.Provider>//this is type AuthState | null
+        <AuthContext.Provider value={firebaseUser}>{children}</AuthContext.Provider>//
     )
 }
-
-
-
-/* Type 'User | null' is not assignable to type 'AuthState | null'.
-Property 'user' is missing in type '{ authState: User | null; }' but required in type 'AuthState'.
-
-  Property 'user' is missing in type 'User' but required in type 'AuthState'.ts(2322)
-FirebaseContext.ts(7, 20): 'user' is declared here.
-index.d.ts(329, 9): The expected type comes from property 'value' which is declared here on type 'IntrinsicAttributes & ProviderProps<AuthState | null>' */
-
-/* firebase.User type properties:
-displayName
-email
-emailVerified
-isAnonymous
-metadata
-multiFactor
-phoneNumber
-photoURL
-providerData
-providerId
-refreshToken
-tenantId
-uid */
