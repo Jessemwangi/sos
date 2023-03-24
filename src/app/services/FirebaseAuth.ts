@@ -6,13 +6,10 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   OAuthCredential,
-  signOut, onAuthStateChanged,
-  updateProfile
+  signOut, updateProfile
 } from "firebase/auth";
 
 import { app } from '../../DataLayer/FirestoreInit';
-//import {setUser} from '../../features/userSlice';
-
 
 const provider = new GoogleAuthProvider();
 
@@ -23,56 +20,52 @@ export const auth = initializeAuth(app, {
 
 function googleSignIn() {
   signInWithPopup(auth, provider)
-      .then((result) => {
-          const credential: OAuthCredential | null = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential!.accessToken;
-          const user = result.user;
-      })
-      .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          console.error(errorCode, errorMessage, credential);
-      })
+    .then((result) => {
+      const credential: OAuthCredential | null = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential!.accessToken;
+      const user = result.user;
+      return (user);
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      return (errorMessage);
+    })
 }
 
-async function signInUser(email:string, password:string){
+async function signInUser(email: string, password: string) {
   await signInWithEmailAndPassword(auth, email, password)
-  .then(
-   (userCredential)=>{
+    .then(
+      (userCredential) => {
+        const user = userCredential.user;
+        console.log(userCredential);
+        return user;
+      })
+    .catch((error) => {
+      const errorMessage = error.message;
+      return (errorMessage)
+    })
+}
+
+function createAccount(email: string, password: string) {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
       const user = userCredential.user;
-    console.log(userCredential);
-  console.log(user.uid);
-} 
-    
-      //connect to store here
- )
-  .catch((error) => {
+      console.log(user);
+    })
+    .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.error(errorCode, errorMessage)})
-} 
-
-function createAccount(email:string, password:string){
-createUserWithEmailAndPassword(auth, email, password)
-.then((userCredential) => {
-  const user = userCredential.user;
-  console.log(user);
-})
-.catch((error) => {
-  const errorCode = error.code;
-  const errorMessage = error.message;
-  console.error(errorCode, errorMessage)
-});
+      console.error(errorCode, errorMessage)
+    });
 }
 
-function signOutUser(){
+function signOutUser() {
   signOut(auth).then(() => {
-     console.log('signed out');
-    }).catch((error:any
-    ) => {
-     console.log(error)
-    })
+    console.log('signed out');
+  }).catch((error: any
+  ) => {
+    console.log(error)
+  })
 }
 
 export { googleSignIn, signInUser, createAccount, signOutUser };

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import './App.css';
 import {
   createBrowserRouter,
@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { AuthProvider } from './app/services/FirebaseProvider';
+
 
 import Layout from './Components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -47,11 +48,12 @@ const router = createBrowserRouter(
 
 function App() {
 
+  const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
+
   useEffect(() => {
     document.title = 'SOS Help';
 
   }, []);
-
 
   return (
 

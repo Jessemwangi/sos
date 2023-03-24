@@ -1,5 +1,4 @@
 import React from 'react';
-import { auth } from './FirebaseAuth';
 import { User } from "firebase/auth";
 
 type AuthContextType = User | null;

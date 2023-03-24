@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
 import { SignUpData, SosUser } from '../app/model';
 import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/services/FirebaseAuth';
-import { setUserStore } from '../features/userSlice';
+import { setSosUser } from '../features/userSlice';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import '../styles/Header.css';
@@ -27,8 +27,6 @@ const Header = () => {
 
     const user = useContext(AuthContext);
 
-    console.log('header speaking:', user?.uid)
-
     const sxStyles = {
         position: 'static',
         height: '20vh'
@@ -44,6 +42,7 @@ const Header = () => {
 
     function handleSignOut() {
         signOutUser();
+        navigate('/');
     }
 
     return (
