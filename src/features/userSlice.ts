@@ -12,16 +12,20 @@ const userInit: SosUser = {
 export const userSlice = createSlice({
   name: "userStore",
   initialState: {
-    sosUser: userInit
+    sosUser: userInit,
+    loggedIn: false
   },
+
   reducers: {
     setUserStore: (state, action) => {
       state.sosUser.email = action.payload.email;
       state.sosUser.uid = action.payload.uid;
       state.sosUser.name = action.payload.name;
-
+    },
+    setLoggedIn: (state, action) => {
+      state.loggedIn = action.payload
     }
   },
 });
-export const { setUserStore } = userSlice.actions;
+export const { setUserStore, setLoggedIn } = userSlice.actions;
 export default userSlice.reducer;

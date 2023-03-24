@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
+import { AuthContext } from '../app/services/FirebaseContext';
 //recipients are sent a link to this page. Its path is unique and generated from the signal id. 
 //signal with unique id is created in firestore when SOS is activated.
 //when loaded, this page retrieves the signal data from firestore by id. 
@@ -9,11 +10,14 @@ const AnsToSignals = () => {
     const params = useParams();
     const signalid = params.signalid;
 
+    const user = useContext(AuthContext);
+
+
     const {
         data,
         isFetching,
         error
-    } = useFetchRecipientsQuery();
+    } = useFetchRecipientsQuery({ para1: user?.uid });
     console.log(data);
 
     //fetch

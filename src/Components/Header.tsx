@@ -23,7 +23,10 @@ const Header = () => {
     const menuButton = document.getElementById('menuButton');
     // const user: SosUser = useSelector((state: any) => state.user.user)
     let openMenuPopover: boolean = useSelector((state: any) => state.header.popoverState.mainMenu);
+    let loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
+
     const user = useContext(AuthContext);
+
     console.log('header speaking:', user?.uid)
 
     const sxStyles = {
@@ -43,22 +46,23 @@ const Header = () => {
         signOutUser();
     }
 
-
     return (
         <div className='header'>
             <div className='signInDiv'>
                 <div>
 
-                    <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
-                    <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                    {loggedIn ? (<Button style={{ color: 'white' }} onClick={handleSignOut}>Sign Out</Button>) : (
 
-                    <Button style={{ color: 'white' }} onClick={handleSignOut}>Sign Out</Button>
+
+                        <><Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
+                            <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                        </>)
+                    }
+
 
 
                 </div>
             </div>
-
-
 
             <AppBar className="appBar" sx={{ position: 'static' }}>
                 <Toolbar className="toolBar" sx={sxStyles}>
