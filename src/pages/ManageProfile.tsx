@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ProfileForm from '../Registration/ProfileForm';
 import { Profile } from '../app/model';
 import { useSelector } from 'react-redux';
-import { useSetProfileMutation } from '../app/services/firestoreAPI';
+import { AuthContext } from '../app/services/FirebaseContext';
+//import { CreateDocSetId } from "../app/services/DbFunctions";
+//import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
 
 
 const ManageProfile = () => {
 
-    const user = useSelector((state: any) => state.user.user);
+    const sosUser = useSelector((state: any) => state.user.sosUser);
+    const user = useContext(AuthContext);
+
 
     return (
         <div>
@@ -15,7 +19,7 @@ const ManageProfile = () => {
 
             {!user ? (<><p>Please sign in first or create an account to view your profile</p>
             </>) : (<>
-                <p>{`Hi ${user}`}</p>
+                <p>{`Hi ${sosUser.name}`}</p>
             </>)
 
             }

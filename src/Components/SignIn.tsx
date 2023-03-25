@@ -1,6 +1,6 @@
 import { toggleSigninModal } from '../features/headerSlice';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SignUpData, SosUser } from '../app/model';
 import { googleSignIn, signInUser } from '../app/services/FirebaseAuth';
@@ -13,7 +13,6 @@ const SignIn = () => {
     const init: SignUpData = {
         email: "",
         password: "",
-        name: ""
     }
 
     //only for local state signin process

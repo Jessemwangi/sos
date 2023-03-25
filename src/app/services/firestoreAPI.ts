@@ -2,11 +2,9 @@ import { Recipient, Profile } from '../model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../../DataLayer/FirestoreInit";
 import { onSnapshot, where, query, getDoc, collection, getDocs, doc, addDoc, updateDoc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
-import { useSelector } from 'react-redux';
 
 
 type Recipients = Recipient[];
-
 
 export const firestoreApi = createApi({
 
@@ -52,29 +50,21 @@ export const firestoreApi = createApi({
             },
             invalidatesTags: ['Recipients'],
         }),
-        fetchProfile: builder.query<Profile, { para1: string }>({
-            async queryFn(arg) {
-                const { para1 } = arg;
-                console.log('arg', arg)
+        ///////////     fetch profile    /////////////
 
-                let profile: Profile = {
-                    id: "",
-                    firstname: "",
-                    lastname: "",
-                    phone: "",
-                    uid: "",
-                    email: "",
-                    username: "",
-                    city: "",
-                    country: ""
-                };
+        //parameter id: {id:string;}
+        fetchProfile: builder.query<Profile, string>({
+            async queryFn(arg) {
+                //const profile: Profile = { uid: arg };
+
                 try {
-                    const docRef = doc(db, 'profile', para1);
-                    const docSnap = await getDoc(docRef);
+                    console.log('in query', arg)
+                    const docSnap = await getDoc(doc(db, 'profile', arg));
+                    let profile: Profile = { uid: arg }
+
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());
                         profile = { ...profile, ...docSnap.data() }
-
                     }
                     return { data: profile }
                 }
@@ -90,9 +80,9 @@ export const firestoreApi = createApi({
         setProfile: builder.mutation({
             async queryFn({ id, details }) {
                 try {
-                    await updateDoc(doc(db, 'profile', id), {
+                    await setDoc(doc(db, 'profile', id), {
                         details
-                    });
+                    }, { merge: true });
                     return { data: null };
                 }
                 catch (error: any) {
@@ -112,5 +102,21 @@ export const { useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfile
 
 
 
+/* No overload matches this call. //db, collection, docId ....array of strings?
+  Overload 1 of 3, '(firestore: Firestore, path: string, ...pathSegments: string[]): DocumentReference<DocumentData>', gave the following error.
+    Argument of type '{ id: string; }' is not assignable to parameter of type 'string'.
+
+  Overload 2 of 3, '(reference: CollectionReference<unknown>, path?: string | undefined, ...pathSegments: string[]): DocumentReference<unknown>', gave the following error.
+    Argument of type 'Firestore' is not assignable to parameter of type 'CollectionReference<unknown>'.
+
+      Type 'Firestore' is missing the following properties from type 'CollectionReference<unknown>': id, path, parent, withConverter, and 2 more.
+
+  Overload 3 of 3, '(reference: DocumentReference<unknown>, path: string, ...pathSegments: string[]): DocumentReference<DocumentData>', gave the following error.
+    Argument of type 'Firestore' is not assignable to parameter of type 'DocumentReference<unknown>'.
+      Type 'Firestore' is missing the following properties from type 'DocumentReference<unknown>': converter, firestore, id, path, and 2 more.ts(2769)
 
 
+
+
+
+ */

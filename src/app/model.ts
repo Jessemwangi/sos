@@ -10,7 +10,7 @@ export interface Guser {
 }
 
 export interface SosUser {
-    name?:string
+    name?: string
     email: null | string
     uid: string
 }
@@ -18,22 +18,24 @@ export interface SosUser {
 export interface SignUpData {
     email: string
     password: string
-    name: string
+    firstname?: string
+    lastname?: string
+    confirmPassword?: string
 }
 
 export type LoadingState = boolean
 
 export interface Profile {
-    id: number | string
-    firstname: string,
-    lastname: string,
-    phone: number | string | null,
+    /*  id: number | string */
+    firstname?: string,
+    lastname?: string,
+    phone?: number | string | null,
     altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
     uid: string,
-    email: string,
-    username: string,
+    email?: string,
+    username?: string,
     addressline1?: string,
     addressline2?: string,
     city?: string,
