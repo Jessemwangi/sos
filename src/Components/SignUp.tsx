@@ -18,8 +18,6 @@ const SignUp = () => {
     const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
 
     const user = useContext(AuthContext);
-    //console.log(user);
-
 
     const init: SignUpData = {
         email: "",
@@ -50,8 +48,9 @@ const SignUp = () => {
             return;
         }
         const firebaseUser = createAccount(signUpData.email, signUpData.password);//uid created by firebase
-        dispatch(setSosUser({ ...sosUser, email: signUpData.email, name: signUpData.firstname }));
+        dispatch(setSosUser({ email: signUpData.email, name: signUpData.firstname, uid: user?.uid }));
         console.log(firebaseUser);
+        console.log(sosUser)
     }
 
 

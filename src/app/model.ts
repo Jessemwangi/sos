@@ -10,7 +10,7 @@ export interface Guser {
 }
 
 export interface SosUser {
-    name?: string
+    name: null | string
     email: null | string
     uid: string
 }

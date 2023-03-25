@@ -49,6 +49,7 @@ const theme = createTheme();
 const CompleteReg = () => {
 
   const sosUser: SosUser = useSelector((state: any) => state.user.sosUser)
+
   const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn)
   const [activeStep, setActiveStep] = useState(0);
 
@@ -78,7 +79,7 @@ const CompleteReg = () => {
         >
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              Hi, finish setting up your account by providing the following information.
+              Hi {sosUser.name}, finish setting up your account by providing the following information.
             </Typography>
           </Toolbar>
         </AppBar>

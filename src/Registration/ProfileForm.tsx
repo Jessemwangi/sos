@@ -8,20 +8,16 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
-  onSnapshot,
-  where,
-  query,
+  serverTimestamp,
   getDoc,
-  collection,
-  getDocs,
   doc,
-  addDoc, QuerySnapshot, DocumentData, setDoc, updateDoc
+  addDoc, setDoc, updateDoc
 } from "@firebase/firestore";
 import { db } from '../DataLayer/FirestoreInit';
 
 
-import { useFetchProfileQuery } from '../app/services/firestoreAPI';
-import { PostDocById } from "../app/services/DbFunctions";
+import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
+//import { PostDocById } from "../app/services/DbFunctions";
 import { Profile } from "../app/model";
 import { AuthContext } from "../app/services/FirebaseContext";
 import { updateProfile } from "../features/profileSlice";
@@ -34,8 +30,6 @@ function ProfileForm() {
   const sosUser = useSelector((state: any) => state.user.sosUser);
   const storeProfile = useSelector((state: any) => state.profile.userProfile);
   const loggedIn = useSelector((state: any) => state.user.loggedIn);
-  console.log('sosUser object:', sosUser.email);
-
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs | null | Date>(dayjs());
 
@@ -60,7 +54,31 @@ function ProfileForm() {
   };
 
 
+
   const [userProfile, setUserProfile] = useState<Profile>(init);
+
+  const profileData: any = {
+    firstname: userProfile.firstname,
+    lastname: userProfile.lastname,
+    phone: userProfile.phone,
+    altphone: userProfile.altphone,
+    occupation: userProfile.occupation,
+    dob: userProfile.dob,
+    uid: sosUser.uid,
+    email: sosUser.email,
+    username: userProfile.username,
+    addressline1: userProfile.addressline1,
+    addressline2: userProfile.addressline2,
+    city: userProfile.city,
+    state_province: userProfile.state_province,
+    postcode: userProfile.postcode,
+    country: userProfile.country,
+    createdAt: new Date()
+  };
+
+
+  //useSetProfileMutation(sosUser.uid, userProfile);
+
 
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
   //const [currentProfile, setCurrentProfile] = useState<Profile>()
@@ -77,30 +95,26 @@ function ProfileForm() {
   };
 
 
-  const { data, isFetching, error } = useFetchProfileQuery(sosUser.uid); //pull uid from store instead of auth user object to avoid uid load errors
-  if (!data) {
-    console.log('data not defined');
-    //toast.info("No profile data was found for you, create your profile here");
-  } else {
-    //dispatch this to store?
-    //setButtonAction('Update Profile'); triggers infinite loop
-
-  }
+  const { data, error } = useFetchProfileQuery(sosUser.uid); //pull uid from store instead of auth user object to avoid uid load errors
+  /*   if (!data) {
+      console.log('data not defined');
+      //toast.info("No profile data was found for you, create your profile here");
+    } else {
+      //setButtonAction('Update Profile'); triggers infinite loop
+  
+    } */
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setUserProfile({ ...userProfile, uid: sosUser.uid, email: sosUser.email, [e.target.name]: e.target.value });
-    console.log(userProfile);
-    console.log(storeProfile);
   };
+
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    /*  const response = PostDocById('profile', { ...userProfile }, sosUser.uid);
-     console.log(response); */
-    //collectionName: string, data: any, arg: string
-    //invalid hook call. Try calling firebase functions directly? 
+    /*  const response = PostDocById('profile', { ...userProfile }, sosUser.uid); */
+    //=>invalid hook call. Try calling firebase functions directly? 
     try {
-      await setDoc(doc(db, 'profile', sosUser.uid), { ...userProfile }, { merge: true })
+      await updateDoc(doc(db, 'profile', sosUser.uid), profileData)
       /*  .then(() => {
          setResponse("Document has been added successfully");
        }); */
