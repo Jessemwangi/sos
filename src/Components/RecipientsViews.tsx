@@ -25,8 +25,6 @@ const RecipientsViews = () => {
 
   const dispatch = useDispatch();
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  //let user = useSelector((state: any) => state.sosUser);
-  console.log('sosUser from state:', user)
 
 
   function closeHandler() {

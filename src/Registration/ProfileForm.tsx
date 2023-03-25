@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useContext, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs, { Dayjs } from "dayjs";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
@@ -7,23 +7,82 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import 'react-toastify/dist/ReactToastify.css';
 
+import {
+  serverTimestamp,
+  getDoc,
+  doc,
+  addDoc, setDoc, updateDoc
+} from "@firebase/firestore";
+import { db } from '../DataLayer/FirestoreInit';
+
+
+import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
+//import { PostDocById } from "../app/services/DbFunctions";
 import { Profile } from "../app/model";
-//import {}  from "../features/profileSlice" //import reducer functions
+import { AuthContext } from "../app/services/FirebaseContext";
+import { updateProfile } from "../features/profileSlice";
 
-//import { selectProfile, addProfile } from "../features/profileSlice";
-//import { GetDataByTwoColumns2, GetAllDocs, GetDataByTwoColumns } from "../app/services/DbFunctions";
+function ProfileForm() {
 
-export default function ProfileForm() {
   const dispatch = useDispatch();
-  //const user = useSelector((state: any) => state.user.user);
-  const userProfile = useSelector((state: any) => state.profile.userProfile);
-  /*   const [userProfile, setUserProfile] = React.useState<Profile>(user_Profile);
-    const [buttonAction, setButtonAction] = React.useState<string>('Save Profile')
-    const [currentProfile, setCurrentProfile] = React.useState<Profile>() */
+  const user = useContext(AuthContext);
 
-  const [datePickerValue, setDatePickerValue] = React.useState<
-    Dayjs | null | Date
-  >(dayjs());
+  const sosUser = useSelector((state: any) => state.user.sosUser);
+  const storeProfile = useSelector((state: any) => state.profile.userProfile);
+  const loggedIn = useSelector((state: any) => state.user.loggedIn);
+
+  const [datePickerValue, setDatePickerValue] = useState<Dayjs | null | Date>(dayjs());
+
+  const init: Profile = {
+
+    firstname: "",
+    lastname: "",
+    phone: "",
+    altphone: "",
+    occupation: "",
+    dob: null,
+    uid: sosUser.uid,
+    email: sosUser.email,
+    username: "",
+    addressline1: "",
+    addressline2: "",
+    city: "",
+    state_province: "",
+    postcode: "",
+    country: "",
+    createdAt: null,
+  };
+
+
+
+  const [userProfile, setUserProfile] = useState<Profile>(init);
+
+  const profileData: any = {
+    firstname: userProfile.firstname,
+    lastname: userProfile.lastname,
+    phone: userProfile.phone,
+    altphone: userProfile.altphone,
+    occupation: userProfile.occupation,
+    dob: userProfile.dob,
+    uid: sosUser.uid,
+    email: sosUser.email,
+    username: userProfile.username,
+    addressline1: userProfile.addressline1,
+    addressline2: userProfile.addressline2,
+    city: userProfile.city,
+    state_province: userProfile.state_province,
+    postcode: userProfile.postcode,
+    country: userProfile.country,
+    createdAt: new Date()
+  };
+
+
+  //useSetProfileMutation(sosUser.uid, userProfile);
+
+
+  const [buttonAction, setButtonAction] = useState<string>('Save Profile')
+  //const [currentProfile, setCurrentProfile] = useState<Profile>()
+
 
   const options: ToastOptions = {
     position: 'top-right',
@@ -36,81 +95,49 @@ export default function ProfileForm() {
   };
 
 
-  /*   React.useEffect(() => {
-      if (user.email && user.sub) {
-        const Firestore_Profile = async () => {
-          const retrievedProfile = await GetDataByTwoColumns<Profile>(
-            "profile",
-            "email",
-            userProfile.email,
-            "id",
-            userProfile.id
-          );
-          if (retrievedProfile instanceof Error) {
-            toast.error(retrievedProfile.message);
-          } else if ("data" in retrievedProfile && retrievedProfile.data.length > 0) {
-            const profileData = retrievedProfile.data[0];
-            setCurrentProfile(profileData);
-            console.log(profileData);
+  const { data, error } = useFetchProfileQuery(sosUser.uid); //pull uid from store instead of auth user object to avoid uid load errors
+  /*   if (!data) {
+      console.log('data not defined');
+      //toast.info("No profile data was found for you, create your profile here");
+    } else {
+      //setButtonAction('Update Profile'); triggers infinite loop
   
-            // dispatch(
-            //   addProfile({
-            //     ...profileData,...user_Profile
-            //   })
-  
-            // );
-            setButtonAction('Update Profile')
-          } else {
-            toast.info("No profile data found for You, Create One...");
-          }
-        }
-  
-        Firestore_Profile();
-      }
-    }, [dispatch, user.email, user.sub, userProfile.email, userProfile.id, user_Profile]); */
+    } */
 
-  //////////////////////////
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setUserProfile({ ...userProfile, uid: sosUser.uid, email: sosUser.email, [e.target.name]: e.target.value });
+  };
 
 
-  //get profile from store:
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    /*  const response = PostDocById('profile', { ...userProfile }, sosUser.uid); */
+    //=>invalid hook call. Try calling firebase functions directly? 
+    try {
+      await updateDoc(doc(db, 'profile', sosUser.uid), profileData)
+      /*  .then(() => {
+         setResponse("Document has been added successfully");
+       }); */
+    } catch (error: any) {
+      /* setError(`An error occured ... ${error.message}`);
+      setResponse(`An error occured ... ${error.message}`); */
+      console.log(error);
+    }
 
-  /* 
-    const handleChange = (
-      e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-      setUserProfile(user_Profile);
-      console.log(user_Profile);
-      dispatch(addProfile({ [e.target.name]: e.target.value }));
-    };
-  
-    const HandlePostProfile = async () => {
-      if (userProfile.id && userProfile.email) {
-        const Firestore_Profile = await GetDataByTwoColumns2(
-          "profile",
-          "email",
-          userProfile.email,
-          "id",
-          userProfile.id
-        );
-        console.log(Firestore_Profile);
-        if (Firestore_Profile) {
-          setButtonAction('Update Profile')
-          // UPdate()
-          console.log("profile in our database");
-        } else {
-          const response: string = await PostData("profile", userProfile);
-          console.log("profile needs to be created");
-          console.log("response", response);
-        }
-      } else {
-  
-        toast.error("Oops, seems like we need you to log in first!", options);
-      }
-    };
-  
+  }
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    } else {
+      dispatch(updateProfile({ ...userProfile }));
+    }
+  }, [dispatch, userProfile]);
+
+  /*
+ if(!user.uid){toast.error("Oops, seems like we need you to log in first!", options);}
    */
 
-  /////////////////////// FORM //////////////////////////////
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom></Typography>
@@ -118,64 +145,64 @@ export default function ProfileForm() {
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="firstName"
-            name="firstName"
+            id="firstname"
+            name="firstname"
             label="First name"
             fullWidth
-            /*  value={user.name.split(" ")[1]} */
+            value={storeProfile.firstname ? storeProfile.firstname : ""} //u
             autoComplete="given-name"
             variant="standard"
+            onChange={(e) => { handleChange(e) }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="lastName"
-            name="lastName"
+            id="lastname"
+            name="lastname"
             label="Last name"
             fullWidth
-            /*  value={user.name.split(" ")[0]} */
+            value={storeProfile.lastname}
             autoComplete="family-name"
             variant="standard"
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="Contact"
-            name="contact"
-            value={userProfile.contact ? userProfile.contact : ""}
-            label="Contacts"
+            id="phone"
+            name="phone"
+            value={storeProfile.phone ? storeProfile.phone : ""}
+            label="Phone Number"
             fullWidth
             autoComplete="Phone Number"
             variant="standard"
-          //onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
-            id="AltContact"
-            name="altcontact"
-            value={userProfile.altcontact ? userProfile.altcontact : ""}
-            label="Alt Contacts"
+            id="altphone"
+            name="altphone"
+            value={storeProfile.altphone ? storeProfile.altphone : ""}
+            label="Alternative Phone Number"
             fullWidth
             autoComplete="Alt Phone Number"
             variant="standard"
-          //onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
             id="occupation"
             name="occupation"
-            value={userProfile.occupation ? userProfile.occupation : ""}
+            value={storeProfile.occupation ? storeProfile.occupation : ""}
             label="occupation"
             fullWidth
             autoComplete="occupation"
             variant="standard"
-          // onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -185,7 +212,7 @@ export default function ProfileForm() {
               value={datePickerValue}
               onChange={(newValue) => {
                 setDatePickerValue(
-                  userProfile.dob ? userProfile.dob : newValue
+                  storeProfile.dob ? storeProfile.dob : newValue
                 );
                 // dispatch(addProfile({ dob: newValue }));
               }}
@@ -196,13 +223,14 @@ export default function ProfileForm() {
         <Grid item xs={12}>
           <TextField
             required
-            id="Email"
-            name="emailaddress"
+            id="email"
+            name="email"
             label="Email Address"
             fullWidth
-            /*  value={user.email} */
+            value={sosUser.email}
             autoComplete="Email Address"
             variant="standard"
+
           />
         </Grid>
         <Grid item xs={12}>
@@ -215,7 +243,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable address-line1"
             variant="standard"
-          // onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -227,7 +255,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable address-line2"
             variant="standard"
-          //onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -240,7 +268,7 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Reachable address-level2"
             variant="standard"
-          // onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -251,20 +279,20 @@ export default function ProfileForm() {
             label="State/Province/Region"
             fullWidth
             variant="standard"
-          // onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="zip"
+            id="postcode"
             name="postcode"
             value={userProfile.postcode ? userProfile.postcode : ""}
             label="Zip / Postal code"
             fullWidth
             autoComplete="Reachable postal-code"
             variant="standard"
-          // onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -277,16 +305,16 @@ export default function ProfileForm() {
             fullWidth
             autoComplete="Resident country"
             variant="standard"
-          // onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
           <Button
             variant="contained"
-            // onClick={HandlePostProfile}
+            onClick={(e) => handleSubmit(e)}
             sx={{ mt: 3, ml: 1 }}
           >
-            {/*      {buttonAction} */}
+            {buttonAction}
           </Button>
         </Grid>
         <ToastContainer />
@@ -294,4 +322,6 @@ export default function ProfileForm() {
     </React.Fragment>
   );
 }
+
+export default ProfileForm;
 

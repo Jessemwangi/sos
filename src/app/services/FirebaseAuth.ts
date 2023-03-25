@@ -6,7 +6,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   OAuthCredential,
-  signOut, updateProfile
+  signOut, updateProfile, User
 } from "firebase/auth";
 
 import { app } from '../../DataLayer/FirestoreInit';
@@ -37,7 +37,6 @@ async function signInUser(email: string, password: string) {
     .then(
       (userCredential) => {
         const user = userCredential.user;
-        console.log(userCredential);
         return user;
       })
     .catch((error) => {
@@ -50,7 +49,8 @@ function createAccount(email: string, password: string) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      console.log(user);
+      return user;
+
     })
     .catch((error) => {
       const errorCode = error.code;
