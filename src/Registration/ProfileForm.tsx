@@ -32,7 +32,7 @@ function ProfileForm() {
     altphone: "",
     occupation: "",
     dob: null,
-    uid: "",
+    uid: sosUser.uid,
     email: "",
     username: "",
     addressline1: "",
@@ -47,9 +47,9 @@ function ProfileForm() {
 
   const [userProfile, setUserProfile] = useState<Profile>(init);
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
-  const [currentProfile, setCurrentProfile] = useState<Profile>()
+  //const [currentProfile, setCurrentProfile] = useState<Profile>()
 
-
+  console.log(userProfile);
 
   const {
     data,
@@ -71,9 +71,8 @@ function ProfileForm() {
   //setButtonAction('Update Profile');
   /* toast.info("No profile data was found for you."); */
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const handleChange = (e: any) => {
+    setUserProfile({ ...userProfile, [e.target.name]: e.target.value });
     //dispatch(addProfile({ [e.target.name]: e.target.value }));
   };
 
@@ -89,21 +88,21 @@ function ProfileForm() {
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="firstName"
-            name="firstName"
+            id="firstname"
+            name="firstname"
             label="First name"
             fullWidth
             value={userProfile.firstname} //u
             autoComplete="given-name"
             variant="standard"
-            onChange={(e) => handleChange(e)}
+            onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="lastName"
-            name="lastName"
+            id="lastname"
+            name="lastname"
             label="Last name"
             fullWidth
             value={userProfile.lastname}
