@@ -58,7 +58,6 @@ export const firestoreApi = createApi({
                 //const profile: Profile = { uid: arg };
 
                 try {
-                    console.log('in query', arg)
                     const docSnap = await getDoc(doc(db, 'profile', arg));
                     let profile: Profile = { uid: arg }
 
@@ -96,8 +95,6 @@ export const firestoreApi = createApi({
 });
 
 
-
-
 export const { useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
 
 
@@ -114,9 +111,4 @@ export const { useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfile
   Overload 3 of 3, '(reference: DocumentReference<unknown>, path: string, ...pathSegments: string[]): DocumentReference<DocumentData>', gave the following error.
     Argument of type 'Firestore' is not assignable to parameter of type 'DocumentReference<unknown>'.
       Type 'Firestore' is missing the following properties from type 'DocumentReference<unknown>': converter, firestore, id, path, and 2 more.ts(2769)
-
-
-
-
-
  */

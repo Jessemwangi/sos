@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs, { Dayjs } from "dayjs";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
@@ -7,10 +7,24 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
+import {
+  onSnapshot,
+  where,
+  query,
+  getDoc,
+  collection,
+  getDocs,
+  doc,
+  addDoc, QuerySnapshot, DocumentData, setDoc, updateDoc
+} from "@firebase/firestore";
+import { db } from '../DataLayer/FirestoreInit';
+
+
+import { useFetchProfileQuery } from '../app/services/firestoreAPI';
+import { PostDocById } from "../app/services/DbFunctions";
 import { Profile } from "../app/model";
 import { AuthContext } from "../app/services/FirebaseContext";
-
+import { updateProfile } from "../features/profileSlice";
 
 function ProfileForm() {
 
@@ -18,14 +32,15 @@ function ProfileForm() {
   const user = useContext(AuthContext);
 
   const sosUser = useSelector((state: any) => state.user.sosUser);
+  const storeProfile = useSelector((state: any) => state.profile.userProfile);
   const loggedIn = useSelector((state: any) => state.user.loggedIn);
-  console.log(sosUser.email);
+  console.log('sosUser object:', sosUser.email);
 
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs | null | Date>(dayjs());
 
   const init: Profile = {
-    /*  id: '', */
+
     firstname: "",
     lastname: "",
     phone: "",
@@ -33,7 +48,7 @@ function ProfileForm() {
     occupation: "",
     dob: null,
     uid: sosUser.uid,
-    email: "",
+    email: sosUser.email,
     username: "",
     addressline1: "",
     addressline2: "",
@@ -46,16 +61,10 @@ function ProfileForm() {
 
 
   const [userProfile, setUserProfile] = useState<Profile>(init);
+
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
   //const [currentProfile, setCurrentProfile] = useState<Profile>()
 
-  console.log(userProfile);
-
-  const {
-    data,
-    isFetching,
-    error
-  } = useFetchProfileQuery(sosUser.uid); //pull uid from store to avoid uid load errors?
 
   const options: ToastOptions = {
     position: 'top-right',
@@ -68,18 +77,52 @@ function ProfileForm() {
   };
 
 
-  //setButtonAction('Update Profile');
-  /* toast.info("No profile data was found for you."); */
+  const { data, isFetching, error } = useFetchProfileQuery(sosUser.uid); //pull uid from store instead of auth user object to avoid uid load errors
+  if (!data) {
+    console.log('data not defined');
+    //toast.info("No profile data was found for you, create your profile here");
+  } else {
+    //dispatch this to store?
+    //setButtonAction('Update Profile'); triggers infinite loop
 
-  const handleChange = (e: any) => {
-    setUserProfile({ ...userProfile, [e.target.name]: e.target.value });
-    //dispatch(addProfile({ [e.target.name]: e.target.value }));
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setUserProfile({ ...userProfile, uid: sosUser.uid, email: sosUser.email, [e.target.name]: e.target.value });
+    console.log(userProfile);
+    console.log(storeProfile);
   };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    /*  const response = PostDocById('profile', { ...userProfile }, sosUser.uid);
+     console.log(response); */
+    //collectionName: string, data: any, arg: string
+    //invalid hook call. Try calling firebase functions directly? 
+    try {
+      await setDoc(doc(db, 'profile', sosUser.uid), { ...userProfile }, { merge: true })
+      /*  .then(() => {
+         setResponse("Document has been added successfully");
+       }); */
+    } catch (error: any) {
+      /* setError(`An error occured ... ${error.message}`);
+      setResponse(`An error occured ... ${error.message}`); */
+      console.log(error);
+    }
+
+  }
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    } else {
+      dispatch(updateProfile({ ...userProfile }));
+    }
+  }, [dispatch, userProfile]);
 
   /*
  if(!user.uid){toast.error("Oops, seems like we need you to log in first!", options);}
    */
-
 
   return (
     <React.Fragment>
@@ -92,10 +135,10 @@ function ProfileForm() {
             name="firstname"
             label="First name"
             fullWidth
-            value={userProfile.firstname} //u
+            value={storeProfile.firstname ? storeProfile.firstname : ""} //u
             autoComplete="given-name"
             variant="standard"
-            onChange={handleChange}
+            onChange={(e) => { handleChange(e) }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -105,7 +148,7 @@ function ProfileForm() {
             name="lastname"
             label="Last name"
             fullWidth
-            value={userProfile.lastname}
+            value={storeProfile.lastname}
             autoComplete="family-name"
             variant="standard"
             onChange={(e) => handleChange(e)}
@@ -116,7 +159,7 @@ function ProfileForm() {
             required
             id="phone"
             name="phone"
-            defaultValue={userProfile.phone ? userProfile.phone : ""}
+            value={storeProfile.phone ? storeProfile.phone : ""}
             label="Phone Number"
             fullWidth
             autoComplete="Phone Number"
@@ -128,7 +171,7 @@ function ProfileForm() {
           <TextField
             id="altphone"
             name="altphone"
-            value={userProfile.altphone ? userProfile.altphone : ""}
+            value={storeProfile.altphone ? storeProfile.altphone : ""}
             label="Alternative Phone Number"
             fullWidth
             autoComplete="Alt Phone Number"
@@ -140,7 +183,7 @@ function ProfileForm() {
           <TextField
             id="occupation"
             name="occupation"
-            value={userProfile.occupation ? userProfile.occupation : ""}
+            value={storeProfile.occupation ? storeProfile.occupation : ""}
             label="occupation"
             fullWidth
             autoComplete="occupation"
@@ -155,7 +198,7 @@ function ProfileForm() {
               value={datePickerValue}
               onChange={(newValue) => {
                 setDatePickerValue(
-                  userProfile.dob ? userProfile.dob : newValue
+                  storeProfile.dob ? storeProfile.dob : newValue
                 );
                 // dispatch(addProfile({ dob: newValue }));
               }}
@@ -254,7 +297,7 @@ function ProfileForm() {
         <Grid item xs={12}>
           <Button
             variant="contained"
-            /*  onClick={useSetProfileMutation(sosUser.uid, {...userProfile})} */
+            onClick={(e) => handleSubmit(e)}
             sx={{ mt: 3, ml: 1 }}
           >
             {buttonAction}

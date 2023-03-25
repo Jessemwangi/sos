@@ -154,6 +154,33 @@ const PostData_With_Id = async (collectionName: string, data: any, idColName: nu
   return { response, error, loadingState };
 };
 
+const PostDocById = async (collectionName: string, data: any, arg: string) => {
+  const [response, setResponse] = useState('');
+  const [error, setError] = useState('');
+  const [loadingState, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const postData = async () => {
+      try {
+        await setDoc(doc(db, collectionName, arg), data, { merge: true })
+          .then(() => {
+            setResponse("Document has been added successfully");
+          });
+      } catch (error: any) {
+        setError(`An error occured ... ${error.message}`);
+        setResponse(`An error occured ... ${error.message}`);
+      }
+      setIsLoading(false);
+      return response;
+
+    };
+
+    postData();
+  }, [collectionName, data, response, arg]);
+
+  return { response, error, loadingState };
+}
+
 const GetDocsById = (collectionName: string, id: string, value: any) => {
   const [response, setResponse] = useState(null);
   const [loadingState, setLoading] = useState(true);
@@ -233,4 +260,4 @@ export const GetAllDocsByTwoColumns = async (
   return response
 };
 
-export { GetAllDocs, GetOneDoc, CreateDocAutoId, PostData_With_Id, GetDocsById, CreateDocSetId };
+export { GetAllDocs, GetOneDoc, CreateDocAutoId, PostData_With_Id, GetDocsById, CreateDocSetId, PostDocById };

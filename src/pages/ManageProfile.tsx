@@ -3,7 +3,6 @@ import ProfileForm from '../Registration/ProfileForm';
 import { Profile } from '../app/model';
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../app/services/FirebaseContext';
-//import { CreateDocSetId } from "../app/services/DbFunctions";
 //import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
 
 
@@ -19,7 +18,7 @@ const ManageProfile = () => {
 
             {!user ? (<><p>Please sign in first or create an account to view your profile</p>
             </>) : (<>
-                <p>{`Hi ${sosUser.name}`}</p>
+                <p>{`Hi ${sosUser.uid}`}</p>
             </>)
 
             }
