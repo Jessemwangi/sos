@@ -13,6 +13,7 @@ const SignIn = () => {
     const init: SignUpData = {
         email: "",
         password: "",
+        confirmPassword:"",
     }
 
     //only for local state signin process

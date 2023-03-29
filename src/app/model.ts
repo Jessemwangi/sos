@@ -20,7 +20,7 @@ export interface SignUpData {
     password: string
     firstname?: string
     lastname?: string
-    confirmPassword?: string
+    confirmPassword: string
 }
 
 export type LoadingState = boolean

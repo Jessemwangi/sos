@@ -10,6 +10,7 @@ import { toggleSignupModal } from '../features/headerSlice';
 import { setSosUser } from '../features/userSlice';
 import { SignUpData, SosUser } from '../app/model';
 import { AuthContext } from '../app/services/FirebaseContext';
+import { toast } from 'react-toastify';
 
 const SignUp = () => {
     const dispatch = useDispatch();
@@ -44,7 +45,8 @@ const SignUp = () => {
     async function handleSignUp(e: any, signUpData: SignUpData) {
         e.preventDefault();
         if (signUpData.password !== signUpData.confirmPassword) {
-            console.log('passwords do not match');
+            toast.error("passwords do not match")
+            // console.log('passwords do not match');
             return;
         }
         const firebaseUser = createAccount(signUpData.email, signUpData.password);//uid created by firebase
