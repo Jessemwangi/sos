@@ -5,7 +5,7 @@ import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import { Grid, Button, Typography, TextField } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import 'react-toastify/dist/ReactToastify.css';
+
 
 import {
   serverTimestamp,
@@ -167,6 +167,7 @@ function ProfileForm() {
             variant="standard"
             onChange={(e) => handleChange(e)}
           />
+          <button onClick={() => toast.info("you just clicked me")}>Toast me up</button>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -317,7 +318,7 @@ function ProfileForm() {
             {buttonAction}
           </Button>
         </Grid>
-        <ToastContainer />
+        
       </Grid>
     </React.Fragment>
   );

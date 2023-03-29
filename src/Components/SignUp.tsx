@@ -118,6 +118,7 @@ const SignUp = () => {
                         /></form>
                 </DialogContent>
                 <DialogActions>
+                    {}
                     <Button type="submit" onClick={(e) => handleSignUp(e, signUpData)}>Submit</Button>
                 </DialogActions>
             </>) : (
