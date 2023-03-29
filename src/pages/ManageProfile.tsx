@@ -10,8 +10,10 @@ const ManageProfile = () => {
 
     const sosUser = useSelector((state: any) => state.user.sosUser);
     const user = useContext(AuthContext);
+    console.log(user);
 
 
+  //  const [data] =
     return (
         <div>
             <h1>Manage Profile</h1>
