@@ -2,18 +2,18 @@ import { toggleSigninModal } from '../features/headerSlice';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SignUpData, SosUser } from '../app/model';
-import { googleSignIn, signInUser } from '../app/services/FirebaseAuth';
+import {  SignInData, SignUpData, SosUser } from '../app/model';
+import { signInUser } from '../app/services/FirebaseAuth';
 import React from 'react';
 
 const SignIn = () => {
 
     const dispatch = useDispatch();
 
-    const init: SignUpData = {
+    const init: SignInData = {
         email: "",
         password: "",
-        confirmPassword:"",
+
     }
 
     //only for local state signin process
@@ -26,7 +26,7 @@ const SignIn = () => {
         setSigninData({ ...signinData, [e.currentTarget.name]: e.currentTarget.value });
     }
 
-    function handleSignIn(e: any, signinData: SignUpData) {
+    function handleSignIn(e: any, signinData: SignInData) {
         e.preventDefault();
         signInUser(signinData.email, signinData.password)
     }

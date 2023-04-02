@@ -18,9 +18,15 @@ export interface SosUser {
 export interface SignUpData {
     email: string
     password: string
-    firstname?: string
-    lastname?: string
+    firstname: string
+    lastname: string
     confirmPassword: string
+}
+
+export interface SignInData {
+    email: string
+    password: string
+
 }
 
 export type LoadingState = boolean
@@ -42,7 +48,7 @@ export interface Profile {
     state_province?: string,
     postcode?: string
     country?: string
-    createdAt?: Date | null
+    createdAt?: Date | null | string
 }
 
 export interface Recipient {
