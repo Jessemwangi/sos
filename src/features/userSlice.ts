@@ -1,35 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Guser } from "../app/model";
+import { Profile, SosUser } from "../app/model";
 
-const init: Guser = {
+const userInit: SosUser = {
   name: "",
   email: "",
-  picture: "",
-  iat: 0,
-  iss: "",
-  jti: "",
-};
+  uid: ""
+}
 
 export const userSlice = createSlice({
-  name: "userSlice",
+  name: "userStore",
   initialState: {
-    users: init,
+    sosUser: userInit,
+    loggedIn: false
   },
+
   reducers: {
-    SignIn: (state, action) => {
-      state.users.email = action.payload.email;
-      state.users.name = action.payload.name;
-      state.users.picture = action.payload.picture;
-      state.users.iat = action.payload.iat;
-      state.users.jti = action.payload.jti;
-      state.users.iss = action.payload.iss;
+    setSosUser: (state, action) => {
+      state.sosUser.email = action.payload.email;
+      state.sosUser.uid = action.payload.uid;
+      state.sosUser.name = action.payload.name;
     },
-    SignOut: (state) => {
-     
-      state.users = { ...init };
-    },
+    setLoggedIn: (state, action) => {
+      state.loggedIn = action.payload
+    }
   },
 });
-export const { SignIn, SignOut } = userSlice.actions;
-export const selectSosUser = (state: any) => state.userSlice.users;
+export const { setSosUser, setLoggedIn } = userSlice.actions;
 export default userSlice.reducer;

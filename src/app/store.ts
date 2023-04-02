@@ -1,18 +1,24 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+
 import userSlice from '../features/userSlice';
-import profileSlice from '../features/ProfileSlice';
+import profileSlice from '../features/profileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
+import headerSlice from '../features/headerSlice';
+import { firestoreApi } from './services/firestoreAPI';
+
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    userSlice: userSlice,
+    user: userSlice,
     profile: profileSlice,
-    activeSOS: sosButtonSlice,
+    sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
+    header: headerSlice,
+    [firestoreApi.reducerPath]: firestoreApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(firestoreApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

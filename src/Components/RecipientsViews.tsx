@@ -1,109 +1,62 @@
-import React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import EditIcon from '@mui/icons-material/Edit';
-import { Popover, Button } from '@mui/material';
-//import { TurnedIn } from "@mui/icons-material";
-import { togglePopover, anchorElement } from '../features/manageRecipientsSlice';
+import React, { useState, useEffect, useContext } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Button, Dialog } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import { togglePopover, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
+import { Recipient } from '../app/model';
+import { useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
-import { rowsArray } from './rows';
+import { AuthContext } from "../app/services/FirebaseContext";
 
 
 const RecipientsViews = () => {
-  const dispatch = useDispatch();
-  const popoverState = useSelector((state: any) => state.manageRecipients.popoverState);
-  const anchorElementState = useSelector((state: any) => state.manageRecipients.anchorElementState)
-  // GEt data from firebase for the active user stored in userslice the map it
-  const rows = rowsArray;
 
-  /* const rows = [
-    {
-      id: "0",
-      createdAt: "16 Mar, 2019",
-      name: "Vernon Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: "1",
-      createdAt: "16 Mar, 2019",
-      name: "Lisa-Marie Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: "2",
-      createdAt: "16 Mar, 2019",
-      name: "Gladys Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: "3",
-      createdAt: "16 Mar, 2019",
-      name: "Elvis Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-    {
-      id: "4",
-      createdAt: "16 Mar, 2019",
-      name: "Priscilla Presley",
-      residents: "Tupelo, MS",
-      call: "371956444",
-      address: "312.44",
-      city: "helsinki",
-      postalCode: "00510",
-    },
-  ]; */
+  const user = useContext(AuthContext);
+
+  const {
+    data,
+    isFetching,
+    error
+  } = useFetchRecipientsQuery({ para1: user?.uid });
+
+  const dispatch = useDispatch();
+  let open = useSelector((state: any) => state.manageRecipients.popoverState);
+
 
   function closeHandler() {
-    console.log('close');
     dispatch(togglePopover());
-    console.log(popoverState);
   }
 
-  function editHandler(e: any) {
-    console.log(e.target.id)
+
+  function editButtonHandler(e: any, id: string) {
     dispatch(togglePopover());
-    dispatch(anchorElement(e.target.id));
-    console.log(popoverState);
+    dispatch(updateCurrentId(id))
+  }
+
+  function deleteHandler(e: any, id: string) {
+
 
   }
 
-  function saveEdits(): any {
-    //TODO
-    console.log('save edits')
+  function handleChange(e: any): any {
+    /* setContact({[e.target.name]: e.target.value }); */
   }
 
-  let open = popoverState;
-  let anchorEl = document.getElementById(anchorElementState);
-
-
+  function submitEdits(e: any): any {
+    e.preventDefault();
+    //TODO: try:
+    //dispatch(saveContacts(contacts)) 
+    //1. update in store with dispatch(action(payload)
+    //2. when store value propates, update firestore with new value from useEffect()
+  }
 
   return (
-    <React.Fragment>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Available Recipients
-      </Typography>
 
+    <React.Fragment>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -111,47 +64,62 @@ const RecipientsViews = () => {
             <TableCell>Name</TableCell>
             <TableCell>Address</TableCell>
             <TableCell>Phone</TableCell>
-            <TableCell align="right">Post Code</TableCell>
+            <TableCell>Post Code</TableCell>
             <TableCell>City</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id} id={row.id}>
-              <TableCell>{row.createdAt}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.address}</TableCell>
-              <TableCell>{row.call}</TableCell>
-              <TableCell align="center">${row.postalCode}</TableCell>
-              <TableCell>{row.city}</TableCell>
-              <TableCell><EditIcon id={`icon${row.id}`} onClick={editHandler} /></TableCell>
+
+          {!isFetching && data && data.map((recipient) => (
+            <TableRow key={recipient.id} >
+              <TableCell>{recipient.createdAt}</TableCell>
+              <TableCell>{recipient.name}</TableCell>
+              <TableCell>{recipient.address}</TableCell>
+              <TableCell>{recipient.phone}</TableCell>
+              <TableCell>{recipient.postcode}</TableCell>
+              <TableCell>{recipient.city}</TableCell>
+              <TableCell><EditIcon id={`icon${recipient.id}`}
+                onClick={(e) => editButtonHandler(e, recipient.id)} />
+              </TableCell>
+              <TableCell> <DeleteIcon id={`delete${recipient.id}`} onClick={(e) => deleteHandler(e, recipient.id)} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      <Popover
-        className="editPopover"
+      <Dialog
+        className="editContactsDialog"
         open={open}
         onClose={closeHandler}
-        anchorEl={anchorEl}
-        //id={popoverId}
-        sx={{
-          height: '500px',
-          width: '800px',
+        PaperProps={{
+          sx: {
+            height: '300px'
+          }
         }}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}><div>
-          <label htmlFor="name" ></label><input id="name"></input>
-          <label htmlFor="call"></label><input id="call"></input>
-          <label htmlFor="address"></label><input id="address"></input>
-          <Button onClick={saveEdits}>Save</Button>
-          <Button onClick={closeHandler}>Close</Button></div>
-      </Popover>
-    </React.Fragment>
+      >
+        {data && data.length > 0 ?
+          <form className="editContactForm" onChange={handleChange}>
+            <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
+            <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
+            <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
+            ></input>
+            <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={data![0].postcode}
+            ></input>
+            <label htmlFor="city"></label>City<input type="text" name="city" id="city"
+              defaultValue={data![0].city}
+            ></input>
+            <div>  <Button type="submit" onClick={submitEdits}>Save</Button>
+              <Button onClick={closeHandler}>Close</Button></div>
+
+          </form>
+          : <p>Awaiting data</p>
+        }
+      </Dialog >
+    </React.Fragment >
   );
+
+
 };
+
 
 export default RecipientsViews;

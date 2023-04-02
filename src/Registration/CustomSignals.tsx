@@ -1,10 +1,10 @@
 import React from 'react';
-import CustomeSignalsView from '../Components/CustomeSignalsView';
+import CustomSignalsView from '../Components/CustomSignalsView';
 
 const CustomeSignals = () => {
     return (
         <React.Fragment>
-        <CustomeSignalsView/>
+        <CustomSignalsView/>
       </React.Fragment>
     );
 };

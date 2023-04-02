@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import CustomeTextView from '../Components/CustomeTextView';
+import CustomeTextView from '../Components/CustomTextView';
 
 export default function CustomTextEntryForm() {
   return (
