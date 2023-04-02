@@ -44,7 +44,7 @@ function ProfileForm() {
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    dispatch(updateProfile({ [e.target.name]: e.target.value }));
+    dispatch(updateProfile({ [e.target.name]: e.target.value}));
   };
 
 
@@ -52,9 +52,10 @@ function ProfileForm() {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'profile', uid), storeProfile)
+      await updateDoc(doc(db, 'profile', "JVn0ba4deUhF2wEmhcsKEfOTLWG3"), storeProfile)
       toast.success("Information updated successfully!")
     } catch (error: any) {
+      console.log(error)
       toast.error("Information updated Failed!")
 
     }
@@ -155,7 +156,7 @@ function ProfileForm() {
                 setDatePickerValue(
                   storeProfile.dob ? storeProfile.dob : newValue
                 );
-                // dispatch(addProfile({ dob: newValue }));
+                 dispatch(updateProfile({ dob: newValue?.toString() }));
               }}
               renderInput={(params) => <TextField {...params} />}
             />
