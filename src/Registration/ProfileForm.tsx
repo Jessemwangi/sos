@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs, { Dayjs } from "dayjs";
 import {  toast } from "react-toastify";
@@ -6,22 +6,16 @@ import { Grid, Button, Typography, TextField, LinearProgress } from "@mui/materi
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useAuthState } from "react-firebase-hooks/auth";
-
-import {
-  doc, updateDoc
-} from "@firebase/firestore";
+import {  doc, updateDoc} from "@firebase/firestore";
 import { db } from '../DataLayer/FirestoreInit';
-
 import { useFetchProfileQuery } from '../app/services/firestoreAPI';
-import { Profile } from "../app/model";
 import { auth } from "../app/services/FirebaseAuth";
 import { setProfile, updateProfile } from "../features/profileSlice";
 
-function ProfileForm() {
+const ProfileForm =() => {
 
   const dispatch = useDispatch();
   const [user] = useAuthState(auth);
-  const sosUser = useSelector((state: any) => state.user.sosUser);
   const storeProfile = useSelector((state: any) => state.profile.userProfile);
   const [datePickerValue, setDatePickerValue] = useState<Dayjs | null | Date>(dayjs());
   const [loadingState, setLoading] = useState<boolean>(true)
@@ -39,7 +33,6 @@ function ProfileForm() {
     }
     
   }, [data, dispatch, error, isFetching])
-  // console.log(data,isFetching,error)
 
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
 
