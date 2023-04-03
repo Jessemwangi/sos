@@ -53,8 +53,6 @@ const CompleteReg = () => {
   const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn)
   const [activeStep, setActiveStep] = useState(0);
 
-  CreateDocSetId('profile', sosUser.uid, { uid: sosUser.uid });
-
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };

@@ -64,6 +64,7 @@ export const firestoreApi = createApi({
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());
                         profile = { ...profile, ...docSnap.data() }
+                        console.log(profile);
                         return { data: profile }
                     }
                     else {
