@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,21 +11,29 @@ import { Recipient } from '../app/model';
 import { useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
 import { AuthContext } from "../app/services/FirebaseContext";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../app/services/FirebaseAuth";
 
 
 const RecipientsViews = () => {
-
-  const user = useContext(AuthContext);
+  const [user] = useAuthState(auth);
+  const dispatch = useDispatch();
+  const uid = user?.uid ? user.uid : '';
+  let open = useSelector((state: any) => state.manageRecipients.popoverState);
 
   const {
     data,
     isFetching,
     error
-  } = useFetchRecipientsQuery({ para1: user?.uid });
+  } = useFetchRecipientsQuery({ para1: 'm9efSleBytTPMGzYyfMRQxDUjsQ2'});
 
-  const dispatch = useDispatch();
-  let open = useSelector((state: any) => state.manageRecipients.popoverState);
+  if (isFetching) {
+    return <LinearProgress color="secondary" />;
+  }
 
+  if (error) {
+    return <p>Error: An Error Occured</p>;
+  }
 
   function closeHandler() {
     dispatch(togglePopover());
@@ -37,6 +45,7 @@ const RecipientsViews = () => {
     dispatch(updateCurrentId(id))
   }
 
+  
   function deleteHandler(e: any, id: string) {
 
 
@@ -70,7 +79,7 @@ const RecipientsViews = () => {
         </TableHead>
         <TableBody>
 
-          {!isFetching && data && data.map((recipient) => (
+          {data && data.map((recipient) => (
             <TableRow key={recipient.id} >
               <TableCell>{recipient.createdAt}</TableCell>
               <TableCell>{recipient.name}</TableCell>

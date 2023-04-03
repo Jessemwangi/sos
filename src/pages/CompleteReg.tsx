@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from "react-redux";
+import React, {  useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline';
-import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography } from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography , LinearProgress} from '@mui/material';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ForumIcon from '@mui/icons-material/Forum';
@@ -10,14 +9,13 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import ProfileForm from '../Registration/ProfileForm';
-import PaymentForm from '../Registration/RecipientEntryForm';
+import RecipientEntryForm from '../Registration/RecipientEntryForm';
 import CustomTextForm from '../Registration/CustomTextEntryForm';
-import { SosUser } from '../app/model';
 import CustomSignals from '../Registration/CustomSignals';
 import WrapUp from '../Registration/WrapUp';
-import { CreateDocSetId } from '../app/services/DbFunctions';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../app/services/FirebaseAuth';
 
-// import { saveProfile } from '../features/Profile';
 
 const steps = [
   { name: 'Biography', icon: <PersonAddIcon />, },
@@ -27,12 +25,12 @@ const steps = [
   { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }
 ];
 
-function getStepContent(step: number, user: SosUser) {
+function getStepContent(step: number) {
   switch (step) {
     case 0:
       return <ProfileForm />;
     case 1:
-      return <PaymentForm />;
+      return <RecipientEntryForm />;
     case 2:
       return <CustomTextForm />;
     case 3:
@@ -48,9 +46,7 @@ const theme = createTheme();
 
 const CompleteReg = () => {
 
-  const sosUser: SosUser = useSelector((state: any) => state.user.sosUser)
-
-  const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn)
+  const [user, loading, error] = useAuthState(auth);
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -60,11 +56,18 @@ const CompleteReg = () => {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+  if (loading) {
+    return <LinearProgress color="secondary" />;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {!loggedIn ? (<h1>Please create an account with SOS service before completing registration</h1>
+      {!user ? (<h1>Please create an account with SOS service before completing registration</h1>
       ) : (
         <><AppBar
           position="absolute"
@@ -77,7 +80,7 @@ const CompleteReg = () => {
         >
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              Hi {sosUser.name}, finish setting up your account by providing the following information.
+              Hi {user.displayName}, finish setting up your account by providing the following information.
             </Typography>
           </Toolbar>
         </AppBar>
@@ -106,7 +109,7 @@ const CompleteReg = () => {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  {getStepContent(activeStep, sosUser)}
+                  {getStepContent(activeStep)}
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     {activeStep !== 0 && (
                       <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>

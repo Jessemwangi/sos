@@ -16,55 +16,48 @@ import { db } from '../DataLayer/FirestoreInit';
 
 import RecipientsViews from '../Components/RecipientsViews';
 import { AuthContext } from "../app/services/FirebaseContext";
+import { useFetchRecipientsQuery } from '../app/services/firestoreAPI';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../app/services/FirebaseAuth';
+import { toast } from 'react-toastify';
 
-export default function RecipientEntryForm() {
+ const RecipientEntryForm = () => {
 
   const dispatch = useDispatch();
-  const user = useContext(AuthContext);
-  const sosUser = useSelector((state: any) => state.user.sosUser);
+  const [user] = useAuthState(auth);
+   const [buttondisplay, setButtonDisplay] = useState<string>('Save Recepient')
+  //  const [recipientData, setRecipientData] = useState();
+   const recipientData = useSelector((state: any) => state.manageRecipients.recipients);
 
+   const uid = user?.uid ? user.uid : '';
 
-
-  const init: Recipient = {
-    id: "",
-    createdAt: "",
-    name: "",
-    address: "",
-    phone: "",
-    city: "",
-    postcode: "",
-    userId: sosUser.uid
-  }
-  const [recipient, setRecipient] = useState<Recipient>(init);
-
-  const recipientData: Recipient = {
-    id: recipient.id,
-    createdAt: "",
-    name: recipient.name,
-    address: recipient.address,
-    phone: recipient.phone,
-    city: recipient.city,
-    postcode: recipient.postcode,
-    userId: sosUser.uid
-  }
-
-
-
+const {
+  data,
+  isFetching,
+  error
+} = useFetchRecipientsQuery({ para1: 'm9efSleBytTPMGzYyfMRQxDUjsQ2' });
+   console.log(data,'isFetching', isFetching, 'error', error)
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
     try {
-      await addDoc(collection(db, 'recipients'), recipientData)
-        .then(() => {
-          console.log("Document has been added successfully");
-        });
+      if (data?.length! > 0) {        
+        await updateDoc(doc(db, 'recipients', uid), { ...recipientData})
+        toast.success("Information updated successfully!")
+      }
+      else {
+
+        await setDoc(doc(db,'recipients',uid),{...recipientData})
+        toast.success("Recepient created successfully!")
+      }
     } catch (error: any) {
-      /* setError(`An error occured ... ${error.message}`);
-      setResponse(`An error occured ... ${error.message}`); */
-      console.log(error);
+      console.log(error)
+      toast.error("Transaction Failed!")
+
     }
 
   }
-
+   
 
 
   return (
@@ -82,6 +75,7 @@ export default function RecipientEntryForm() {
           <TextField
             required
             id="Name"
+            name='name'
             label="Name"
             fullWidth
             autoComplete="cc-name"
@@ -92,6 +86,7 @@ export default function RecipientEntryForm() {
           <TextField
             required
             id="Address"
+            name='address'
             label="Address"
             fullWidth
             autoComplete="cc-Address"
@@ -102,6 +97,7 @@ export default function RecipientEntryForm() {
           <TextField
             required
             id="Phone"
+            name='phone'
             label="Phone Number"
             fullWidth
             autoComplete="cc-Phone"
@@ -112,6 +108,7 @@ export default function RecipientEntryForm() {
           <TextField
             required
             id="Email"
+            name='email'
             label="Email Address"
             fullWidth
             autoComplete="cc-Email"
@@ -122,6 +119,7 @@ export default function RecipientEntryForm() {
           <TextField
             required
             id="post-Code"
+            name='postcode'
             label="post Code"
             helperText="post Code and street number"
             fullWidth
@@ -133,6 +131,7 @@ export default function RecipientEntryForm() {
           <TextField
             required
             id="city"
+            name='city'
             label="City"
             helperText="City Name"
             fullWidth
@@ -153,9 +152,11 @@ export default function RecipientEntryForm() {
           onClick={(e) => handleSubmit(e)}
           sx={{ mt: 3, ml: 1 }}
         >
-         {/*  {buttonAction} */}
+           {buttondisplay} 
         </Button>
       </Grid>
     </React.Fragment>
   );
-}
+ }
+
+export default RecipientEntryForm;
