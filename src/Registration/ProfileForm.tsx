@@ -6,7 +6,7 @@ import { Grid, Button, Typography, TextField, LinearProgress } from "@mui/materi
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {  doc, updateDoc} from "@firebase/firestore";
+import {  doc, updateDoc,setDoc} from "@firebase/firestore";
 import { db } from '../DataLayer/FirestoreInit';
 import { useFetchProfileQuery } from '../app/services/firestoreAPI';
 import { auth } from "../app/services/FirebaseAuth";
@@ -25,8 +25,7 @@ const ProfileForm =() => {
 
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
   const { data, error, isFetching } = useFetchProfileQuery(uid); //pull uid from store instead of auth user object to avoid uid load errors
-  
-  console.log(data,error)
+
   useEffect(() => {
     if (!user) {
       return;
@@ -37,7 +36,7 @@ const ProfileForm =() => {
       dispatch(setProfile(data))
       setButtonAction("Update Profile")
     } else if(user && !data) {
-      dispatch(updateProfile({uid, email:user.email}))
+      dispatch(updateProfile({uid, email:user.email, username:user.displayName}))
     }
     
   }, [data, dispatch, error, isFetching, uid, user])
@@ -52,11 +51,18 @@ const ProfileForm =() => {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'profile', uid), { ...storeProfile, username: `${storeProfile.fisrtname}  ${storeProfile.lastname}`})
-      toast.success("Information updated successfully!")
+      if (data?.email) {        
+        await updateDoc(doc(db, 'profile', uid), { ...storeProfile})
+        toast.success("Information updated successfully!")
+      }
+      else {
+
+        await setDoc(doc(db,'profile',uid),{...storeProfile})
+        toast.success("Profile created successfully!")
+      }
     } catch (error: any) {
       console.log(error)
-      toast.error("Information updated Failed!")
+      toast.error("Transaction Failed!")
 
     }
 
