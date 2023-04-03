@@ -39,7 +39,7 @@ export interface Profile {
     altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
-    uid: string,
+    uid?: string,
     email?: string,
     username?: string,
     addressline1?: string,

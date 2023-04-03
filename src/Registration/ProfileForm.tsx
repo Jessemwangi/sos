@@ -23,18 +23,25 @@ const ProfileForm =() => {
 
   const uid = user?.uid ? user.uid : '';
 
-  const { data, error, isFetching } = useFetchProfileQuery("JVn0ba4deUhF2wEmhcsKEfOTLWG3"); //pull uid from store instead of auth user object to avoid uid load errors
+  const [buttonAction, setButtonAction] = useState<string>('Save Profile')
+  const { data, error, isFetching } = useFetchProfileQuery(uid); //pull uid from store instead of auth user object to avoid uid load errors
   
+  console.log(data,error)
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     setLoading(isFetching)
     setProfileError(error)
-    if (data) {
+    if (data?.email) {
       dispatch(setProfile(data))
+      setButtonAction("Update Profile")
+    } else if(user && !data) {
+      dispatch(updateProfile({uid, email:user.email}))
     }
     
-  }, [data, dispatch, error, isFetching])
+  }, [data, dispatch, error, isFetching, uid, user])
 
-  const [buttonAction, setButtonAction] = useState<string>('Save Profile')
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     dispatch(updateProfile({ [e.target.name]: e.target.value}));
@@ -45,7 +52,7 @@ const ProfileForm =() => {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'profile', "JVn0ba4deUhF2wEmhcsKEfOTLWG3"), storeProfile)
+      await updateDoc(doc(db, 'profile', uid), { ...storeProfile, username: `${storeProfile.fisrtname}  ${storeProfile.lastname}`})
       toast.success("Information updated successfully!")
     } catch (error: any) {
       console.log(error)
@@ -165,7 +172,7 @@ const ProfileForm =() => {
             value={storeProfile.email}
             autoComplete="Email Address"
             variant="standard"
-
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
