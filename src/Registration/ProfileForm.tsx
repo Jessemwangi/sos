@@ -6,7 +6,7 @@ import { Grid, Button, Typography, TextField, LinearProgress } from "@mui/materi
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {  doc, updateDoc} from "@firebase/firestore";
+import {  doc, updateDoc,setDoc} from "@firebase/firestore";
 import { db } from '../DataLayer/FirestoreInit';
 import { useFetchProfileQuery } from '../app/services/firestoreAPI';
 import { auth } from "../app/services/FirebaseAuth";
@@ -23,18 +23,24 @@ const ProfileForm =() => {
 
   const uid = user?.uid ? user.uid : '';
 
-  const { data, error, isFetching } = useFetchProfileQuery("JVn0ba4deUhF2wEmhcsKEfOTLWG3"); //pull uid from store instead of auth user object to avoid uid load errors
-  
+  const [buttonAction, setButtonAction] = useState<string>('Save Profile')
+  const { data, error, isFetching } = useFetchProfileQuery(uid); //pull uid from store instead of auth user object to avoid uid load errors
+
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     setLoading(isFetching)
     setProfileError(error)
-    if (data) {
+    if (data?.email) {
       dispatch(setProfile(data))
+      setButtonAction("Update Profile")
+    } else if(user && !data) {
+      dispatch(updateProfile({uid, email:user.email, username:user.displayName}))
     }
     
-  }, [data, dispatch, error, isFetching])
+  }, [data, dispatch, error, isFetching, uid, user])
 
-  const [buttonAction, setButtonAction] = useState<string>('Save Profile')
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     dispatch(updateProfile({ [e.target.name]: e.target.value}));
@@ -45,11 +51,18 @@ const ProfileForm =() => {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'profile', "JVn0ba4deUhF2wEmhcsKEfOTLWG3"), storeProfile)
-      toast.success("Information updated successfully!")
+      if (data?.email) {        
+        await updateDoc(doc(db, 'profile', uid), { ...storeProfile})
+        toast.success("Information updated successfully!")
+      }
+      else {
+
+        await setDoc(doc(db,'profile',uid),{...storeProfile})
+        toast.success("Profile created successfully!")
+      }
     } catch (error: any) {
       console.log(error)
-      toast.error("Information updated Failed!")
+      toast.error("Transaction Failed!")
 
     }
 
@@ -165,7 +178,7 @@ const ProfileForm =() => {
             value={storeProfile.email}
             autoComplete="Email Address"
             variant="standard"
-
+            onChange={(e) => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12}>

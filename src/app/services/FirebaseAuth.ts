@@ -43,6 +43,8 @@ async function signInUser(email: string, password: string) {
       })
     .catch((error) => {
       const errorMessage = error.message;
+      console.log(error);
+      
       return (errorMessage)
     })
 }

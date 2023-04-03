@@ -59,13 +59,17 @@ export const firestoreApi = createApi({
 
                 try {
                     const docSnap = await getDoc(doc(db, 'profile', arg));
-                    let profile: Profile = { uid: arg }
+                    let profile: Profile = {}
 
                     if (docSnap.exists()) {
                         console.log("Document data:", docSnap.data());
                         profile = { ...profile, ...docSnap.data() }
+                        return { data: profile }
                     }
-                    return { data: profile }
+                    else {
+                        profile={}
+                        return { data: profile }
+                    }
                 }
                 catch (error: any) {
                     console.log("No such document");
