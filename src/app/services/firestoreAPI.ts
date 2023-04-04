@@ -17,7 +17,6 @@ export const firestoreApi = createApi({
         fetchRecipientsById: builder.query<Recipients, { id: string }>({
             async queryFn(arg) {
               const { id } = arg;
-          console.log(id)
               try {
                 const q = query(
                   collection(db, 'recipients'),
@@ -26,7 +25,6 @@ export const firestoreApi = createApi({
                 const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                 let recipients: Recipients = [];
                   querySnapshot?.forEach((doc) => {
-                    console.log(recipients)
                   recipients.push({ id: doc.id, ...doc.data() } as Recipient)
                 });
                 return { data: recipients };
