@@ -6,7 +6,7 @@ import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  doc, setDoc, updateDoc
+  doc, updateDoc
 } from "@firebase/firestore";
 
 
@@ -16,7 +16,7 @@ import '../styles/RecipientsViews.css';
 import { db } from '../DataLayer/FirestoreInit';
 import { auth } from "../app/services/FirebaseAuth";
 import { Recipient } from '../app/model';
-import { updateRecipient, resetForm } from '../features/manageRecipientsSlice';
+import { resetForm } from '../features/manageRecipientsSlice';
 
 
 const RecipientsViews = () => {
@@ -28,12 +28,6 @@ const RecipientsViews = () => {
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
   const [targetRecipient, setTargetRecipient] = useState(recipient);
-
-  /* 
-    useEffect(() => {
-      console.log(targetRecipient);
-    }, [targetRecipient])
-   */
 
   const {
     data,
@@ -55,7 +49,6 @@ const RecipientsViews = () => {
 
   const handleChange = (e: any) => {
     setTargetRecipient({ ...targetRecipient, [e.target.name]: e.target.value });
-    //dispatch(updateRecipient({ [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: any) => {
@@ -64,20 +57,23 @@ const RecipientsViews = () => {
     try {
       await updateDoc(doc(db, 'recipients', `${targetRecipient.id}`), {
 
-        "name": `${targetRecipient.name}`,
-        "address": targetRecipient.address,
-        "phone": targetRecipient.phone,
-        "city": targetRecipient.city,
-        "postcode": targetRecipient.postcode,
-        "email": targetRecipient.email
+        name: `${targetRecipient.name}`,
+        address: targetRecipient.address,
+        phone: targetRecipient.phone,
+        city: targetRecipient.city,
+        postcode: targetRecipient.postcode,
+        email: targetRecipient.email
       })
-        .then(() => console.log(targetRecipient));
+        .then(() => console.log(targetRecipient))
+
+
 
     } catch (error: any) {
       console.log(error)
 
     }
     dispatch(resetForm());
+    setTargetRecipient(recipient);
     dispatch(togglePopover());
   }
 
@@ -92,6 +88,9 @@ const RecipientsViews = () => {
 
 
   function deleteHandler(e: any, id: string) {
+    const currentRecipient = data!.filter((recipient) => recipient.id === id);
+    console.log(currentRecipient);
+    setTargetRecipient(currentRecipient[0]);
 
 
   }
@@ -136,7 +135,7 @@ const RecipientsViews = () => {
         onClose={closeHandler}
         PaperProps={{
           sx: {
-            height: '300px'
+            height: '400px'
           }
         }}
       >
@@ -157,6 +156,12 @@ const RecipientsViews = () => {
               name="phone"
               id="phoneInput"
               defaultValue={targetRecipient.phone}
+            ></input>
+            <label htmlFor="email">Email</label><input
+              type="email"
+              name="email"
+              id="emailInput"
+              defaultValue={targetRecipient.email}
             ></input>
             <label htmlFor="postcode">Postcode</label><input
               type="text"

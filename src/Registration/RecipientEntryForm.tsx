@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -58,7 +58,7 @@ const RecipientEntryForm = () => {
     try {
 
       await setDoc(doc(db, 'recipients', recipient.id), { ...recipient })
-      toast.success("Recepient created successfully!")
+      toast.success("Recipient created successfully!")
       dispatch(resetForm())
 
     } catch (error: any) {
