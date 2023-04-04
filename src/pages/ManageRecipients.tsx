@@ -1,7 +1,12 @@
 import RecipientsViews from '../Components/RecipientsViews';
 import { Typography } from '@mui/material';
+import { auth } from '../app/services/FirebaseAuth'
 
 const ManageRecipients = () => {
+
+    const user = auth.currentUser;
+
+    if (!user) { return <><h3>Please log in first to manage your contacts.</h3></> }
 
     return (
         <div>
