@@ -1,66 +1,101 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  doc, setDoc, updateDoc
+} from "@firebase/firestore";
 
-import { togglePopover, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
-import { Recipient } from '../app/model';
-import { useFetchRecipientsByIdQuery, useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
+
+import { togglePopover } from '../features/manageRecipientsSlice';
+import { useFetchRecipientsByIdQuery } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
-import { AuthContext } from "../app/services/FirebaseContext";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { db } from '../DataLayer/FirestoreInit';
 import { auth } from "../app/services/FirebaseAuth";
+import { Recipient } from '../app/model';
+import { updateRecipient, resetForm } from '../features/manageRecipientsSlice';
 
 
 const RecipientsViews = () => {
   const [user] = useAuthState(auth);
   const dispatch = useDispatch();
   const uid = user?.uid ? user.uid : '';
+
+
+  const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
+  const [targetRecipient, setTargetRecipient] = useState(recipient);
+
+  /* 
+    useEffect(() => {
+      console.log(targetRecipient);
+    }, [targetRecipient])
+   */
+
   const {
     data,
     isFetching,
     error
-  } = useFetchRecipientsByIdQuery({ id: uid});
+  } = useFetchRecipientsByIdQuery({ id: uid });
 
   if (isFetching) {
     return <LinearProgress color="secondary" />;
   }
 
   if (error) {
-    return <p>Error: An Error Occured</p>;
+    return <p>Error: An Error Occurred</p>;
   }
 
   function closeHandler() {
     dispatch(togglePopover());
   }
 
+  const handleChange = (e: any) => {
+    setTargetRecipient({ ...targetRecipient, [e.target.name]: e.target.value });
+    //dispatch(updateRecipient({ [e.target.name]: e.target.value }));
+  };
 
-  function editButtonHandler(e: any, id: string) {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      await updateDoc(doc(db, 'recipients', `${targetRecipient.id}`), {
+
+        "name": `${targetRecipient.name}`,
+        "address": targetRecipient.address,
+        "phone": targetRecipient.phone,
+        "city": targetRecipient.city,
+        "postcode": targetRecipient.postcode,
+        "email": targetRecipient.email
+      })
+        .then(() => console.log(targetRecipient));
+
+    } catch (error: any) {
+      console.log(error)
+
+    }
+    dispatch(resetForm());
     dispatch(togglePopover());
-    dispatch(updateCurrentId(id))
   }
 
-  
+  function editButtonHandler(e: any, id: string) {
+    const currentRecipient = data!.filter((recipient) => recipient.id === id);
+    console.log(currentRecipient);
+    setTargetRecipient(currentRecipient[0]);
+    dispatch(togglePopover());
+
+
+  }
+
+
   function deleteHandler(e: any, id: string) {
 
 
   }
 
-  function handleChange(e: any): any {
-    /* setContact({[e.target.name]: e.target.value }); */
-  }
-
-  function submitEdits(e: any): any {
-    e.preventDefault();
-    //TODO: try:
-    //dispatch(saveContacts(contacts)) 
-    //1. update in store with dispatch(action(payload)
-    //2. when store value propates, update firestore with new value from useEffect()
-  }
 
   return (
 
@@ -105,20 +140,40 @@ const RecipientsViews = () => {
           }
         }}
       >
-        {data && data.length > 0 ?
+        {recipient ?
           <form className="editContactForm" onChange={handleChange}>
-            <label htmlFor="name">Name</label><input defaultValue={data![0].name} type="text" name="name" id="nameInput"></input>
-            <label htmlFor="address">Address</label><input defaultValue={data![0].address} type="text" name="address" id="addressInput"></input>
-            <label htmlFor="phone">Phone</label><input type="text" name="phone" id="phoneInput" defaultValue={data![0].phone}
+            <label htmlFor="name">Name</label><input
+              defaultValue={targetRecipient.name}
+              type="text"
+              name="name"
+              id="nameInput"></input>
+            <label htmlFor="address">Address</label><input
+              defaultValue={targetRecipient.address}
+              type="text"
+              name="address"
+              id="addressInput"></input>
+            <label htmlFor="phone">Phone</label><input
+              type="text"
+              name="phone"
+              id="phoneInput"
+              defaultValue={targetRecipient.phone}
             ></input>
-            <label htmlFor="postcode">Postcode</label><input type="text" name="" id="postcodeInput" defaultValue={data![0].postcode}
+            <label htmlFor="postcode">Postcode</label><input
+              type="text"
+              name="postcode"
+              id="postcodeInput"
+              defaultValue={targetRecipient.postcode}
             ></input>
-            <label htmlFor="city"></label>City<input type="text" name="city" id="city"
-              defaultValue={data![0].city}
+            <label htmlFor="city"></label>City<input
+              type="text"
+              name="city"
+              id="city"
+              defaultValue={targetRecipient.city}
             ></input>
-            <div>  <Button type="submit" onClick={submitEdits}>Save</Button>
-              <Button onClick={closeHandler}>Close</Button></div>
-
+            <div>
+              <Button type="submit" onClick={handleSubmit}>Save</Button>
+              <Button onClick={closeHandler}>Close</Button>
+            </div>
           </form>
           : <p>Awaiting data</p>
         }
