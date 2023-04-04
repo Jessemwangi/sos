@@ -78,7 +78,7 @@ interface geoCodes {
     lon: number
 }
 
-export interface signals {
+export interface signal {
     signalsId: string,
     uid: string,
     createdAt: Date,

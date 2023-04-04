@@ -18,6 +18,7 @@ import { setSosUser } from "../features/userSlice";
 import { SignUpData, SosUser } from "../app/model";
 import { AuthContext } from "../app/services/FirebaseContext";
 import { toast } from "react-toastify";
+import { sign } from 'crypto';
 
 const SignUp = () => {
   const dispatch = useDispatch();
