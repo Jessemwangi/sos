@@ -55,11 +55,12 @@ export interface Recipient {
     id: string,
     createdAt?: string,
     name: string,
-    address?: string,
+    address: string,
     phone: string,
-    city?: string,
-    postcode?: string,
-    userId: string
+    city: string,
+    postcode: string,
+    userId: string,
+    email:string
 
 }
 
