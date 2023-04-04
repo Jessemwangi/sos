@@ -13,7 +13,31 @@ export const firestoreApi = createApi({
     reducerPath: "firestoreApi",
 
     endpoints: (builder) => ({
-        fetchRecipients: builder.query<Recipients, { para1: string | undefined }>({
+
+        fetchRecipientsById: builder.query<Recipients, { id: string }>({
+            async queryFn(arg) {
+              const { id } = arg;
+          console.log(id)
+              try {
+                const q = query(
+                  collection(db, 'recipients'),
+                  where('userId', '==', id),
+                );
+                const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+                let recipients: Recipients = [];
+                  querySnapshot?.forEach((doc) => {
+                    console.log(recipients)
+                  recipients.push({ id: doc.id, ...doc.data() } as Recipient)
+                });
+                return { data: recipients };
+              } catch (error: any) {
+                  return { error: error.message };
+              }
+            },
+            providesTags: ['Recipients'],
+          }),
+          
+ fetchRecipients: builder.query<Recipients, { para1: string | undefined }>({
             async queryFn(arg) {
                 const { para1 } = arg;
                 // console.log('arg', arg)
@@ -35,7 +59,8 @@ export const firestoreApi = createApi({
                 }
             },
             providesTags: ['Recipients'],
-        }),
+ }),
+ 
         setRecipient: builder.mutation({
             async queryFn({ recipientId, details }) {
                 try {
@@ -97,7 +122,7 @@ export const firestoreApi = createApi({
 });
 
 
-export const { useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
+export const {useFetchRecipientsByIdQuery, useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
 
 
 

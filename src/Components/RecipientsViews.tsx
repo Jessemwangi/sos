@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { togglePopover, saveContacts, updateCurrentId } from '../features/manageRecipientsSlice';
 import { Recipient } from '../app/model';
-import { useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
+import { useFetchRecipientsByIdQuery, useFetchRecipientsQuery, useSetRecipientMutation } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
 import { AuthContext } from "../app/services/FirebaseContext";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -20,12 +20,11 @@ const RecipientsViews = () => {
   const dispatch = useDispatch();
   const uid = user?.uid ? user.uid : '';
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-
   const {
     data,
     isFetching,
     error
-  } = useFetchRecipientsQuery({ para1: uid});
+  } = useFetchRecipientsByIdQuery({ id: uid});
 
   if (isFetching) {
     return <LinearProgress color="secondary" />;
