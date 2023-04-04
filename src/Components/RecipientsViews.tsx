@@ -6,7 +6,7 @@ import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  doc, updateDoc
+  doc, updateDoc, deleteDoc
 } from "@firebase/firestore";
 
 
@@ -82,15 +82,20 @@ const RecipientsViews = () => {
     console.log(currentRecipient);
     setTargetRecipient(currentRecipient[0]);
     dispatch(togglePopover());
-
-
   }
 
 
-  function deleteHandler(e: any, id: string) {
-    const currentRecipient = data!.filter((recipient) => recipient.id === id);
-    console.log(currentRecipient);
-    setTargetRecipient(currentRecipient[0]);
+  async function deleteHandler(e: any, id: string) {
+
+    //need a popover to check
+    try {
+      await deleteDoc(doc(db, 'recipients', `${id}`))
+        .then(() => console.log('id:', id));
+
+    } catch (error: any) {
+      console.log(error)
+
+    }
 
 
   }
