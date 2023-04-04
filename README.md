@@ -2,7 +2,7 @@
 
 ## About SOS
 
-SOS is a mobile-first web application built with Typescript and a Firebase Firestore backend. The app's purpose is to provide a very simple and rapid way to send a distress signal via SMS to a pre-defined list of contacts. 
+SOS is a mobile-first web application developed using Typescript and a Firebase Firestore backend. Its primary objective is to provide a quick and easy way to send a distress signal via SMS and email to a predefined list of contacts. The application is designed with simplicity in mind and optimized for use on mobile devices, making it easy to use even in high-stress situations. With SOS, users can quickly notify their contacts and seek help in emergencies with just a few taps on their phone.
 
 ### How to use
 
