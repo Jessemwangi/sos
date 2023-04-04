@@ -1,326 +1,284 @@
-import React, { useState, useEffect, useContext, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs, { Dayjs } from "dayjs";
-import { ToastContainer, toast, ToastOptions } from "react-toastify";
-import { Grid, Button, Typography, TextField } from "@mui/material";
+import {  toast } from "react-toastify";
+import { Grid, Button, Typography, TextField, LinearProgress } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
-
-import {
-  serverTimestamp,
-  getDoc,
-  doc,
-  addDoc, setDoc, updateDoc
-} from "@firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {  doc, updateDoc,setDoc} from "@firebase/firestore";
 import { db } from '../DataLayer/FirestoreInit';
+import { useFetchProfileQuery } from '../app/services/firestoreAPI';
+import { auth } from "../app/services/FirebaseAuth";
+import { setProfile, updateProfile } from "../features/profileSlice";
 
-
-import { useFetchProfileQuery, useSetProfileMutation } from '../app/services/firestoreAPI';
-//import { PostDocById } from "../app/services/DbFunctions";
-import { Profile } from "../app/model";
-import { AuthContext } from "../app/services/FirebaseContext";
-import { updateProfile } from "../features/profileSlice";
-
-function ProfileForm() {
+const ProfileForm =() => {
 
   const dispatch = useDispatch();
-  const user = useContext(AuthContext);
-
-  const sosUser = useSelector((state: any) => state.user.sosUser);
+  const [user] = useAuthState(auth);
   const storeProfile = useSelector((state: any) => state.profile.userProfile);
-  const loggedIn = useSelector((state: any) => state.user.loggedIn);
-
   const [datePickerValue, setDatePickerValue] = useState<Dayjs | null | Date>(dayjs());
+  const [loadingState, setLoading] = useState<boolean>(true)
+  const [profileError, setProfileError] = useState<any>()
 
-  const init: Profile = {
-
-    firstname: "",
-    lastname: "",
-    phone: "",
-    altphone: "",
-    occupation: "",
-    dob: null,
-    uid: sosUser.uid,
-    email: sosUser.email,
-    username: "",
-    addressline1: "",
-    addressline2: "",
-    city: "",
-    state_province: "",
-    postcode: "",
-    country: "",
-    createdAt: null,
-  };
-
-
-
-  const [userProfile, setUserProfile] = useState<Profile>(init);
-
-  const profileData: any = {
-    firstname: userProfile.firstname,
-    lastname: userProfile.lastname,
-    phone: userProfile.phone,
-    altphone: userProfile.altphone,
-    occupation: userProfile.occupation,
-    dob: userProfile.dob,
-    uid: sosUser.uid,
-    email: sosUser.email,
-    username: userProfile.username,
-    addressline1: userProfile.addressline1,
-    addressline2: userProfile.addressline2,
-    city: userProfile.city,
-    state_province: userProfile.state_province,
-    postcode: userProfile.postcode,
-    country: userProfile.country,
-    createdAt: new Date()
-  };
-
-
-  //useSetProfileMutation(sosUser.uid, userProfile);
-
+  const uid = user?.uid ? user.uid : '';
 
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
-  //const [currentProfile, setCurrentProfile] = useState<Profile>()
+  const { data, error, isFetching } = useFetchProfileQuery(uid); //pull uid from store instead of auth user object to avoid uid load errors
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setLoading(isFetching)
+    setProfileError(error)
+    if (data?.email) {
+      dispatch(setProfile(data))
+      setButtonAction("Update Profile")
+    } else if(user && !data) {
+      dispatch(updateProfile({uid, email:user.email, username:user.displayName}))
+    }
+    
+  }, [data, dispatch, error, isFetching, uid, user])
 
-
-  const options: ToastOptions = {
-    position: 'top-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  };
-
-
-  const { data, error } = useFetchProfileQuery(sosUser.uid); //pull uid from store instead of auth user object to avoid uid load errors
-  /*   if (!data) {
-      console.log('data not defined');
-      //toast.info("No profile data was found for you, create your profile here");
-    } else {
-      //setButtonAction('Update Profile'); triggers infinite loop
-  
-    } */
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setUserProfile({ ...userProfile, uid: sosUser.uid, email: sosUser.email, [e.target.name]: e.target.value });
+    dispatch(updateProfile({ [e.target.name]: e.target.value}));
   };
 
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    /*  const response = PostDocById('profile', { ...userProfile }, sosUser.uid); */
-    //=>invalid hook call. Try calling firebase functions directly? 
+
     try {
-      await updateDoc(doc(db, 'profile', sosUser.uid), profileData)
-      /*  .then(() => {
-         setResponse("Document has been added successfully");
-       }); */
+      if (data?.email) {        
+        await updateDoc(doc(db, 'profile', uid), { ...storeProfile})
+        toast.success("Information updated successfully!")
+      }
+      else {
+
+        await setDoc(doc(db,'profile',uid),{...storeProfile})
+        toast.success("Profile created successfully!")
+      }
     } catch (error: any) {
-      /* setError(`An error occured ... ${error.message}`);
-      setResponse(`An error occured ... ${error.message}`); */
-      console.log(error);
+      console.log(error)
+      toast.error("Transaction Failed!")
+
     }
 
   }
 
-  useEffect(() => {
-    if (!data) {
-      return;
-    } else {
-      dispatch(updateProfile({ ...userProfile }));
-    }
-  }, [dispatch, userProfile]);
+  // useEffect(() => {
+  //   if (!user?.uid) {
+  //     toast.error("Oops, seems like we need you to log in first!");
+  //     dispatch(toggleSigninModal(true))
+     
+  //   }
+  // }, [user?.uid]);
 
-  /*
- if(!user.uid){toast.error("Oops, seems like we need you to log in first!", options);}
-   */
 
   return (
-    <React.Fragment>
-      <Typography variant="h6" gutterBottom></Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="firstname"
-            name="firstname"
-            label="First name"
-            fullWidth
-            value={storeProfile.firstname ? storeProfile.firstname : ""} //u
-            autoComplete="given-name"
-            variant="standard"
-            onChange={(e) => { handleChange(e) }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="lastname"
-            name="lastname"
-            label="Last name"
-            fullWidth
-            value={storeProfile.lastname}
-            autoComplete="family-name"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-          <button onClick={() => toast.info("you just clicked me")}>Toast me up</button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="phone"
-            name="phone"
-            value={storeProfile.phone ? storeProfile.phone : ""}
-            label="Phone Number"
-            fullWidth
-            autoComplete="Phone Number"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="altphone"
-            name="altphone"
-            value={storeProfile.altphone ? storeProfile.altphone : ""}
-            label="Alternative Phone Number"
-            fullWidth
-            autoComplete="Alt Phone Number"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="occupation"
-            name="occupation"
-            value={storeProfile.occupation ? storeProfile.occupation : ""}
-            label="occupation"
-            fullWidth
-            autoComplete="occupation"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"en"}>
-            <DatePicker
-              label="Date of Birth"
-              value={datePickerValue}
-              onChange={(newValue) => {
-                setDatePickerValue(
-                  storeProfile.dob ? storeProfile.dob : newValue
-                );
-                // dispatch(addProfile({ dob: newValue }));
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="email"
-            name="email"
-            label="Email Address"
-            fullWidth
-            value={sosUser.email}
-            autoComplete="Email Address"
-            variant="standard"
-
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="address1"
-            name="addressline1"
-            value={userProfile.addressline1 ? userProfile.addressline1 : ""}
-            label="Address line 1"
-            fullWidth
-            autoComplete="Reachable address-line1"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="address2"
-            name="addressline2"
-            label="Address line 2"
-            value={userProfile.addressline2 ? userProfile.addressline2 : ""}
-            fullWidth
-            autoComplete="Reachable address-line2"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="city"
-            name="city"
-            value={userProfile.city ? userProfile.city : ""}
-            label="City"
-            fullWidth
-            autoComplete="Reachable address-level2"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="state"
-            name="state_province"
-            value={userProfile.state_province ? userProfile.state_province : ""}
-            label="State/Province/Region"
-            fullWidth
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="postcode"
-            name="postcode"
-            value={userProfile.postcode ? userProfile.postcode : ""}
-            label="Zip / Postal code"
-            fullWidth
-            autoComplete="Reachable postal-code"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="country"
-            name="country"
-            value={userProfile.country ? userProfile.country : ""}
-            label="Country"
-            fullWidth
-            autoComplete="Resident country"
-            variant="standard"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            onClick={(e) => handleSubmit(e)}
-            sx={{ mt: 3, ml: 1 }}
-          >
-            {buttonAction}
-          </Button>
-        </Grid>
-        
-      </Grid>
-    </React.Fragment>
+    <>
+  
+    {
+      loadingState ?
+          (<>
+            <LinearProgress color="secondary" />
+          </>)
+        :
+          (
+            profileError ?
+              (
+                <>
+                  <h1>OOOppps!!! this is not your fault, it on us, </h1>
+                  <p>the following error occured {profileError }</p>
+                </>
+              ) : (
+               <React.Fragment>
+              <Typography variant="h6" gutterBottom></Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      id="firstname"
+                      name="firstname"
+                      label="First name"
+                      fullWidth
+                      value={storeProfile.firstname} //u
+                      autoComplete="given-name"
+                      variant="standard"
+                      onChange={(e) => { handleChange(e) }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      id="lastname"
+                      name="lastname"
+                      label="Last name"
+                      fullWidth
+                      value={storeProfile.lastname}
+                      autoComplete="family-name"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      id="phone"
+                      name="phone"
+                      value={storeProfile.phone ? storeProfile.phone : ""}
+                      label="Phone Number"
+                      fullWidth
+                      autoComplete="Phone Number"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="altphone"
+                      name="altphone"
+                      value={storeProfile.altphone ? storeProfile.altphone : ""}
+                      label="Alternative Phone Number"
+                      fullWidth
+                      autoComplete="Alt Phone Number"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="occupation"
+                      name="occupation"
+                      value={storeProfile.occupation ? storeProfile.occupation : ""}
+                      label="occupation"
+                      fullWidth
+                      autoComplete="occupation"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"en"}>
+                      <DatePicker
+                        label="Date of Birth"
+                        value={datePickerValue}
+                        onChange={(newValue) => {
+                          setDatePickerValue(
+                            storeProfile.dob ? storeProfile.dob : newValue
+                          );
+                           dispatch(updateProfile({ dob: newValue?.toString() }));
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      id="email"
+                      name="email"
+                      label="Email Address"
+                      fullWidth
+                      value={storeProfile.email}
+                      autoComplete="Email Address"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      id="address1"
+                      name="addressline1"
+                      value={storeProfile.addressline1 ? storeProfile.addressline1 : ""}
+                      label="Address line 1"
+                      fullWidth
+                      autoComplete="Reachable address-line1"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="address2"
+                      name="addressline2"
+                      label="Address line 2"
+                      value={storeProfile.addressline2 ? storeProfile.addressline2 : ""}
+                      fullWidth
+                      autoComplete="Reachable address-line2"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      id="city"
+                      name="city"
+                      value={storeProfile.city ? storeProfile.city : ""}
+                      label="City"
+                      fullWidth
+                      autoComplete="Reachable address-level2"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="state"
+                      name="state_province"
+                      value={storeProfile.state_province ? storeProfile.state_province : ""}
+                      label="State/Province/Region"
+                      fullWidth
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      id="postcode"
+                      name="postcode"
+                      value={storeProfile.postcode ? storeProfile.postcode : ""}
+                      label="Zip / Postal code"
+                      fullWidth
+                      autoComplete="Reachable postal-code"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      id="country"
+                      name="country"
+                      value={storeProfile.country ? storeProfile.country : ""}
+                      label="Country"
+                      fullWidth
+                      autoComplete="Resident country"
+                      variant="standard"
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      onClick={(e) => handleSubmit(e)}
+                      sx={{ mt: 3, ml: 1 }}
+                    >
+                      {buttonAction}
+                    </Button>
+                  </Grid>
+                  
+                </Grid>
+                </React.Fragment >
+            )
+         
+  )
+      }
+        </>
   );
 }
 

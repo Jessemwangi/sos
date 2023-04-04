@@ -18,9 +18,15 @@ export interface SosUser {
 export interface SignUpData {
     email: string
     password: string
-    firstname?: string
-    lastname?: string
-    confirmPassword?: string
+    firstname: string
+    lastname: string
+    confirmPassword: string
+}
+
+export interface SignInData {
+    email: string
+    password: string
+
 }
 
 export type LoadingState = boolean
@@ -33,7 +39,7 @@ export interface Profile {
     altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
-    uid: string,
+    uid?: string,
     email?: string,
     username?: string,
     addressline1?: string,
@@ -42,18 +48,19 @@ export interface Profile {
     state_province?: string,
     postcode?: string
     country?: string
-    createdAt?: Date | null
+    createdAt?: Date | null | string
 }
 
 export interface Recipient {
     id: string,
     createdAt?: string,
     name: string,
-    address?: string,
+    address: string,
     phone: string,
-    city?: string,
-    postcode?: string,
-    userId: string
+    city: string,
+    postcode: string,
+    userId: string,
+    email:string
 
 }
 
