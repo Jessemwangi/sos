@@ -16,7 +16,7 @@ export const firestoreApi = createApi({
         fetchRecipients: builder.query<Recipients, { para1: string | undefined }>({
             async queryFn(arg) {
                 const { para1 } = arg;
-                console.log('arg', arg)
+                // console.log('arg', arg)
 
                 try {
                     const q = query(
@@ -62,9 +62,7 @@ export const firestoreApi = createApi({
                     let profile: Profile = {}
 
                     if (docSnap.exists()) {
-                        console.log("Document data:", docSnap.data());
                         profile = { ...profile, ...docSnap.data() }
-                        console.log(profile);
                         return { data: profile }
                     }
                     else {
@@ -73,7 +71,6 @@ export const firestoreApi = createApi({
                     }
                 }
                 catch (error: any) {
-                    console.log("No such document");
                     return { error: error.message };
                 }
             },

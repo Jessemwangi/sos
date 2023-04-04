@@ -1,10 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Recipient } from '../app/model';
+import { v4 as uuidv4 } from 'uuid';
+
 // import FormControlLabel from '@mui/material/FormControlLabel';
 // import Checkbox from '@mui/material/Checkbox';
 
@@ -20,36 +22,52 @@ import { useFetchRecipientsQuery } from '../app/services/firestoreAPI';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 import { toast } from 'react-toastify';
+import { resetForm, setRecipients, updateRecipient } from '../features/manageRecipientsSlice';
 
  const RecipientEntryForm = () => {
 
   const dispatch = useDispatch();
-  const [user] = useAuthState(auth);
+   const [user] = useAuthState(auth);
+   const [loadingState, setLoading] = useState<boolean>(true)
+   const [profileError, setProfileError] = useState<any>()
+
    const [buttondisplay, setButtonDisplay] = useState<string>('Save Recepient')
   //  const [recipientData, setRecipientData] = useState();
    const recipientData = useSelector((state: any) => state.manageRecipients.recipients);
-
+   const recipient = useSelector((state: any) => state.manageRecipients.recipient);
+   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
+   
    const uid = user?.uid ? user.uid : '';
+   let recipientId;
 
 const {
   data,
   isFetching,
   error
-} = useFetchRecipientsQuery({ para1: 'm9efSleBytTPMGzYyfMRQxDUjsQ2' });
-   console.log(data,'isFetching', isFetching, 'error', error)
+} = useFetchRecipientsQuery({ para1: uid });
+useEffect(() => {
+  if (!user) {
+    return;
+  }
+  setLoading(isFetching)
+  setProfileError(error)
+  if (data?.length! > 0) {
+    dispatch(setRecipients(data))
+    setButtonAction("Update Profile")
+  } else if(user && !data) {
+    dispatch(updateRecipient({userId:uid, id: uuidv4()}))
+  }
+  
+}, [data, dispatch, error, isFetching, uid, user])
+   
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
-      if (data?.length! > 0) {        
-        await updateDoc(doc(db, 'recipients', uid), { ...recipientData})
-        toast.success("Information updated successfully!")
-      }
-      else {
-
-        await setDoc(doc(db,'recipients',uid),{...recipientData})
-        toast.success("Recepient created successfully!")
-      }
+      await setDoc(doc(db,'recipients',recipient.id),{...recipient})
+      toast.success("Recepient created successfully!")
+      dispatch(resetForm())
+      
     } catch (error: any) {
       console.log(error)
       toast.error("Transaction Failed!")
@@ -57,8 +75,9 @@ const {
     }
 
   }
-   
-
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    dispatch(updateRecipient({ [e.target.name]: e.target.value}));
+  };
 
   return (
     <React.Fragment>
@@ -75,6 +94,7 @@ const {
           <TextField
             required
             id="Name"
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
             name='name'
             label="Name"
             fullWidth
@@ -88,6 +108,7 @@ const {
             id="Address"
             name='address'
             label="Address"
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
             fullWidth
             autoComplete="cc-Address"
             variant="standard"
@@ -97,6 +118,7 @@ const {
           <TextField
             required
             id="Phone"
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
             name='phone'
             label="Phone Number"
             fullWidth
@@ -110,6 +132,7 @@ const {
             id="Email"
             name='email'
             label="Email Address"
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
             fullWidth
             autoComplete="cc-Email"
             variant="standard"
@@ -121,6 +144,7 @@ const {
             id="post-Code"
             name='postcode'
             label="post Code"
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
             helperText="post Code and street number"
             fullWidth
             autoComplete="cc-post-Code"
@@ -133,6 +157,7 @@ const {
             id="city"
             name='city'
             label="City"
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
             helperText="City Name"
             fullWidth
             autoComplete="cc-city-Name"
@@ -152,7 +177,7 @@ const {
           onClick={(e) => handleSubmit(e)}
           sx={{ mt: 3, ml: 1 }}
         >
-           {buttondisplay} 
+           {buttonAction} 
         </Button>
       </Grid>
     </React.Fragment>

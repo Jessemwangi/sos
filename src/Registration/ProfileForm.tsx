@@ -25,7 +25,6 @@ const ProfileForm =() => {
 
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
   const { data, error, isFetching } = useFetchProfileQuery(uid); //pull uid from store instead of auth user object to avoid uid load errors
-console.log(data)
   useEffect(() => {
     if (!user) {
       return;

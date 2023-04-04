@@ -25,7 +25,7 @@ const RecipientsViews = () => {
     data,
     isFetching,
     error
-  } = useFetchRecipientsQuery({ para1: 'm9efSleBytTPMGzYyfMRQxDUjsQ2'});
+  } = useFetchRecipientsQuery({ para1: uid});
 
   if (isFetching) {
     return <LinearProgress color="secondary" />;
