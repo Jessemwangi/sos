@@ -3,6 +3,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+let helmet = require("helmet");
 const bodyParser = require('body-parser');
 const { port, host } = require('./config.js')
 const secrets = require('./secrets.js');
@@ -17,6 +18,7 @@ const app = express();
 
 const client = require('twilio')(twilio_sid, authToken);
 
+app.use(helmet.hidePoweredBy());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors);
