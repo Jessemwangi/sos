@@ -3,6 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Timer = () => {
 
+    /*     fetch('/sms/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify()
+        }) */
+
     //state:
     const signal = useSelector((state: any) => state.signal);
 

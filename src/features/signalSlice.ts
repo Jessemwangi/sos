@@ -4,7 +4,7 @@ import { signal, signalsList, geoCodes } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth'
 
 
-const user = auth.currentUser;
+const user = auth.currentUser!;
 
 /*
 
@@ -35,7 +35,7 @@ interface geoCodes {
 
 const initialState: signal = {
     signalId: "",
-    uid: user?.uid,
+    uid: user.uid,
     createdAt: new Date(),
     geolocation: {
         lat: 0,
@@ -43,6 +43,7 @@ const initialState: signal = {
     }
 
 }
+
 
 
 export const signalSlice = createSlice({

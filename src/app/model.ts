@@ -73,14 +73,14 @@ export interface signalsList {
     createdAt?: Date
 }
 
-interface geoCodes {
+export interface geoCodes {
     lat: number,
     lon: number
 }
 
 export interface signal {
-    signalsId: string,
-    uid: string,
+    signalId: string,
+    uid: string | undefined,
     createdAt: Date,
     geolocation: geoCodes
 }
