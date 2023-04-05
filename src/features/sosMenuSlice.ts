@@ -4,21 +4,35 @@ import { db } from "../DataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 import { SignalsList } from '../app/model';
 
+//for maintaining the user's personalised emergency types/signals
 
-/* const initialState = {
-    signalsList: {
-        signalId: "",
-        uid: "",
-        name: "",
-        recipientId: [],
-        presetMsg: "",
-        cstTextId: "",
-        createdAt: new Date()
-    }
-
-} */
+const init: SignalsList = {
+    signalId: "",
+    uid: "",
+    name: "",
+    recipientId: [],
+    presetMsg: "",
+    cstTextId: "",
+    createdAt: new Date()
+}
 
 type Signals = SignalsList[];
+
+
+export const sosMenuSlice = createSlice({
+    name: 'sosMenu',
+    initialState: {
+        signals: init,
+    },
+    reducers: {
+        selectSos: (state, action: PayloadAction<number>) => {
+
+        }
+    }
+
+
+})
+
 export const sosSignalApi = createApi({
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Signals'],
@@ -52,20 +66,10 @@ export const sosSignalApi = createApi({
 
 
 
-/* export const sosMenuSlice = createSlice({
-    name: 'sosMenu',
-    initialState,
-    reducers: {
-        selectSos: (state, action: PayloadAction<number>) => {
 
-        }
-    }
-
-
-})
 
 export const { selectSos } = sosMenuSlice.actions;
-export default sosMenuSlice.reducer; */
+export default sosMenuSlice.reducer;
 
 
 export const { useFetchSignalsListByIdQuery } = sosSignalApi;

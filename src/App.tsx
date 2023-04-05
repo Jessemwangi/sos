@@ -48,8 +48,6 @@ const router = createBrowserRouter(
 
 function App() {
 
-  const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
-
   useEffect(() => {
     document.title = 'SOS Help';
 

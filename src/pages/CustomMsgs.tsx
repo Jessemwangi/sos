@@ -10,7 +10,6 @@ const CustomMsgs = () => {
             <CustomTextView />
 
             <CustomTextEntryForm />
-         
 
         </div>
     );

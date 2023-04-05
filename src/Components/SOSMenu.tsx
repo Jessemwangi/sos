@@ -38,14 +38,6 @@ const emergencyList: SignalsList[] = [
         createdAt: new Date()
     },
     {
-        signalId: '456',
-        uid: '',
-        name: 'Domesetic Violence',
-        recipientId: ['0', '1', '3'],
-        presetMsg: 'string',
-        cstTextId: '',
-        createdAt: new Date()
-    }, {
         signalId: '789',
         uid: '4',
         name: 'Custom Field',

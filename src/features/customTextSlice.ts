@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CustomText } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
-import { where, query, collection, getDocs, doc, updateDoc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
+import { where, query, collection, getDocs, doc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
 
 
 type Messages = CustomText[];
 
 const init: CustomText = {
-    cstTextId: "",//uuid generated id? 
+    cstTextId: "",//uuid generated id
     message: "",
     title: "",
     userId: ""
@@ -17,11 +17,14 @@ const init: CustomText = {
 
 export const customTextSlice = createSlice({
     name: 'customText',
-    initialState: { customText: init },
+    initialState: {
+        customText: init,
+        reload: false
+    },
     reducers: {
         setText: (state: any, action: PayloadAction<object>) => { state.customText = { ...state.customText, ...action.payload } },
-
-        clearText: (state) => { state.customText = init }
+        clearText: (state) => { state.customText = init },
+        triggerReload: (state) => { state.reload = !state.reload }
 
     }
 });
@@ -76,5 +79,5 @@ export const customTextApi = createApi({
 export const { useFetchMessagesByIdQuery, useSetMessageMutation } = customTextApi;
 
 
-export const { setText, clearText } = customTextSlice.actions;
+export const { setText, clearText, triggerReload } = customTextSlice.actions;
 export default customTextSlice.reducer;

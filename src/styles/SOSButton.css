@@ -1,16 +1,20 @@
 button.sosButton {
-    height: 200px;
+    height: 25vh;
     line-height: 200px;
-    width: 350px;
+    width: 35vw;
     border-radius: 50px;
     background-color: var(--red);
     color: white;
+    box-shadow: inset red 0px 2px 15px, inset rgba(0, 0, 0, 0.15) 0px -10px 20px, rgba(0, 0, 0, 0.85) 2px 2px 2px;
+    text-shadow: 1px 1px 1px black;
 
     display: flex;
     justify-content: center;
     text-align: center;
     margin: 1rem;
-    border: solid 3px red;
+    border: solid 1px red;
+
+
 }
 
 button.sosButton span {
@@ -21,8 +25,16 @@ button.sosButton span {
 
 button.sosButton:hover {
     background-color: red;
+    box-shadow: rgba(0, 0, 0, 0.8) 0 0 8px, inset rgba(0, 0, 0, 0.15) 0px -10px 20px;
 }
 
+button.sosButton:active {
+    box-shadow: rgba(255, 255, 255, 0.25) 0px 1px 0px,
+        inset rgba(255, 255, 255, 0.03) 0px 20px 0px,
+        inset rgba(0, 0, 0, 0.15) 0px -20px 20px,
+        inset rgba(255, 255, 255, 0.05) 0px 20px 20px;
+
+}
 
 button.sosButton.flash {
     animation: flash 0.5s linear infinite;
@@ -36,5 +48,25 @@ button.sosButton.flash {
     to {
         background-color: var(--orange);
         box-shadow: 5px 5px 5px var(--orange);
+
+    }
+}
+
+@media screen and (max-width: 850px) {
+    button.sosButton {
+        height: 30vh;
+        width: 50vw;
+
+    }
+}
+
+@media screen and (max-width: 600px) {
+    button.sosButton {
+        height: 25vh;
+        width: 70vw;
+    }
+
+    button.sosButton span {
+        font-size: 60px
     }
 }

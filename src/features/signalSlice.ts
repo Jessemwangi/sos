@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Signal, SignalsList, GeoCodes } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth'
 
+//used for state of triggered SOS request
 
 const user = auth.currentUser!;
 
@@ -29,11 +30,9 @@ interface GeoCodes {
     lat: number,
     lon: number
 }
-
-
 */
 
-const initialState: Signal = {
+const init: Signal = {
     signalId: "",
     uid: user.uid,
     createdAt: new Date(),
@@ -41,19 +40,20 @@ const initialState: Signal = {
         lat: 0,
         lon: 0
     }
-
 }
-
-
 
 export const signalSlice = createSlice({
     name: 'signal',
-    initialState,
+    initialState: {
+        signal: init,
+        signalId: ""
+    },
     reducers: {
         //in MenuSlice: onClick dispatches an action to set the signalId
         setSignal: (state: any, action) => {
-
+            state.signal = action.payload
         },
+        //fetch corresponding message and recipients from db
         //where is geolocation triggered? in Timeout function? Timer dispatches geolocation to store?
     }
 

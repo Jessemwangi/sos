@@ -4,15 +4,14 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { doc, updateDoc, setDoc } from "@firebase/firestore";
+import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '../DataLayer/FirestoreInit';
-//import CustomTextView from '../Components/CustomTextView';
 import { CustomText } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useSetMessageMutation, setText, clearText } from '../features/customTextSlice';
+import { setText, clearText, triggerReload } from '../features/customTextSlice';
 
 
 export default function CustomTextEntryForm() {
@@ -42,8 +41,6 @@ export default function CustomTextEntryForm() {
 
   }
 
-
-
   async function handleSubmit() {
     console.log('clicked')
     completeText();
@@ -57,6 +54,7 @@ export default function CustomTextEntryForm() {
       }, { merge: true })
         .then(() => { console.log('submitted to firestore') })
       dispatch(clearText());
+      dispatch(triggerReload());
     }
     catch (error: any) {
       return { error: error.message }

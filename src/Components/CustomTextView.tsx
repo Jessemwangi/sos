@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Button, Grid } from '@mui/material';
-import { CustomText } from '../app/model';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 import { auth } from '../app/services/FirebaseAuth';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useSelector } from 'react-redux';
 
 
 const CustomTextView = () => {
 
-  //fetch customTexts from db
-  //display in table
-
   const [user] = useAuthState(auth);
   const uid = user?.uid;
+  const reload = useSelector((state: any) => state.customText.reload)
+  const [shouldReload, setShouldReload] = useState(0);
 
   const {
     data,
     isFetching,
-    error
   } = useFetchMessagesByIdQuery({ id: uid });
 
-  //  if (error) { return (<>Error loading data</>) }
+
+  useEffect(() => { setShouldReload((shouldReload + 1)) }, [reload])
 
   return (
     <React.Fragment>
