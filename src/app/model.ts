@@ -60,11 +60,11 @@ export interface Recipient {
     city: string,
     postcode: string,
     userId: string,
-    email:string
+    email: string
 
 }
 
-export interface signalsList {
+export interface SignalsList {
     signalId: string,
     uid: string,
     name: string,
@@ -86,8 +86,9 @@ export interface signal {
     geolocation: geoCodes
 }
 
-export interface customTexts {
+export interface customText {
     cstTextId: number
     message: string
     title: string
+    userId: string
 }

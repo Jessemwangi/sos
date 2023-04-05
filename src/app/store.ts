@@ -6,6 +6,7 @@ import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
 import { firestoreApi } from './services/firestoreAPI';
+import { sosSignalApi } from '../features/sosMenuSlice';
 
 
 export const store = configureStore({
@@ -16,9 +17,10 @@ export const store = configureStore({
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,
     [firestoreApi.reducerPath]: firestoreApi.reducer,
+    [sosSignalApi.reducerPath]: sosSignalApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(firestoreApi.middleware),
+    getDefaultMiddleware().concat(firestoreApi.middleware).concat(sosSignalApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

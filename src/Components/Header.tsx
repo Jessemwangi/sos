@@ -1,17 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
-import { SignUpData, SosUser } from '../app/model';
-import { googleSignIn, signInUser, createAccount, signOutUser } from '../app/services/FirebaseAuth';
-import { setSosUser } from '../features/userSlice';
+import { auth, signOutUser } from '../app/services/FirebaseAuth';
+
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import '../styles/Header.css';
-import { AuthContext } from '../app/services/FirebaseContext';
+import { useAuthState } from "react-firebase-hooks/auth";
 
 //const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -21,16 +19,10 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const menuButton = document.getElementById('menuButton');
-    // const user: SosUser = useSelector((state: any) => state.user.user)
+
     let openMenuPopover: boolean = useSelector((state: any) => state.header.popoverState.mainMenu);
-    let loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
 
-    const user = useContext(AuthContext);
-
-    const sxStyles = {
-        position: 'static',
-        height: '20vh'
-    }
+    const [user] = useAuthState(auth);
 
     function openMenu(e: any) {
         dispatch(togglePopover({ mainMenu: true }));
@@ -47,24 +39,17 @@ const Header = () => {
 
     return (
         <div className='header'>
-            <div className='signInDiv'>
-                <div>
-
-                    {loggedIn ? (<Button style={{ color: 'white' }} onClick={handleSignOut}>Sign Out</Button>) : (
-
+            <AppBar className="appBar" sx={{ position: 'static', background: 'var(--purple)' }}>
+                <div className="signInDiv">
+                    {user ? (<Button style={{ color: 'white', marginLeft: '2rem', border: '2px solid white' }} onClick={handleSignOut}>Sign Out</Button>) : (
 
                         <><Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
                             <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
                         </>)
                     }
 
-
-
                 </div>
-            </div>
-
-            <AppBar className="appBar" sx={{ position: 'static' }}>
-                <Toolbar className="toolBar" sx={sxStyles}>
+                <Toolbar className="toolBar" >
                     <Button><MenuIcon id="menuButton" onClick={openMenu} /></Button>
                     <Link to='/'><Typography variant="h3" sx={{ color: 'white' }}>SOS Service</Typography><p>To Dashboard</p></Link>
                 </Toolbar>

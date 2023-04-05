@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { signal, signalsList, geoCodes } from '../app/model';
+import { signal, SignalsList, geoCodes } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth'
 
 
@@ -15,7 +15,7 @@ export interface signal {
     geolocation: geoCodes
 }
 
-export interface signalsList {
+export interface SignalsList {
     signalId: string,
     uid: string,
     name: string,

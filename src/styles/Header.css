@@ -5,17 +5,15 @@
 .appBar {
   height: 30vh;
   padding: 0;
-}
-
-#signOutButton {
-  color: white;
-  padding: 0;
+  position: relative;
+  width: 100%;
 }
 
 .signInDiv {
-  max-height: 70px;
+  padding: 0.5rem;
   display: flex;
-  justify-content: space-between;
+  height: 8vh;
+  width: 100vw;
 }
 
 .noDisplay {
@@ -25,6 +23,7 @@
 .toolBar {
   justify-content: space-between;
   background-color: var(--orange);
+  height: 30vh;
 }
 
 .userImage {
@@ -32,6 +31,17 @@
   width: 40px;
   border-radius: 50%;
   margin: 1rem;
+}
+
+.signInButton {
+  color: 'white';
+  margin-left: '2rem';
+  border: '2px solid white';
+  cursor: pointer;
+}
+
+.signInButton:active {
+  background-color: var(--violet);
 }
 
 #menuButton {

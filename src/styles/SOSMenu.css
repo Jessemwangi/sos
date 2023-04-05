@@ -1,8 +1,10 @@
 .sosMenu {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
     height: 130px;
     width: 100%;
+    background: transparent;
 
 }
 
@@ -15,6 +17,7 @@
     font-size: 32px;
     color: white;
     font-weight: 700;
+    border-radius: 15px;
 }
 
 .sosMenu button:hover {
@@ -24,3 +27,5 @@
 .sosMenu button.selected {
     background-color: var(--purple);
 }
+
+@media screen and (max-width: 600px) {}

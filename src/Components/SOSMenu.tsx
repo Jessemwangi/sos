@@ -1,12 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import "../styles/SOSMenu.css";
-import { selectSos } from "../features/sosMenuSlice";
-import { signalsList } from '../app/model';
+//import { selectSos } from "../features/sosMenuSlice";
+import { SignalsList } from '../app/model';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from '../app/services/FirebaseAuth'
 
 
 
-const emergencyList: signalsList[] = [
+const emergencyList: SignalsList[] = [
     {
         signalId: '4',
         uid: '',
@@ -62,7 +64,7 @@ const SOSMenu = () => {
     const dispatch = useDispatch();
 
     function clickHandler(e: any) {
-        dispatch(selectSos(e.target.key));
+        //dispatch(selectSos(e.target.key));
         e.target.classList.toggle('selected');
     }
 

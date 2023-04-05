@@ -5,7 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 const ManageProfile = () => {
 
-    const user = auth.currentUser;
+    const [user] = useAuthState(auth);
 
     if (!user) { return <><h3>Please log in first to manage your profile.</h3></> }
 
