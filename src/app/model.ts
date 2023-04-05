@@ -74,21 +74,21 @@ export interface SignalsList {
     createdAt?: Date
 }
 
-export interface geoCodes {
+export interface GeoCodes {
     lat: number,
     lon: number
 }
 
-export interface signal {
+export interface Signal {
     signalId: string,
     uid: string | undefined,
     createdAt: Date,
-    geolocation: geoCodes
+    geolocation: GeoCodes
 }
 
-export interface customText {
-    cstTextId: number
+export interface CustomText {
+    cstTextId: string
     message: string
     title: string
-    userId: string
+    userId: string | undefined
 }

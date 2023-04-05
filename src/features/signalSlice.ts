@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { signal, SignalsList, geoCodes } from '../app/model';
+import { Signal, SignalsList, GeoCodes } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth'
 
 
@@ -8,7 +8,7 @@ const user = auth.currentUser!;
 
 /*
 
-export interface signal {
+export interface Signal {
     signalId: string,
     uid: string,
     createdAt: Date,
@@ -25,7 +25,7 @@ export interface SignalsList {
     createdAt?: Date
 }
 
-interface geoCodes {
+interface GeoCodes {
     lat: number,
     lon: number
 }
@@ -33,7 +33,7 @@ interface geoCodes {
 
 */
 
-const initialState: signal = {
+const initialState: Signal = {
     signalId: "",
     uid: user.uid,
     createdAt: new Date(),

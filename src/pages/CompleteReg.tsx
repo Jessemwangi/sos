@@ -1,6 +1,6 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline';
-import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography , LinearProgress} from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography, LinearProgress } from '@mui/material';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ForumIcon from '@mui/icons-material/Forum';

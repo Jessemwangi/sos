@@ -1,19 +1,30 @@
-import { customText } from '../app/model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { CustomText } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
-import { where, query, getDoc, collection, getDocs, doc, updateDoc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
+import { where, query, collection, getDocs, doc, updateDoc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
 
 
-/* 
-export interface customText {
-    cstTextId: number
-    message: string
-    title: string
-    userId: string
-} */
+type Messages = CustomText[];
 
+const init: CustomText = {
+    cstTextId: "",//uuid generated id? 
+    message: "",
+    title: "",
+    userId: ""
+}
 
-type Messages = customText[];
+export const customTextSlice = createSlice({
+    name: 'customText',
+    initialState: { customText: init },
+    reducers: {
+        setText: (state: any, action: PayloadAction<object>) => { state.customText = { ...state.customText, ...action.payload } },
+
+        clearText: (state) => { state.customText = init }
+
+    }
+});
 
 export const customTextApi = createApi({
     baseQuery: fakeBaseQuery(),
@@ -21,7 +32,7 @@ export const customTextApi = createApi({
     reducerPath: "customTextApi",
 
     endpoints: (builder) => ({
-        fetchMessagesById: builder.query<Messages, { id: string }>({
+        fetchMessagesById: builder.query<Messages, { id: string | undefined }>({
             async queryFn(arg) {
                 const { id } = arg;
                 try {
@@ -32,7 +43,7 @@ export const customTextApi = createApi({
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     let messages: Messages = [];
                     querySnapshot?.forEach((doc) => {
-                        messages.push({ ...doc.data() } as customText)
+                        messages.push({ ...doc.data() } as CustomText)
                     });
                     return { data: messages };
                 } catch (error: any) {
@@ -42,9 +53,9 @@ export const customTextApi = createApi({
             providesTags: ['Messages'],
         }),
         setMessage: builder.mutation({
-            async queryFn({ id, details }) {
+            async queryFn({ docId, details }) {
                 try {
-                    await setDoc(doc(db, 'customTexts', id), {
+                    await setDoc(doc(db, 'customTexts', docId), {
                         details
                     }, { merge: true });
                     return { data: null };
@@ -63,3 +74,7 @@ export const customTextApi = createApi({
 
 
 export const { useFetchMessagesByIdQuery, useSetMessageMutation } = customTextApi;
+
+
+export const { setText, clearText } = customTextSlice.actions;
+export default customTextSlice.reducer;
