@@ -5,15 +5,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
 import { auth, signOutUser } from '../app/services/FirebaseAuth';
-
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import '../styles/Header.css';
 import { useAuthState } from "react-firebase-hooks/auth";
 
-//const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+//const google_client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
-const GOOGLE_CLIENT_ID = '127054368864-db825ognn1j3bdg4rl224ums2j7k2g07';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -61,6 +59,9 @@ const Header = () => {
                     <Link to="/custommsg"><MenuItem onClick={closeMenu}>Customize Messages</MenuItem></Link>
                     <Link to='/profile'><MenuItem onClick={closeMenu}>Manage Profile</MenuItem></Link>
                     <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
+                    <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
+                    <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
+
                 </MenuList>
             </Popover>
             <SignIn />

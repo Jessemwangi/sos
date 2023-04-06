@@ -1,6 +1,6 @@
 import { Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import React from 'react';
-//a log of sent SOSs
+
 
 
 /* export interface Signal {
@@ -26,9 +26,11 @@ interface GeoCodes {
     lon: number
 }*/
 
-//Add emergency type to signal model?
+//TOFIX: Add emergency type to signal model?
+//TODO: how is response to signal collected?
 
 const SignalHistory = () => {
+    //a log of sent SOSs
 
 
     const [data] = [[{
@@ -45,6 +47,8 @@ const SignalHistory = () => {
         <div>
             <Typography>Signal Log</Typography>
 
+            <p>Your sent signals:</p>
+
             <Table size="medium">
                 <TableHead>
                     <TableRow>
@@ -52,6 +56,7 @@ const SignalHistory = () => {
                         <TableCell>Emergency type</TableCell>
                         <TableCell>Message recipients</TableCell>
                         <TableCell>Sent from location</TableCell>
+                        <TableCell>Response</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -62,6 +67,7 @@ const SignalHistory = () => {
                             <TableCell>{signal.name}</TableCell>
                             <TableCell>{signal.recipients}</TableCell>
                             <TableCell>{signal.geolocation}</TableCell>
+                            <TableCell></TableCell>
 
 
                         </TableRow>
@@ -73,8 +79,6 @@ const SignalHistory = () => {
 
 
 
-            one signal detail, with summary of when it was send
-            <p>send to who, received status, and if resolved or not.</p>
 
         </div>
     );
