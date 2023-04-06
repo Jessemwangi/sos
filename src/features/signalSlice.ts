@@ -4,6 +4,7 @@ import { Signal, SignalsList, GeoCodes } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth'
 
 //used for state of triggered SOS request
+//AND signals list??
 
 const user = auth.currentUser!;
 

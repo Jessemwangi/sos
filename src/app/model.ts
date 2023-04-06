@@ -1,20 +1,3 @@
-
-export interface Guser {
-    name: string
-    email: null | string
-    picture: string
-    iat: number
-    iss: string
-    jti: string
-    sub: number | string
-}
-
-export interface SosUser {
-    name: null | string
-    email: null | string
-    uid: string
-}
-
 export interface SignUpData {
     email: string
     password: string

@@ -14,8 +14,7 @@ import {
 import { createAccount } from "../app/services/FirebaseAuth";
 //import { CreateDocSetId } from '../app/services/DbFunctions';
 import { toggleSignupModal } from "../features/headerSlice";
-import { setSosUser } from "../features/userSlice";
-import { SignUpData, SosUser } from "../app/model";
+import { SignUpData } from "../app/model";
 import { AuthContext } from "../app/services/FirebaseContext";
 import { toast } from "react-toastify";
 import { sign } from 'crypto';
@@ -23,7 +22,7 @@ import { sign } from 'crypto';
 const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const sosUser: SosUser = useSelector((state: any) => state.user.sosUser);
+
   const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
 
   const user = useContext(AuthContext);
@@ -85,13 +84,6 @@ const SignUp = () => {
         signUpData.email,
         signUpData.password
       ); //uid created by firebase
-      dispatch(
-        setSosUser({
-          email: signUpData.email,
-          name: signUpData.firstname,
-          uid: user?.uid,
-        })
-      );
 
       console.log(firebaseUser);
     }
@@ -178,7 +170,7 @@ const SignUp = () => {
             </form>
           </DialogContent>
           <DialogActions>
-            {}
+            { }
             <Button type="submit" onClick={(e) => handleSignUp(e, signUpData)}>
               Submit
             </Button>

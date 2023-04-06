@@ -4,6 +4,9 @@ import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 import { auth } from '../app/services/FirebaseAuth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useSelector } from 'react-redux';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 
 const CustomTextView = () => {
@@ -17,6 +20,14 @@ const CustomTextView = () => {
     data,
     isFetching,
   } = useFetchMessagesByIdQuery({ id: uid });
+
+  const editButtonHandler = (e: any, id: string) => {
+    console.log('edit')
+  }
+
+  const deleteHandler = (e: any, id: string) => {
+    console.log('delete')
+  }
 
 
   useEffect(() => { setShouldReload((shouldReload + 1)) }, [reload])
@@ -38,6 +49,10 @@ const CustomTextView = () => {
             <TableRow key={row.cstTextId}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
+              <TableCell><EditIcon id={`icon${row.cstTextId}`}
+                onClick={(e) => editButtonHandler(e, row.cstTextId)} />
+              </TableCell>
+              <TableCell> <DeleteIcon id={`delete${row.cstTextId}`} onClick={(e) => deleteHandler(e, row.cstTextId)} /></TableCell>
             </TableRow>
           )))
             : <></>
