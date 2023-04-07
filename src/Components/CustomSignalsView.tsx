@@ -6,54 +6,47 @@ import { db } from '../DataLayer/FirestoreInit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
+import { SignalsList } from '../app/model';
 
-import { setSignal } from '../features/signalSlice';
-
-
-/*
-export interface SignalsList {
-    signalId: string,
-    uid: string,
-    name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
-}
-
-interface GeoCodes {
-    lat: number,
-    lon: number
-}*/
+import { setStoreSignalsList, resetForm } from '../features/manageSignalSlice';
+import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 
 const CustomSignalsView = () => {
 
     //for creating user's custom emergency types
-    //a component in the custom signals page of the regWizard, for optional setup
-
+    //used as a component in the custom signals page of the regWizard, for optional setup, and in manageSignals page
     const [buttonAction] = useState<string>('Save Signal')
     const dispatch = useDispatch();
-    const storeSignal = useSelector((state) => { })
+    const storeSignal: SignalsList = useSelector((state: any) => state.storeSignalsList);
     const [user] = useAuthState(auth);
 
+    //const [data] = useFetchSignalsListByIdQuery(user.uid);
+
     function handleChange(e: any) {
-        dispatch(setSignal({ [e.target.name]: e.target.value }))
+        dispatch(setStoreSignalsList({ [e.target.name]: e.target.value }))
+    }
+
+    function completeSignal() {
+        dispatch(setStoreSignalsList({ uid: user?.uid, signalId: uuidv4() }));
+
     }
 
     async function handleSubmit() {
-        console.log('clicked')
-
-
+        console.log('clicked');
+        completeSignal();
         try {
-            await setDoc(doc(db, 'customTexts', storeSignal.signalId), {
+            await setDoc(doc(db, 'signalsList', storeSignal.signalId), {
                 signalId: storeSignal.signalId,
+                uid: user?.uid,
                 name: storeSignal.name,
-                uid: user.uid,
-                userId: storeSignal.userId
+                recipients: storeSignal.recipients,
+                presetMsg: "",
+                cstTextId: storeSignal.cstTextId,
+                createdAt: ""
             }, { merge: true })
                 .then(() => { console.log('submitted to firestore') })
-            dispatch(clearText());
-            dispatch(triggerReload());
+            dispatch(resetForm());
+            // dispatch(triggerReload());
         }
         catch (error: any) {
             return { error: error.message }
@@ -70,13 +63,24 @@ const CustomSignalsView = () => {
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
-                        id="title"
-                        name="title"
-                        label="Title"
+                        id="name"
+                        name="name"
+                        label="Signal Name"
                         fullWidth
-                        autoComplete="cc-title"
+                        autoComplete="cc-name"
                         variant="standard"
-                        defaultValue={storeText.title}
+                        onChange={handleChange}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        required
+                        id="recipients"
+                        name="recipients"
+                        label="Choose recipients"
+                        fullWidth
+                        autoComplete="cc-recipients"
+                        variant="standard"
                         onChange={handleChange}
                     />
                 </Grid>
@@ -85,11 +89,10 @@ const CustomSignalsView = () => {
                         required
                         id="message"
                         name="message"
-                        label="Message"
+                        label="Choose message"
                         fullWidth
-                        autoComplete="cc-Message"
+                        autoComplete="cc-message"
                         variant="standard"
-                        defaultValue={storeText.message}
                         onChange={handleChange}
                     />
                 </Grid>

@@ -10,7 +10,6 @@ import {
 } from "firebase/auth";
 
 import { app } from '../../DataLayer/FirestoreInit';
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const provider = new GoogleAuthProvider();
@@ -44,26 +43,27 @@ async function signInUser(email: string, password: string) {
     .catch((error) => {
       const errorMessage = error.message;
       console.log(error);
-      
+
       return (errorMessage)
     })
 }
 
-function createAccount(displayName:string, email: string, password: string) {
-  createUserWithEmailAndPassword(auth, email, password)
+async function createAccount(displayName: string, email: string, password: string) {
+  await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      if (auth.currentUser){
-        updateProfile(auth.currentUser,{displayName:displayName})
-       }
+
+      if (user) {
+        updateProfile(user, { displayName: displayName })
+      }
       return user;
 
     })
     .catch((error) => {
       // const errorCode = error.code;
-       const errorMessage = error.message;
-      console.log( error);
-      
+      const errorMessage = error.message;
+      console.log(error, errorMessage);
+
       toast.error(error.message)
     });
 }

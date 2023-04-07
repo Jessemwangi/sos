@@ -1,41 +1,71 @@
 import React from 'react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignalsList } from '../app/model';
+import { db } from "../DataLayer/FirestoreInit";
+import { where, query, collection, getDocs, doc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
 
 
-const init = {
-
+type UserSignals = SignalsList[];
+const init: SignalsList = {
     signalId: "",
     uid: "", //firebase uid
     name: "",
-    recipientId: [""],
-    presetMsg: "", //is this neccessary? 
+    recipients: [""],
+    presetMsg: "",
     cstTextId: "",
-    createdAt: new Date()
-
+    createdAt: ""
 }
+const userSignals: UserSignals = [];
 
 //modify a signal, delete a signal, add a new signal to signalsList
 
 const manageSignalSlice = createSlice({
     name: 'manageSignals',
     initialState: {
-        signal: init,
+        storeSignalsList: init
     },
     reducers: {
-        setSignal: (state, action) => {
-            const signal: SignalsList = (action.payload);
-        },
-        updateSignal: (state, action) => {
-            state.signal = { ...state.signal, ...action.payload }
+        setStoreSignalsList: (state, action) => {
+            state.storeSignalsList = { ...state.storeSignalsList, ...action.payload };
         },
         resetForm: (state) => {
-            state.signal = init;
+            state.storeSignalsList = init;
         }
     }
-
-
 });
 
-export const { setSignal } = manageSignalSlice.actions;
+
+export const signalsListApi = createApi({
+    baseQuery: fakeBaseQuery(),
+    tagTypes: ['UserSignals'],
+    reducerPath: "signalsListApi",
+
+    endpoints: (builder) => ({
+        fetchSignalsListById: builder.query<UserSignals, { id: string }>({
+            async queryFn(arg) {
+                const { id } = arg;
+                try {
+                    const q = query(
+                        collection(db, 'signalsList'),
+                        where('uid', '==', id),
+                    );
+                    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+                    querySnapshot?.forEach((doc) => {
+                        userSignals.push({ ...doc.data() } as SignalsList)
+                    });
+                    return { data: userSignals };
+                } catch (error: any) {
+                    return { error: error.message };
+                }
+            },
+            providesTags: ['UserSignals'],
+        }),
+    })
+});
+
+export const { useFetchSignalsListByIdQuery } = signalsListApi;
+
+
+export const { setStoreSignalsList, resetForm } = manageSignalSlice.actions;
 export default manageSignalSlice.reducer

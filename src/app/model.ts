@@ -9,13 +9,11 @@ export interface SignUpData {
 export interface SignInData {
     email: string
     password: string
-
 }
 
 export type LoadingState = boolean
 
 export interface Profile {
-    /*  id: number | string */
     firstname?: string,
     lastname?: string,
     phone?: number | string | null,
@@ -51,10 +49,10 @@ export interface SignalsList {
     signalId: string,
     uid: string,
     name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
+    recipients: string[],
+    presetMsg?: string | undefined,
+    cstTextId?: string | undefined,
+    createdAt?: Date | string
 }
 
 export interface GeoCodes {
@@ -65,7 +63,7 @@ export interface GeoCodes {
 export interface Signal {
     signalId: string,
     uid: string | undefined,
-    createdAt: Date,
+    createdAt: Date | string,
     geolocation: GeoCodes
 }
 

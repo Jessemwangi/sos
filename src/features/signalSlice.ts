@@ -2,41 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { Signal, SignalsList, GeoCodes } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth'
+import { useAuthState } from "react-firebase-hooks/auth";
 
 //used for state of triggered SOS request
-//AND signals list??
 
-const user = auth.currentUser!;
-
-/*
-
-export interface Signal {
-    signalId: string,
-    uid: string,
-    createdAt: Date,
-    geolocation: geoCodes
-}
-
-export interface SignalsList {
-    signalId: string,
-    uid: string,
-    name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
-}
-
-interface GeoCodes {
-    lat: number,
-    lon: number
-}
-*/
 
 const init: Signal = {
     signalId: "",
-    uid: user.uid,
-    createdAt: new Date(),
+    uid: "",
+    createdAt: "",
     geolocation: {
         lat: 0,
         lon: 0

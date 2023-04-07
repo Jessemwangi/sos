@@ -10,7 +10,7 @@ const init: SignalsList = {
     signalId: "",
     uid: "",
     name: "",
-    recipientId: [],
+    recipients: [],
     presetMsg: "",
     cstTextId: "",
     createdAt: new Date()

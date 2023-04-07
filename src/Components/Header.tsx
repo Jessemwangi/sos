@@ -59,8 +59,8 @@ const Header = () => {
                     <Link to="/custommsg"><MenuItem onClick={closeMenu}>Customize Messages</MenuItem></Link>
                     <Link to='/profile'><MenuItem onClick={closeMenu}>Manage Profile</MenuItem></Link>
                     <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
-                    <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
-                    <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>
+                    <Link to="/signals"><MenuItem onClick={closeMenu}>Manage Signal Types</MenuItem></Link>
+                    <Link to="/signalhistory"><MenuItem onClick={closeMenu}>View Signal History</MenuItem></Link>
 
                 </MenuList>
             </Popover>

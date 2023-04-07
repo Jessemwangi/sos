@@ -68,7 +68,7 @@ const RecipientEntryForm = () => {
     }
     setLoading(false)
   }
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     dispatch(updateRecipient({ [e.target.name]: e.target.value }));
   };
@@ -98,7 +98,7 @@ const RecipientEntryForm = () => {
                   <RecipientsViews />
 
                   <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
-                    Add More Recepients
+                    Add SOS Recipients
                   </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>

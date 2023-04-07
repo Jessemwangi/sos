@@ -28,7 +28,12 @@ const SignIn = () => {
 
     function handleSignIn(e: any, signinData: SignInData) {
         e.preventDefault();
-        signInUser(signinData.email, signinData.password)
+        try {
+            signInUser(signinData.email, signinData.password)
+        }
+        catch (err: any) {
+            alert(err.message)
+        }
     }
 
     return (

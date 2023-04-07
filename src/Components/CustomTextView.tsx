@@ -23,13 +23,15 @@ const CustomTextView = () => {
 
   const editButtonHandler = (e: any, id: string) => {
     console.log('edit')
+    //TODO
   }
 
   const deleteHandler = (e: any, id: string) => {
     console.log('delete')
+    //TODO
   }
 
-
+  //TOFIX not rerendering on update
   useEffect(() => { setShouldReload((shouldReload + 1)) }, [reload])
 
   return (

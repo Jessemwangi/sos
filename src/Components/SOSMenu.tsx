@@ -13,7 +13,7 @@ const emergencyList: SignalsList[] = [
         signalId: '4',
         uid: '',
         name: 'Fire',
-        recipientId: ['0', '1'],
+        recipients: [],
         presetMsg: 'string',
         cstTextId: '',
         createdAt: new Date()
@@ -22,7 +22,7 @@ const emergencyList: SignalsList[] = [
         signalId: '45',
         uid: '',
         name: 'Medical Emergency',
-        recipientId: ['0', '1', '3'],
+        recipients: [],
         presetMsg: 'string',
         cstTextId: '',
         createdAt: new Date()
@@ -32,7 +32,7 @@ const emergencyList: SignalsList[] = [
         signalId: '657',
         uid: '',
         name: 'Home Invasion',
-        recipientId: ['0', '1', '3'],
+        recipients: [],
         presetMsg: 'string',
         cstTextId: '',
         createdAt: new Date()
@@ -41,7 +41,7 @@ const emergencyList: SignalsList[] = [
         signalId: '789',
         uid: '4',
         name: 'Custom Field',
-        recipientId: ['0', '1', '3'],
+        recipients: [],
         presetMsg: 'string',
         cstTextId: '567sd',
         createdAt: new Date()
@@ -53,6 +53,8 @@ const emergencyList: SignalsList[] = [
 
 
 const SOSMenu = () => {
+
+    const [user] = useAuthState(auth);
     const dispatch = useDispatch();
 
     function clickHandler(e: any) {

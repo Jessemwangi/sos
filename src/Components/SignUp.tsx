@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,17 +15,16 @@ import { createAccount } from "../app/services/FirebaseAuth";
 //import { CreateDocSetId } from '../app/services/DbFunctions';
 import { toggleSignupModal } from "../features/headerSlice";
 import { SignUpData } from "../app/model";
-import { AuthContext } from "../app/services/FirebaseContext";
 import { toast } from "react-toastify";
 import { sign } from 'crypto';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../app/services/FirebaseAuth";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn);
-
-  const user = useContext(AuthContext);
+  const [user] = useAuthState(auth);
 
   const init: SignUpData = {
     email: "",
@@ -45,7 +44,7 @@ const SignUp = () => {
     });
   }
 
-  function handleProfileClick() {
+  function handleGoToProfile() {
     dispatch(toggleSignupModal(false));
     navigate("/regwizard");
   }
@@ -79,8 +78,9 @@ const SignUp = () => {
       toast.error("passwords do not match");
       return;
     } else {
+      const fullname: string = signUpData.firstname + ' ' + signUpData.lastname;
       const firebaseUser = createAccount(
-        signUpData.firstname + signUpData.lastname,
+        fullname,
         signUpData.email,
         signUpData.password
       ); //uid created by firebase
@@ -98,7 +98,7 @@ const SignUp = () => {
     >
       <DialogTitle>Sign Up with Email</DialogTitle>
 
-      {!loggedIn ? (
+      {!user ? (
         <>
           <DialogContent>
             <DialogContentText>
@@ -184,7 +184,7 @@ const SignUp = () => {
               registration process.
             </DialogContentText>
             <DialogActions>
-              <Button type="button" onClick={handleProfileClick}>
+              <Button type="button" onClick={handleGoToProfile}>
                 To Profile
               </Button>
             </DialogActions>
