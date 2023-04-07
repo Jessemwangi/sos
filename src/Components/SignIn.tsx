@@ -28,12 +28,12 @@ const SignIn = () => {
 
     function handleSignIn(e: any, signinData: SignInData) {
         e.preventDefault();
-        try {
-            signInUser(signinData.email, signinData.password)
-        }
-        catch (err: any) {
-            alert(err.message)
-        }
+
+        signInUser(signinData.email, signinData.password)
+
+        //TOFIX: error alert if account doesn't exist
+
+
     }
 
     return (
