@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { Typography, Grid, TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { db } from '../DataLayer/FirestoreInit';
 import { CustomText } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { setText, clearText, triggerReload } from '../features/customTextSlice';
+import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 
 
-export default function CustomTextEntryForm() {
+
+export default function CustomTextForm() {
 
   const [user] = useAuthState(auth);
   const uid = user?.uid;
@@ -23,12 +22,16 @@ export default function CustomTextEntryForm() {
 
   const storeText: CustomText = useSelector((state: any) => state.customText.customText);
 
+  const { data } = useFetchMessagesByIdQuery({ id: uid })
+  //const generic_message: CustomText = data 
+  console.log(data);
 
   const init: CustomText = {
     cstTextId: "",//uuid generated id
     message: "",
     title: "",
-    userId: uid
+    userId: uid,
+    default: false
   }
 
 
@@ -72,8 +75,15 @@ export default function CustomTextEntryForm() {
     <React.Fragment>
 
       <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
-        Add more Customized Text
+
+
+        Add Customized Text
       </Typography>
+      <p>   Your current default text message is:
+        <span>{ }</span>
+        This is the message that will be sent if no specific signal type is chosen.
+        You can add personalised messages below.</p>
+      <p>If you wish to set a message as your default message, toggle the checkbox.</p>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <TextField
@@ -100,6 +110,10 @@ export default function CustomTextEntryForm() {
             defaultValue={storeText.message}
             onChange={handleChange}
           />
+        </Grid>
+        <Grid item>
+          <FormControlLabel control={<Checkbox defaultChecked />} label="Set as default message" />
+
         </Grid>
 
         <Grid item xs={12}>

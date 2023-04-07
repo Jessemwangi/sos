@@ -12,7 +12,8 @@ const init: CustomText = {
     cstTextId: "",//uuid generated id
     message: "",
     title: "",
-    userId: ""
+    userId: "",
+    default: false,
 }
 
 export const customTextSlice = createSlice({
@@ -41,8 +42,16 @@ export const customTextApi = createApi({
                 try {
                     const q = query(
                         collection(db, 'customTexts'),
-                        where('userId', '==', id),
+                        where('userId', 'in', [id, 'ALL'])
                     );
+
+
+                    //const q = query(
+                    //citiesRef, 
+                    //where('country', 'in', ['USA', 'Japan']));
+
+
+
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     let messages: Messages = [];
                     querySnapshot?.forEach((doc) => {

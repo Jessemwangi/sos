@@ -18,7 +18,8 @@ const emergencyList: SignalsList[] = [
         presetMsg: 'string',
         cstTextId: '',
         createdAt: new Date(),
-        pinned: true
+        pinned: true,
+        default: false
     },
     {
         signalId: '45',
@@ -28,7 +29,8 @@ const emergencyList: SignalsList[] = [
         presetMsg: 'string',
         cstTextId: '',
         createdAt: new Date(),
-        pinned: true
+        pinned: true,
+        default: false
     },
 
     {
@@ -39,7 +41,8 @@ const emergencyList: SignalsList[] = [
         presetMsg: 'string',
         cstTextId: '',
         createdAt: new Date(),
-        pinned: true
+        pinned: true,
+        default: false
     },
     {
         signalId: '789',
@@ -49,7 +52,8 @@ const emergencyList: SignalsList[] = [
         presetMsg: 'string',
         cstTextId: '567sd',
         createdAt: new Date(),
-        pinned: true
+        pinned: true,
+        default: false
     }
 ]
 

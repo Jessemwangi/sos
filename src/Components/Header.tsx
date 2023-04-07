@@ -55,7 +55,6 @@ const Header = () => {
             <Popover id="menuPopover" open={openMenuPopover} anchorEl={menuButton} onClose={closeMenu}>
                 <MenuList>
                     <Link to="/help"><MenuItem onClick={closeMenu}>How to use SOS</MenuItem></Link>
-                    <Link to="/customsignals"><MenuItem onClick={closeMenu}>Customize Emergency Signals</MenuItem></Link>
                     <Link to="/custommsg"><MenuItem onClick={closeMenu}>Customize Messages</MenuItem></Link>
                     <Link to='/profile'><MenuItem onClick={closeMenu}>Manage Profile</MenuItem></Link>
                     <Link to="/recipients"><MenuItem onClick={closeMenu}>Manage Contacts</MenuItem></Link>

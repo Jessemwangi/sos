@@ -14,7 +14,8 @@ const init: SignalsList = {
     presetMsg: "",
     cstTextId: "",
     createdAt: new Date(),
-    pinned: false
+    pinned: false,
+    default: false
 }
 
 type Signals = SignalsList[];

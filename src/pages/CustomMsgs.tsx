@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomTextView from '../Components/CustomTextView';
-import CustomTextEntryForm from '../Registration/CustomTextEntryForm';
+import CustomTextEntryForm from '../Registration/CustomTextForm';
 
 const CustomMsgs = () => {
     //For managing custom messages

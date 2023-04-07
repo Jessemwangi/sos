@@ -53,7 +53,8 @@ export interface SignalsList {
     presetMsg?: string | undefined,
     cstTextId?: string | undefined,
     createdAt?: Date | string,
-    pinned : boolean
+    pinned: boolean
+    default: boolean
 }
 
 export interface GeoCodes {
@@ -73,4 +74,5 @@ export interface CustomText {
     message: string
     title: string
     userId: string | undefined
+    default: boolean
 }

@@ -15,7 +15,8 @@ const init: SignalsList = {
     presetMsg: "",
     cstTextId: "",
     createdAt: "",
-    pinned: false
+    pinned: false,
+    default: false
 }
 const userSignals: UserSignals = [];
 

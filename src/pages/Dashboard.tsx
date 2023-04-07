@@ -5,15 +5,21 @@ import Timer from '../Components/Timer';
 import '../styles/Dashboard.css'
 import { useSelector, useDispatch } from 'react-redux';
 
+
 const Dashboard = () => {
     const dispatch = useDispatch();
     const active = useSelector((state: any) => state.sosButton.active);
+    console.log(active)
     const sosTimer = setTimeout(() => { }, 120 * 1000);
 
     function cancelSos() {
         clearTimeout(sosTimer);
     }
 
+/*     useEffect(() => {
+        if (active === true) { console.log('detecting active button') }
+    }, [dispatch, active])
+ */
 
 
     /*   Checks on timer state, when ready fires post request to twilio server endpoint: */
@@ -29,12 +35,7 @@ const Dashboard = () => {
 
     //`https://api.twilio.com/2010-04-01/Accounts/${AccountSid}/Messages.json`
 
-    useEffect(() => {
-        if (active) {
 
-
-        }
-    }, [active])
 
     return (
         <div className="dashboard">

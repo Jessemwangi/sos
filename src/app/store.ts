@@ -6,10 +6,10 @@ import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
 import customTextSlice from '../features/customTextSlice';
+import signalSlice from '../features/signalSlice';
 import { firestoreApi } from './services/firestoreAPI';
 import { sosSignalApi } from '../features/sosMenuSlice';
 import { customTextApi, } from '../features/customTextSlice';
-import signalSlice from '../features/signalSlice';
 import manageSignalSlice, { signalsListApi } from '../features/manageSignalSlice';
 
 

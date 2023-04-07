@@ -76,7 +76,6 @@ const RecipientEntryForm = () => {
 
   return (
     <>
-
       {
         loadingState ?
           (<>
@@ -92,13 +91,11 @@ const RecipientEntryForm = () => {
                 </>
               ) : (
                 <React.Fragment>
-                  {/* <Typography variant="h6" gutterBottom>
-        Your Recipients
-      </Typography> */}
+
                   <RecipientsViews />
 
                   <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
-                    Add SOS Recipients
+                    Add at least one default SOS Recipient
                   </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
@@ -156,14 +153,14 @@ const RecipientEntryForm = () => {
                     <Grid item xs={12} md={6}>
                       <TextField
                         required
-                        id="post-Code"
+                        id="postcode"
                         name='postcode'
                         value={recipient.postcode}
-                        label="post Code"
+                        label="Post Code"
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleChange(e)}
-                        helperText="post Code and street number"
+                        helperText="postcode and street number"
                         fullWidth
-                        autoComplete="cc-post-Code"
+                        autoComplete="cc-postcode"
                         variant="standard"
                       />
                     </Grid>
