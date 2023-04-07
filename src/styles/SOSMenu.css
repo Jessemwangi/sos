@@ -1,12 +1,10 @@
 .sosMenu {
-
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: 1fr;
     grid-gap: 0.5rem;
     height: 130px;
     width: 100%;
-    background: white;
 
 }
 
@@ -22,8 +20,6 @@
     color: white;
     font-weight: 700;
     border-radius: 15px;
-    /*    box-shadow: inset var(--purple) 0px 20px 50px,
-        inset rgba(0, 0, 0, 0.35) 0px -10px 20px; */
     box-shadow: 0 1rem 1.25rem 0 rgba(22, 55, 95, 0.50),
         0 -0.25rem 1.5rem rgba(110, 15, 155, 1) inset,
         0 0.75rem 0.5rem rgba(255, 255, 255, 0.4) inset;
@@ -46,4 +42,24 @@
 
 }
 
-@media screen and (max-width: 600px) {}
+@media screen and (max-width: 600px) {
+
+
+    .sosMenu {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+        padding: 1rem;
+        width: 100%;
+
+    }
+
+    .sosMenu button {
+        height: 10vh;
+        width: 40vw;
+        margin: auto;
+        font-size: 20px;
+
+    }
+
+}

@@ -1,5 +1,16 @@
+div.sosButtonContainer {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
 button.sosButton {
     height: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     line-height: 200px;
     width: 35vw;
     border-radius: 50px;
@@ -56,6 +67,7 @@ button.sosButton.flash {
     button.sosButton {
         height: 30vh;
         width: 50vw;
+        font-size: 50px;
 
     }
 }
@@ -67,6 +79,6 @@ button.sosButton.flash {
     }
 
     button.sosButton span {
-        font-size: 60px
+        font-size: 50px;
     }
 }

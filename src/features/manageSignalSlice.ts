@@ -14,7 +14,8 @@ const init: SignalsList = {
     recipients: [""],
     presetMsg: "",
     cstTextId: "",
-    createdAt: ""
+    createdAt: "",
+    pinned: false
 }
 const userSignals: UserSignals = [];
 

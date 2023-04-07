@@ -1,6 +1,11 @@
 .main {
     min-height: 80vh;
-    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-items: center;
+
 }
 
 h3,

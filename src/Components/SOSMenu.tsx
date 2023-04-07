@@ -5,6 +5,7 @@ import "../styles/SOSMenu.css";
 import { SignalsList } from '../app/model';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from '../app/services/FirebaseAuth'
+import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 
 
 
@@ -16,7 +17,8 @@ const emergencyList: SignalsList[] = [
         recipients: [],
         presetMsg: 'string',
         cstTextId: '',
-        createdAt: new Date()
+        createdAt: new Date(),
+        pinned: true
     },
     {
         signalId: '45',
@@ -25,7 +27,8 @@ const emergencyList: SignalsList[] = [
         recipients: [],
         presetMsg: 'string',
         cstTextId: '',
-        createdAt: new Date()
+        createdAt: new Date(),
+        pinned: true
     },
 
     {
@@ -35,7 +38,8 @@ const emergencyList: SignalsList[] = [
         recipients: [],
         presetMsg: 'string',
         cstTextId: '',
-        createdAt: new Date()
+        createdAt: new Date(),
+        pinned: true
     },
     {
         signalId: '789',
@@ -44,7 +48,8 @@ const emergencyList: SignalsList[] = [
         recipients: [],
         presetMsg: 'string',
         cstTextId: '567sd',
-        createdAt: new Date()
+        createdAt: new Date(),
+        pinned: true
     }
 ]
 
@@ -55,7 +60,14 @@ const emergencyList: SignalsList[] = [
 const SOSMenu = () => {
 
     const [user] = useAuthState(auth);
+    const uid = user?.uid ? user.uid : '';
     const dispatch = useDispatch();
+
+    const {
+        data,
+        isFetching,
+        error
+    } = useFetchSignalsListByIdQuery({ id: uid });
 
     function clickHandler(e: any) {
         //dispatch(selectSos(e.target.key));
@@ -63,7 +75,7 @@ const SOSMenu = () => {
     }
 
 
-
+    console.log(data);
     return (
         <div className="sosMenu">
             {emergencyList.map((item) => (

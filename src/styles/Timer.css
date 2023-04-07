@@ -1,0 +1,12 @@
+div.timer {
+    height: 20vh;
+    width: 20vw;
+    border-radius: 50%;
+    background-color: rgba(25, 22, 22, 0.824);
+    display: none;
+
+}
+
+div.timer.activer {
+    display: inline-block;
+}

@@ -52,7 +52,8 @@ export interface SignalsList {
     recipients: string[],
     presetMsg?: string | undefined,
     cstTextId?: string | undefined,
-    createdAt?: Date | string
+    createdAt?: Date | string,
+    pinned : boolean
 }
 
 export interface GeoCodes {
