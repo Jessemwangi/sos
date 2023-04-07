@@ -7,11 +7,9 @@ const CustomMsgs = () => {
 
 
     return (
-        <div>
+        <div style={{ padding: '2rem' }}>
             <CustomTextView />
-
             <CustomTextEntryForm />
-
         </div>
     );
 };

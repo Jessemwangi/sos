@@ -7,7 +7,7 @@ const ManageSignals = () => {
     //Is this for viewing and managing a user's signal templates?
 
     return (
-        <div>
+        <div style={{ padding: '2rem' }}>
             <CustomSignalsView />
             <SetPinnedSignals />
 

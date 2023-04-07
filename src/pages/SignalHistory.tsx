@@ -44,7 +44,7 @@ const SignalHistory = () => {
     }]]
 
     return (
-        <div>
+        <div style={{padding: '2rem'}}>
             <Typography>Signal Log</Typography>
 
             <p>Your sent signals:</p>

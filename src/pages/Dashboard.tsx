@@ -38,8 +38,11 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-            <div className="sosButtonContainer"><SOSButton /></div>
-            <div></div>
+            <div className="sosButtonContainer">
+                <SOSButton />
+                <div><Timer /></div>
+            </div>
+
             {active ? (<div className="activation-text"><span >SOS has been activated. Select emergency type : </span>
                 <div className="sosMenuContainer"><SOSMenu />
                 </div>

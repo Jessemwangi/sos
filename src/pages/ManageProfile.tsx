@@ -10,8 +10,8 @@ const ManageProfile = () => {
     if (!user) { return <><h3>Please log in first to manage your profile.</h3></> }
 
     return (
+        <div style={{ padding: '2rem' }}>    <ProfileForm /></div>
 
-        <ProfileForm />
     );
 };
 

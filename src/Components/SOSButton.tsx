@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/SOSButton.css';
 import { useDispatch } from 'react-redux';
 import { activate } from '../features/sosButtonSlice';
+import Timer from './Timer';
 
 const SOSButton = () => {
     //const active = useSelector((state: any) => state.sosButton.active);
@@ -18,6 +19,7 @@ const SOSButton = () => {
     return (
         <button className="sosButton" id="sosButton" onClick={activeSosButton}>
             <span>SOS</span>
+
         </button>
 
     );

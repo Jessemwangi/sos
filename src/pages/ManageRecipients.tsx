@@ -10,7 +10,7 @@ const ManageRecipients = () => {
     if (!user) { return <><h3>Please log in first to manage your contacts.</h3></> }
 
     return (
-        <div>
+        <div style={{ padding: '2rem' }}>
             <Typography component="h2" variant="h6" color="primary" gutterBottom>
                 Available Recipients
             </Typography>
