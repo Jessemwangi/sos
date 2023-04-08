@@ -2,7 +2,11 @@ import React from 'react';
 import CustomTextView from '../Components/CustomTextView';
 import CustomTextEntryForm from '../Registration/CustomTextForm';
 
-const CustomMsgs = () => {
+type Props = {
+    refresh: boolean
+}
+
+const CustomMsgs = ({ refresh }: Props) => {
     //For managing custom messages
 
 

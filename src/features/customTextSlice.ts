@@ -45,13 +45,6 @@ export const customTextApi = createApi({
                         where('userId', 'in', [id, 'ALL'])
                     );
 
-
-                    //const q = query(
-                    //citiesRef, 
-                    //where('country', 'in', ['USA', 'Japan']));
-
-
-
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     let messages: Messages = [];
                     querySnapshot?.forEach((doc) => {

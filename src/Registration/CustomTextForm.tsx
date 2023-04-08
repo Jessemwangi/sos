@@ -19,12 +19,13 @@ export default function CustomTextForm() {
   const uid = user?.uid;
   const dispatch = useDispatch();
   const [buttonAction] = useState<string>('Save Text')
+  const [ready, setReady] = useState<boolean>(false);
 
   const storeText: CustomText = useSelector((state: any) => state.customText.customText);
 
   const { data } = useFetchMessagesByIdQuery({ id: uid })
   //const generic_message: CustomText = data 
-  console.log(data);
+
 
   const init: CustomText = {
     cstTextId: "",//uuid generated id
@@ -37,10 +38,18 @@ export default function CustomTextForm() {
 
   function handleChange(e: any) {
     dispatch(setText({ [e.target.name]: e.target.value }))
+    if (ready === true) { setReady(false) }
+
+  }
+
+  function handleChecked(e: any) {
+    dispatch(setText({ [e.target.name]: e.target.checked }))
+    console.log(e.target.name, e.target.checked);
   }
 
   function completeText() {
     dispatch(setText({ userId: uid, cstTextId: uuidv4() }));
+    setReady(true);
 
   }
 
@@ -48,27 +57,35 @@ export default function CustomTextForm() {
     console.log('clicked')
     completeText();
 
-    try {
-      await setDoc(doc(db, 'customTexts', storeText.cstTextId), {
-        cstTextId: storeText.cstTextId,
-        message: storeText.message,
-        title: storeText.title,
-        userId: storeText.userId
-      }, { merge: true })
-        .then(() => { console.log('submitted to firestore') })
-      dispatch(clearText());
-      dispatch(triggerReload());
-    }
-    catch (error: any) {
-      return { error: error.message }
-    }
   }
+
+  async function sendData() {
+    await setDoc(doc(db, 'customTexts', storeText.cstTextId), {
+      cstTextId: storeText.cstTextId,
+      message: storeText.message,
+      title: storeText.title,
+      userId: storeText.userId,
+      default: storeText.default
+    }, { merge: true })
+      .then(() => { console.log('submitted to firestore') })
+      .catch((err) => alert(err));
+    /* dispatch(clearText());
+    dispatch(triggerReload()); */}
+
+
+  useEffect(() => {
+
+    sendData();
+
+  }, [ready])
+
+
 
   /* 
     useEffect(() => {
-   
+  
       console.log('check text in store:', storeText);
-   
+  
     }, [storeText]) */
 
   return (
@@ -112,7 +129,7 @@ export default function CustomTextForm() {
           />
         </Grid>
         <Grid item>
-          <FormControlLabel control={<Checkbox defaultChecked />} label="Set as default message" />
+          <FormControlLabel control={<Checkbox id="default" name="default" onChange={handleChecked} />} label="Set as default message" />
 
         </Grid>
 
