@@ -8,10 +8,9 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 import { SignalsList } from '../app/model';
 import { db } from '../DataLayer/FirestoreInit';
-import { setStoreSignalsList, resetForm } from '../features/manageSignalSlice';
-import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
+import { setStoreSignalsList, resetForm, useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 
-const CustomSignalsView = () => {
+const CustomSignalsForm = () => {
 
     //for creating user's custom emergency types
     //used as a component in the custom signals page of the regWizard, for optional setup, and in manageSignals page
@@ -19,8 +18,9 @@ const CustomSignalsView = () => {
     const dispatch = useDispatch();
     const storeSignal: SignalsList = useSelector((state: any) => state.storeSignalsList);
     const [user] = useAuthState(auth);
+    const uid = user?.uid;
 
-    //const [data] = useFetchSignalsListByIdQuery(user.uid);
+    const { data, isFetching } = useFetchSignalsListByIdQuery({ id: uid });
 
     function handleChange(e: any) {
         dispatch(setStoreSignalsList({ [e.target.name]: e.target.value }))
@@ -46,7 +46,7 @@ const CustomSignalsView = () => {
             }, { merge: true })
                 .then(() => { console.log('submitted to firestore') })
             dispatch(resetForm());
-            // dispatch(triggerReload());
+        
         }
         catch (error: any) {
             return { error: error.message }
@@ -114,4 +114,4 @@ const CustomSignalsView = () => {
     );
 };
 
-export default CustomSignalsView;
+export default CustomSignalsForm;

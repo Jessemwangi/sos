@@ -1,12 +1,12 @@
 import React from 'react';
-import CustomSignalsView from '../Components/CustomSignalsView';
+import CustomSignalsForm from '../Components/CustomSignalsForm';
 
 const CustomeSignals = () => {
-    return (
-        <React.Fragment>
-        <CustomSignalsView/>
-      </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <CustomSignalsForm />
+    </React.Fragment>
+  );
 };
 
 export default CustomeSignals;

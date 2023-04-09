@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { Recipient } from "../app/model";
 
-const recipient: Recipient = {
+const init: Recipient = {
     id: '',
     createdAt: '',
     name: '',
@@ -9,7 +9,7 @@ const recipient: Recipient = {
     phone: '',
     city: '',
     postcode: '',
-    userId: '',
+    uid: '',
     email: ''
 
 }
@@ -17,7 +17,7 @@ const recipients: Recipient[] = []
 
 const initialState = {
     popoverState: false,
-    recipient: recipient,
+    recipient: init,
     recipients: recipients,
     currentId: ""
 
@@ -39,7 +39,7 @@ export const manageRecipientsSlice = createSlice({
 
         },
         resetForm: (state) => {
-            state.recipient = recipient;
+            state.recipient = init;
         }
 
     },

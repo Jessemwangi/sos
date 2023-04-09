@@ -27,7 +27,7 @@ const RecipientEntryForm = () => {
   const [profileError, setProfileError] = useState<any>()
 
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
-  const [buttonAction, setButtonAction] = useState<string>('Save Profile')
+  const [buttonAction, setButtonAction] = useState<string>('Save Recipient')
 
   const uid = user?.uid ? user.uid : '';
 
@@ -45,9 +45,9 @@ const RecipientEntryForm = () => {
     setProfileError(error)
     if (data?.length! > 0) {
       dispatch(setRecipients(data))
-      setButtonAction("Update Profile")
+      setButtonAction("Update Recipient")
     } else if (user && !data) {
-      dispatch(updateRecipient({ userId: uid, id: uuidv4() }))
+      dispatch(updateRecipient({ uid: uid, id: uuidv4() }))
     }
 
   }, [data, dispatch, error, isFetching, uid, user])

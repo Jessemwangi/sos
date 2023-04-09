@@ -40,14 +40,14 @@ export interface Recipient {
     phone: string,
     city: string,
     postcode: string,
-    userId: string,
+    uid: string,
     email: string
 
 }
 
 export interface SignalsList {
     signalId: string,
-    uid: string,
+    uid: string | undefined,
     name: string,
     recipients: string[],
     presetMsg?: string | undefined,
@@ -73,6 +73,6 @@ export interface CustomText {
     cstTextId: string
     message: string
     title: string
-    userId: string | undefined
+    uid: string | undefined
     default: boolean
 }

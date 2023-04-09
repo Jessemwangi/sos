@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
@@ -9,14 +9,12 @@ import {
   doc, updateDoc, deleteDoc
 } from "@firebase/firestore";
 
-
-import { togglePopover } from '../features/manageRecipientsSlice';
 import { useFetchRecipientsByIdQuery } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
 import { db } from '../DataLayer/FirestoreInit';
 import { auth } from "../app/services/FirebaseAuth";
 import { Recipient } from '../app/model';
-import { resetForm } from '../features/manageRecipientsSlice';
+import { resetForm, togglePopover } from '../features/manageRecipientsSlice';
 
 
 const RecipientsViews = () => {
@@ -27,7 +25,7 @@ const RecipientsViews = () => {
 
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
-  const [targetRecipient, setTargetRecipient] = useState(recipient);
+  const [objectState, setObjectState] = useState(recipient);
 
   const {
     data,
@@ -48,63 +46,55 @@ const RecipientsViews = () => {
   }
 
   const handleChange = (e: any) => {
-    setTargetRecipient({ ...targetRecipient, [e.target.name]: e.target.value });
+    setObjectState({ ...objectState, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'recipients', `${targetRecipient.id}`), {
+      await updateDoc(doc(db, 'recipients', `${objectState.id}`), {
 
-        name: `${targetRecipient.name}`,
-        address: targetRecipient.address,
-        phone: targetRecipient.phone,
-        city: targetRecipient.city,
-        postcode: targetRecipient.postcode,
-        email: targetRecipient.email
+        name: `${objectState.name}`,
+        address: objectState.address,
+        phone: objectState.phone,
+        city: objectState.city,
+        postcode: objectState.postcode,
+        email: objectState.email
       })
-        .then(() => console.log(targetRecipient))
+        .then(() => console.log(objectState))
 
 
 
     } catch (error: any) {
-      console.log(error)
+      alert(error)
 
     }
     dispatch(resetForm());
-    setTargetRecipient(recipient);
+    setObjectState(recipient);
     dispatch(togglePopover());
   }
 
   function editButtonHandler(e: any, id: string) {
-    const currentRecipient = data!.filter((recipient) => recipient.id === id);
-    console.log(currentRecipient);
-    setTargetRecipient(currentRecipient[0]);
+    const currentItem = (data!.filter((item) => item.id === id))[0];
+    setObjectState(currentItem);
     dispatch(togglePopover());
   }
 
-
   async function deleteHandler(e: any, id: string) {
-
-    //need a popover to check
     try {
       await deleteDoc(doc(db, 'recipients', `${id}`))
         .then(() => console.log('id:', id));
-
     } catch (error: any) {
       console.log(error)
-
     }
-
-
   }
 
 
   return (
 
     <React.Fragment>
-      <Table size="small">
+      <Table size="small" className="viewsTable">
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
@@ -125,10 +115,10 @@ const RecipientsViews = () => {
               <TableCell>{recipient.phone}</TableCell>
               <TableCell>{recipient.postcode}</TableCell>
               <TableCell>{recipient.city}</TableCell>
-              <TableCell><EditIcon id={`icon${recipient.id}`}
+              <TableCell><EditIcon style={{ cursor: 'hover' }} id={`icon${recipient.id}`}
                 onClick={(e) => editButtonHandler(e, recipient.id)} />
               </TableCell>
-              <TableCell> <DeleteIcon id={`delete${recipient.id}`} onClick={(e) => deleteHandler(e, recipient.id)} /></TableCell>
+              <TableCell> <DeleteIcon style={{ cursor: 'hover' }} id={`delete${recipient.id}`} onClick={(e) => deleteHandler(e, recipient.id)} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -147,12 +137,12 @@ const RecipientsViews = () => {
         {recipient ?
           <form className="editContactForm" onChange={handleChange}>
             <label htmlFor="name">Name</label><input
-              defaultValue={targetRecipient.name}
+              defaultValue={objectState.name}
               type="text"
               name="name"
               id="nameInput"></input>
             <label htmlFor="address">Address</label><input
-              defaultValue={targetRecipient.address}
+              defaultValue={objectState.address}
               type="text"
               name="address"
               id="addressInput"></input>
@@ -160,25 +150,25 @@ const RecipientsViews = () => {
               type="text"
               name="phone"
               id="phoneInput"
-              defaultValue={targetRecipient.phone}
+              defaultValue={objectState.phone}
             ></input>
             <label htmlFor="email">Email</label><input
               type="email"
               name="email"
               id="emailInput"
-              defaultValue={targetRecipient.email}
+              defaultValue={objectState.email}
             ></input>
             <label htmlFor="postcode">Postcode</label><input
               type="text"
               name="postcode"
               id="postcodeInput"
-              defaultValue={targetRecipient.postcode}
+              defaultValue={objectState.postcode}
             ></input>
             <label htmlFor="city"></label>City<input
               type="text"
               name="city"
               id="city"
-              defaultValue={targetRecipient.city}
+              defaultValue={objectState.city}
             ></input>
             <div>
               <Button type="submit" onClick={handleSubmit}>Save</Button>
