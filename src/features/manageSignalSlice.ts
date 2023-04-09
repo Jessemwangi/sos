@@ -1,4 +1,3 @@
-import React from 'react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignalsList } from '../app/model';

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Typography, Grid, TextField, Button } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../DataLayer/FirestoreInit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
+
 import { auth } from '../app/services/FirebaseAuth';
 import { SignalsList } from '../app/model';
-
+import { db } from '../DataLayer/FirestoreInit';
 import { setStoreSignalsList, resetForm } from '../features/manageSignalSlice';
 import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 

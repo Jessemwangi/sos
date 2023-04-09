@@ -26,6 +26,7 @@ export default function CustomTextForm() {
   const { data } = useFetchMessagesByIdQuery({ id: uid })
   //const generic_message: CustomText = data 
 
+  const defaultMsg = data?.filter((msg) => { return msg.default === true });
 
   const init: CustomText = {
     cstTextId: "",//uuid generated id
@@ -44,7 +45,7 @@ export default function CustomTextForm() {
 
   function handleChecked(e: any) {
     dispatch(setText({ [e.target.name]: e.target.checked }))
-    console.log(e.target.name, e.target.checked);
+    console.log(e.currentTarget.name, e.target.checked);
   }
 
   function completeText() {
@@ -59,6 +60,21 @@ export default function CustomTextForm() {
 
   }
 
+
+/*
+
+db.collection("cities").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        doc.ref.update({
+            capital: true
+        });
+    });
+});
+
+*/
+
+
+
   async function sendData() {
     await setDoc(doc(db, 'customTexts', storeText.cstTextId), {
       cstTextId: storeText.cstTextId,
@@ -69,13 +85,16 @@ export default function CustomTextForm() {
     }, { merge: true })
       .then(() => { console.log('submitted to firestore') })
       .catch((err) => alert(err));
-    /* dispatch(clearText());
-    dispatch(triggerReload()); */}
+    dispatch(clearText());
+    dispatch(triggerReload());
+    console.log(storeText);
+  }
 
 
   useEffect(() => {
 
     sendData();
+
 
   }, [ready])
 

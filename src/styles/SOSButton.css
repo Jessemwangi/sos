@@ -16,16 +16,12 @@ button.sosButton {
     border-radius: 50px;
     background-color: var(--red);
     color: white;
-    box-shadow: 
-    inset rgb(222, 17, 17) 0 2px 35px, 
-    inset rgba(0, 0, 0, 0.15) 0px -10px 20px, 
-    inset rgb(245, 240, 240, 0.9) 0 0 5px,
-    rgba(25, 10, 25, 0.65) 5px 5px 15px;
+    box-shadow:
+        inset rgb(222, 17, 17) 0 2px 35px,
+        inset rgba(0, 0, 0, 0.15) 0px -10px 20px,
+        inset rgb(245, 240, 240, 0.9) 0 0 5px,
+        rgba(25, 10, 25, 0.65) 5px 5px 15px;
     text-shadow: 1px 1px 1px black;
-
-    display: flex;
-    justify-content: center;
-    text-align: center;
     margin: 1rem;
     border: solid 1px red;
 
