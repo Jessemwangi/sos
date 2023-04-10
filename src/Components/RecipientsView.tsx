@@ -9,11 +9,11 @@ import {
   doc, updateDoc, deleteDoc
 } from "@firebase/firestore";
 
-import { useFetchRecipientsByIdQuery } from '../app/services/firestoreAPI';
 import '../styles/RecipientsView.css';
 import { db } from '../DataLayer/FirestoreInit';
 import { auth } from "../app/services/FirebaseAuth";
 import { Recipient } from '../app/model';
+import { useFetchRecipientsByIdQuery } from '../features/manageRecipientsSlice';
 import { resetForm, togglePopover } from '../features/manageRecipientsSlice';
 
 
@@ -23,7 +23,7 @@ const RecipientsView = () => {
    */
   const dispatch = useDispatch();
   const [user] = useAuthState(auth);
-  const uid = user?.uid;
+  const uid = user?.uid ? user.uid : '';
   let open: boolean = useSelector((state: any) => state.manageRecipients.popoverState);
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
   const [objectState, setObjectState] = useState(recipient);
@@ -33,6 +33,8 @@ const RecipientsView = () => {
     isFetching,
     error
   } = useFetchRecipientsByIdQuery({ id: uid });
+  console.log(uid)
+  console.log(data)
 
   if (isFetching) {
     return <LinearProgress color="secondary" />;

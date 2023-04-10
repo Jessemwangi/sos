@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 import {
-  doc, setDoc, Timestamp
+  doc, setDoc, serverTimestamp
 } from "@firebase/firestore";
 
 import { db } from '../DataLayer/FirestoreInit';
@@ -46,11 +46,12 @@ const RecipientEntryForm = () => {
 
   }
 
+  //TODO: check that serverTimestamp is causing type or serializavle data problems when loading from firebase
+
   async function sendData() {
-    console.log(recipient); //debugging
     await setDoc(doc(db, 'recipients', recipient.id), {
       id: recipient.id,
-      createdAt: Timestamp.fromDate(new Date()),
+      createdAt: serverTimestamp(),
       name: recipient.name,
       address: recipient.address,
       phone: recipient.phone,

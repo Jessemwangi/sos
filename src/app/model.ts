@@ -14,14 +14,14 @@ export interface SignInData {
 export type LoadingState = boolean
 
 export interface Profile {
-    firstname?: string,
-    lastname?: string,
-    phone?: number | string | null,
+    firstname: string,
+    lastname: string,
+    phone: number | string | null,
     altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
-    uid?: string,
-    email?: string,
+    uid: string | undefined,
+    email: string,
     username?: string,
     addressline1?: string,
     addressline2?: string,

@@ -56,28 +56,11 @@ export const customTextApi = createApi({
             },
             providesTags: ['Messages'],
         }),
-        /*    setMessage: builder.mutation({
-               async queryFn({ docId, details }) {
-                   try {
-                       await setDoc(doc(db, 'customTexts', docId), {
-                           details
-                       }, { merge: true });
-                       return { data: null };
-                   }
-                   catch (error: any) {
-                       return { error: error.message }
-                   }
-               },
-               invalidatesTags: ['Messages'],
-           }), */
-
-
-
     })
 });
 
 
-export const { useFetchMessagesByIdQuery, /* useSetMessageMutation */ } = customTextApi;
+export const { useFetchMessagesByIdQuery } = customTextApi;
 
 
 export const { setCustomText, resetForm, togglePopover } = customTextSlice.actions;
