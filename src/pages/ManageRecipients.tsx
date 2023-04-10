@@ -1,7 +1,8 @@
-import { Typography } from '@mui/material';
-import { auth } from '../app/services/FirebaseAuth'
 import { useAuthState } from "react-firebase-hooks/auth";
-import RecipientEntryForm from '../Registration/RecipientEntryForm';
+
+import { auth } from '../app/services/FirebaseAuth'
+import RecipientEntryForm from '../Registration/RecipientEntryForm'
+import RecipientsView from '../Components/RecipientsView'
 
 const ManageRecipients = () => {
 
@@ -11,9 +12,7 @@ const ManageRecipients = () => {
 
     return (
         <div style={{ padding: '2rem' }}>
-            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                Available Recipients
-            </Typography>
+            <RecipientsView />
             <RecipientEntryForm />
         </div>
     );

@@ -26,7 +26,6 @@ export const customTextSlice = createSlice({
         setCustomText: (state: any, action: PayloadAction<object>) => { state.customText = { ...state.customText, ...action.payload } },
         togglePopover: (state) => { state.popoverState = !state.popoverState },
         resetForm: (state) => { state.customText = init },
-
     }
 });
 
@@ -57,20 +56,20 @@ export const customTextApi = createApi({
             },
             providesTags: ['Messages'],
         }),
-        setMessage: builder.mutation({
-            async queryFn({ docId, details }) {
-                try {
-                    await setDoc(doc(db, 'customTexts', docId), {
-                        details
-                    }, { merge: true });
-                    return { data: null };
-                }
-                catch (error: any) {
-                    return { error: error.message }
-                }
-            },
-            invalidatesTags: ['Messages'],
-        }),
+        /*    setMessage: builder.mutation({
+               async queryFn({ docId, details }) {
+                   try {
+                       await setDoc(doc(db, 'customTexts', docId), {
+                           details
+                       }, { merge: true });
+                       return { data: null };
+                   }
+                   catch (error: any) {
+                       return { error: error.message }
+                   }
+               },
+               invalidatesTags: ['Messages'],
+           }), */
 
 
 
@@ -78,7 +77,7 @@ export const customTextApi = createApi({
 });
 
 
-export const { useFetchMessagesByIdQuery, useSetMessageMutation } = customTextApi;
+export const { useFetchMessagesByIdQuery, /* useSetMessageMutation */ } = customTextApi;
 
 
 export const { setCustomText, resetForm, togglePopover } = customTextSlice.actions;

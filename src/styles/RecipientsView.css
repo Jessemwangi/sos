@@ -27,7 +27,3 @@
     margin: 0.5rem;
 
 }
-
-.viewsTable tbody :nth-child(1){
-    background-color: rgba(125, 125, 255, 0.5);;
-}

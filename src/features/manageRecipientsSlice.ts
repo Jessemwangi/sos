@@ -28,13 +28,13 @@ export const manageRecipientsSlice = createSlice({
     initialState,
     reducers: {
         togglePopover: (state) => { state.popoverState = !state.popoverState },
+        /* 
+                setRecipients: (state, action) => {
+                    const recipients: Recipient[] = (action.payload);
+                    state.recipients = { ...recipients };
+                }, */
 
-        setRecipients: (state, action) => {
-            const recipients: Recipient[] = (action.payload);
-            state.recipients = { ...recipients };
-        },
-
-        updateRecipient: (state, action) => {
+        setRecipient: (state, action) => {
             state.recipient = { ...state.recipient, ...action.payload }
 
         },
@@ -45,5 +45,5 @@ export const manageRecipientsSlice = createSlice({
     },
 });
 
-export const { togglePopover, setRecipients, updateRecipient, resetForm } = manageRecipientsSlice.actions;
+export const { togglePopover, setRecipient, resetForm } = manageRecipientsSlice.actions;
 export default manageRecipientsSlice.reducer

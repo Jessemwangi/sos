@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProfileForm from '../Registration/ProfileForm';
 import RecipientEntryForm from '../Registration/RecipientEntryForm';
 import CustomTextForm from '../Registration/CustomTextForm';
-import CustomSignals from '../Registration/CustomSignals';
+import CustomSignalsForm from '../Registration/CustomSignalsForm';
 import WrapUp from '../Registration/WrapUp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
@@ -20,8 +20,8 @@ import { auth } from '../app/services/FirebaseAuth';
 const steps = [
   { name: 'Biography', icon: <PersonAddIcon />, },
   { name: 'Recipients', icon: <GroupAddIcon />, },
- { name: 'Custom Text', icon: <ForumIcon />, }, 
-  /*  { name: 'Custom Signals', icon: <SosIcon />, }, */
+  { name: 'Custom Text', icon: <ForumIcon />, },
+  { name: 'Custom Signals', icon: <SosIcon />, },
   { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }
 ];
 
@@ -34,7 +34,7 @@ function getStepContent(step: number) {
     case 2:
       return <CustomTextForm />;
     case 3:
-      return <CustomSignals />;
+      return <CustomSignalsForm />;
     case 4:
       return <WrapUp />;
     default:

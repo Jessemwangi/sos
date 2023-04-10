@@ -14,7 +14,7 @@ export const firestoreApi = createApi({
 
     endpoints: (builder) => ({
 
-        fetchRecipientsById: builder.query<Recipients, { id: string }>({
+        fetchRecipientsById: builder.query<Recipients, { id: string | undefined}>({
             async queryFn(arg) {
                 const { id } = arg;
                 try {

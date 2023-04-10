@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomSignalsView from '../Components/CustomSignalsForm';
+import CustomSignalsView from '../Registration/CustomSignalsForm';
 import SetPinnedSignals from '../Components/SetPinnedSignals';
 
 const ManageSignals = () => {

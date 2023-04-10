@@ -38,14 +38,14 @@ export default function CustomTextForm() {
   
     } */
 
-  function completeText() {
+  function completeData() {
     dispatch(setCustomText({ uid: uid, cstTextId: uuidv4() }));
     setReadyState(true);
 
   }
 
   async function handleSubmit() {
-    completeText();
+    completeData();
 
 
   }

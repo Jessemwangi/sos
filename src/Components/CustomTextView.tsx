@@ -30,6 +30,8 @@ const CustomTextView = () => {
     isFetching,
   } = useFetchMessagesByIdQuery({ id: uid });
 
+
+    /*POPOVER FUNCTIONS FOR EDITING MESSAGES */
   function editButtonHandler(e: any, id: string) {
     dispatch(togglePopover());
     const currentItem = (data!.filter((item) => item.cstTextId === id))[0];
@@ -70,13 +72,15 @@ const CustomTextView = () => {
     dispatch(togglePopover());
   }
 
+   /*END POPOVER FUNCTIONS */
+
 
   return (
     <React.Fragment>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Available Messaging Text
       </Typography>
-      <Table size="small">
+      <Table size="small" className="viewsTable">
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
@@ -88,16 +92,18 @@ const CustomTextView = () => {
             <TableRow key={row.cstTextId}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
-              <TableCell><EditIcon style={{ cursor: 'pointer' }} id={`icon${row.cstTextId}`}
+              <TableCell><EditIcon className='icon' id={`icon${row.cstTextId}`}
                 onClick={(e) => editButtonHandler(e, row.cstTextId)} />
               </TableCell>
-              <TableCell> <DeleteIcon style={{ cursor: 'pointer' }} id={`delete${row.cstTextId}`} onClick={(e) => deleteHandler(e, row.cstTextId)} /></TableCell>
+              <TableCell> <DeleteIcon className='icon' id={`delete${row.cstTextId}`} onClick={(e) => deleteHandler(e, row.cstTextId)} /></TableCell>
             </TableRow>
           )))
             : <></>
           }
         </TableBody>
       </Table>
+
+
       <Dialog
         className="editMessagesDialog"
         open={open}
