@@ -21,7 +21,7 @@ const steps = [
   { name: 'Biography', icon: <PersonAddIcon />, },
   { name: 'Recipients', icon: <GroupAddIcon />, },
  { name: 'Custom Text', icon: <ForumIcon />, }, 
-  /*  { name: 'Custom Signals', icon: <SosIcon />, }, */
+ { name: 'Custom Signals', icon: <SosIcon />, }, 
   { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }
 ];
 
@@ -121,7 +121,7 @@ const CompleteReg = () => {
                       onClick={handleNext}
                       sx={{ mt: 3, ml: 1 }}
                     >
-                      {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                      {activeStep === steps.length - 1 ? 'View Summary' : 'Next'}
                     </Button>
                   </Box>
                 </React.Fragment>

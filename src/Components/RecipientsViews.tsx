@@ -10,7 +10,7 @@ import {
 } from "@firebase/firestore";
 
 
-import { togglePopover } from '../features/manageRecipientsSlice';
+import { setRecipients, togglePopover } from '../features/manageRecipientsSlice';
 import { useFetchRecipientsByIdQuery } from '../app/services/firestoreAPI';
 import '../styles/RecipientsViews.css';
 import { db } from '../DataLayer/FirestoreInit';
@@ -26,6 +26,7 @@ const RecipientsViews = () => {
 
 
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
+  const recipients: Recipient[] = useSelector((state: any) => state.manageRecipients.recipients);
   let open = useSelector((state: any) => state.manageRecipients.popoverState);
   const [targetRecipient, setTargetRecipient] = useState(recipient);
 
@@ -35,6 +36,13 @@ const RecipientsViews = () => {
     error
   } = useFetchRecipientsByIdQuery({ id: uid });
 
+  useEffect(() => {
+    if (!isFetching && data) {
+      dispatch(setRecipients(data));
+      
+    }
+  }, [data, dispatch, isFetching,recipient])
+  
   if (isFetching) {
     return <LinearProgress color="secondary" />;
   }
@@ -117,7 +125,7 @@ const RecipientsViews = () => {
         </TableHead>
         <TableBody>
 
-          {data && data.map((recipient) => (
+          {recipients && recipients.map((recipient) => (
             <TableRow key={recipient.id} >
               <TableCell>{recipient.createdAt}</TableCell>
               <TableCell>{recipient.name}</TableCell>
