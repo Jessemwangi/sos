@@ -47,11 +47,12 @@ const RecipientEntryForm = () => {
   }
 
   //TODO: check that serverTimestamp is causing type or serializavle data problems when loading from firebase
+  // --> yes
 
   async function sendData() {
     await setDoc(doc(db, 'recipients', recipient.id), {
       id: recipient.id,
-      createdAt: serverTimestamp(),
+      createdAt: /* serverTimestamp() */"",
       name: recipient.name,
       address: recipient.address,
       phone: recipient.phone,

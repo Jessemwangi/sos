@@ -33,8 +33,7 @@ const RecipientsView = () => {
     isFetching,
     error
   } = useFetchRecipientsByIdQuery({ id: uid });
-  console.log(uid)
-  console.log(data)
+
 
   if (isFetching) {
     return <LinearProgress color="secondary" />;
@@ -100,7 +99,7 @@ const RecipientsView = () => {
   }
 
   /*END POPOVER FUNCTIONS */
-  console.log(data);
+
 
   return (
     <>
