@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Grid, TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
-import { doc, setDoc, collection, getDocs, query, where, updateDoc } from "@firebase/firestore";
+import { Typography, Grid, TextField, Button, /* Checkbox, FormControlLabel */ } from '@mui/material';
+import { doc, setDoc, /* collection, getDocs, query, where, updateDoc */ } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Grid, TextField, Button } from '@mui/material';
+import { Typography, Grid, TextField, Button, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import { auth } from '../app/services/FirebaseAuth';
 import { SignalsList } from '../app/model';
 import { db } from '../DataLayer/FirestoreInit';
 import { setStoreSignalsList, resetForm, useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
+import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 
 const CustomSignalsForm = () => {
 
@@ -21,6 +22,8 @@ const CustomSignalsForm = () => {
     const uid = user?.uid;
 
     const { data, isFetching } = useFetchSignalsListByIdQuery({ id: uid });
+
+    // const {messageData} = useFetchMessagesByIdQuery({ id: uid });
 
     function handleChange(e: any) {
         dispatch(setStoreSignalsList({ [e.target.name]: e.target.value }))
@@ -46,7 +49,7 @@ const CustomSignalsForm = () => {
             }, { merge: true })
                 .then(() => { console.log('submitted to firestore') })
             dispatch(resetForm());
-        
+
         }
         catch (error: any) {
             return { error: error.message }
@@ -73,6 +76,23 @@ const CustomSignalsForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
+                    <FormControl fullWidth>
+                        <InputLabel id="message">Message</InputLabel>
+                        <Select
+                            labelId="message"
+                            id="messageSelect"
+
+                            label="Message"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={10}>Ten</MenuItem>
+                            <MenuItem value={20}>Twenty</MenuItem>
+                            <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                    </FormControl>
+
+
+
                     <TextField
                         required
                         id="recipients"
@@ -85,16 +105,7 @@ const CustomSignalsForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        required
-                        id="message"
-                        name="message"
-                        label="Choose message"
-                        fullWidth
-                        autoComplete="cc-message"
-                        variant="standard"
-                        onChange={handleChange}
-                    />
+
                 </Grid>
 
                 <Grid item xs={12}>
