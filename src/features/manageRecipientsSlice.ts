@@ -31,7 +31,7 @@ export const manageRecipientsSlice = createSlice({
 
         setRecipients: (state, action) => {
             const recipients: Recipient[] = (action.payload);
-            state.recipients = { ...recipients };
+            state.recipients = [...recipients ];
         },
 
         updateRecipient: (state, action) => {
