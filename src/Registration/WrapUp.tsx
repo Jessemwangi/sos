@@ -17,10 +17,10 @@ import { useFetchRecipientsQuery } from "../app/services/firestoreAPI";
 const WrapUp = () => {
   const [user] = useAuthState(auth);
   const uid = user?.uid;
-    const messages_Data = useFetchMessagesByIdQuery({ id: uid });
-    const recipients_Data = useFetchRecipientsQuery({ para1: uid });
-    const messages = messages_Data.data;
-    const recipients = recipients_Data.data;
+  const messages_Data = useFetchMessagesByIdQuery({ id: uid });
+  const recipients_Data = useFetchRecipientsQuery({ para1: uid });
+  const messages = messages_Data.data;
+  const recipients = recipients_Data.data;
   console.log(recipients);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -42,11 +42,11 @@ const WrapUp = () => {
       border: 0,
     },
   }));
-    
-    const legendCss = {
-        "padding": "1rem",
-        "marginBottom":"2rem",
-    }
+
+  const legendCss = {
+    padding: "1rem",
+    marginBottom: "2rem",
+  };
 
   if (!user) {
     return (
@@ -56,7 +56,7 @@ const WrapUp = () => {
     );
   }
   return (
-    <div style={{"padding":"1rem"}}>
+    <div style={{ padding: "1rem" }}>
       <fieldset style={legendCss}>
         <legend>Contact List</legend>
         <TableContainer component={Paper}>
@@ -64,8 +64,8 @@ const WrapUp = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell>Name</StyledTableCell>
-                              <StyledTableCell align="center">Email Address</StyledTableCell>
-                              <StyledTableCell align="center">Contact</StyledTableCell>
+                <StyledTableCell align="center">Email Address</StyledTableCell>
+                <StyledTableCell align="center">Contact</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -77,8 +77,8 @@ const WrapUp = () => {
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {rcp.email}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
                       {rcp.phone}
                     </StyledTableCell>
                   </StyledTableRow>
@@ -87,7 +87,7 @@ const WrapUp = () => {
           </Table>
         </TableContainer>
       </fieldset>
-      <fieldset  style={legendCss}>
+      <fieldset style={legendCss}>
         <legend>SOS Custom Messages</legend>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 400 }} aria-label="customized table">
@@ -113,14 +113,16 @@ const WrapUp = () => {
           </Table>
         </TableContainer>
       </fieldset>
-      <fieldset  style={legendCss}>
+      <fieldset style={legendCss}>
         <legend>SOS pre-Configured Distress Signal</legend>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 400 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Title</StyledTableCell>
+                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell align="center">Title</StyledTableCell>
                 <StyledTableCell align="center">Message</StyledTableCell>
+                <StyledTableCell align="center">Default</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -128,10 +130,16 @@ const WrapUp = () => {
                 messages.map((msg) => (
                   <StyledTableRow key={msg.cstTextId}>
                     <StyledTableCell component="th" scope="row">
+                      {msg.cstTextId}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       {msg.title}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {msg.message}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {msg.default}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
