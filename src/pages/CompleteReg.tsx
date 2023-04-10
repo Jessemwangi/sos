@@ -1,6 +1,6 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline';
-import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography , LinearProgress} from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography, LinearProgress } from '@mui/material';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ForumIcon from '@mui/icons-material/Forum';
@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import ProfileForm from '../Registration/ProfileForm';
 import RecipientEntryForm from '../Registration/RecipientEntryForm';
-import CustomTextForm from '../Registration/CustomTextEntryForm';
+import CustomTextForm from '../Registration/CustomTextForm';
 import CustomSignals from '../Registration/CustomSignals';
 import WrapUp from '../Registration/WrapUp';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -20,8 +20,8 @@ import { auth } from '../app/services/FirebaseAuth';
 const steps = [
   { name: 'Biography', icon: <PersonAddIcon />, },
   { name: 'Recipients', icon: <GroupAddIcon />, },
-  { name: 'Custom Text', icon: <ForumIcon />, },
-  { name: 'Custom Signals', icon: <SosIcon />, },
+ { name: 'Custom Text', icon: <ForumIcon />, }, 
+  /*  { name: 'Custom Signals', icon: <SosIcon />, }, */
   { name: 'Wrap Up', icon: <AssignmentTurnedInIcon />, }
 ];
 

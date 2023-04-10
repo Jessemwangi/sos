@@ -4,7 +4,27 @@
 
 SOS is a mobile-first web application developed using Typescript and a Firebase Firestore backend. Its primary objective is to provide a quick and easy way to send a distress signal via SMS and email to a predefined list of contacts. The application is designed with simplicity in mind and optimized for use on mobile devices, making it easy to use even in high-stress situations. With SOS, users can quickly notify their contacts and seek help in emergencies with just a few taps on their phone.
 
-### How to use
+### Starting the application
+
+In development mode, the Node Twilio server and React frontend can be started simultaneously with the commmand
+```shell
+npm run all
+```
+which uses the <a href="https://github.com/mysticatea/npm-run-all">npm-run-all</a> package.
+
+To test the frontend only, use the standard react scripts startup command:
+```shell
+npm start
+```
+
+The server can be run with the command:
+```shell
+npm run server
+```
+By default, the server runs on port 3004. This can be changed from the server config file.
+Note that if running in development mode you will need a Twilio account and authToken to use the SMS functionality. These variables should be added to the .env file.
+
+### How to use the application
 
 #### Setup
 

@@ -1,7 +1,7 @@
 import { Recipient, Profile } from '../model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../../DataLayer/FirestoreInit";
-import { onSnapshot, where, query, getDoc, collection, getDocs, doc, updateDoc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
+import { where, query, getDoc, collection, getDocs, doc, updateDoc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
 
 
 type Recipients = Recipient[];
@@ -16,26 +16,26 @@ export const firestoreApi = createApi({
 
         fetchRecipientsById: builder.query<Recipients, { id: string }>({
             async queryFn(arg) {
-              const { id } = arg;
-              try {
-                const q = query(
-                  collection(db, 'recipients'),
-                  where('userId', '==', id),
-                );
-                const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-                let recipients: Recipients = [];
-                  querySnapshot?.forEach((doc) => {
-                  recipients.push({ id: doc.id, ...doc.data() } as Recipient)
-                });
-                return { data: recipients };
-              } catch (error: any) {
-                  return { error: error.message };
-              }
+                const { id } = arg;
+                try {
+                    const q = query(
+                        collection(db, 'recipients'),
+                        where('userId', '==', id),
+                    );
+                    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+                    let recipients: Recipients = [];
+                    querySnapshot?.forEach((doc) => {
+                        recipients.push({ id: doc.id, ...doc.data() } as Recipient)
+                    });
+                    return { data: recipients };
+                } catch (error: any) {
+                    return { error: error.message };
+                }
             },
             providesTags: ['Recipients'],
-          }),
-          
- fetchRecipients: builder.query<Recipients, { para1: string | undefined }>({
+        }),
+
+        fetchRecipients: builder.query<Recipients, { para1: string | undefined }>({
             async queryFn(arg) {
                 const { para1 } = arg;
                 // console.log('arg', arg)
@@ -57,8 +57,8 @@ export const firestoreApi = createApi({
                 }
             },
             providesTags: ['Recipients'],
- }),
- 
+        }),
+
         setRecipient: builder.mutation({
             async queryFn({ recipientId, details }) {
                 try {
@@ -89,7 +89,7 @@ export const firestoreApi = createApi({
                         return { data: profile }
                     }
                     else {
-                        profile={}
+                        profile = {}
                         return { data: profile }
                     }
                 }
@@ -120,20 +120,4 @@ export const firestoreApi = createApi({
 });
 
 
-export const {useFetchRecipientsByIdQuery, useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
-
-
-
-/* No overload matches this call. //db, collection, docId ....array of strings?
-  Overload 1 of 3, '(firestore: Firestore, path: string, ...pathSegments: string[]): DocumentReference<DocumentData>', gave the following error.
-    Argument of type '{ id: string; }' is not assignable to parameter of type 'string'.
-
-  Overload 2 of 3, '(reference: CollectionReference<unknown>, path?: string | undefined, ...pathSegments: string[]): DocumentReference<unknown>', gave the following error.
-    Argument of type 'Firestore' is not assignable to parameter of type 'CollectionReference<unknown>'.
-
-      Type 'Firestore' is missing the following properties from type 'CollectionReference<unknown>': id, path, parent, withConverter, and 2 more.
-
-  Overload 3 of 3, '(reference: DocumentReference<unknown>, path: string, ...pathSegments: string[]): DocumentReference<DocumentData>', gave the following error.
-    Argument of type 'Firestore' is not assignable to parameter of type 'DocumentReference<unknown>'.
-      Type 'Firestore' is missing the following properties from type 'DocumentReference<unknown>': converter, firestore, id, path, and 2 more.ts(2769)
- */
+export const { useFetchRecipientsByIdQuery, useFetchRecipientsQuery, useSetRecipientMutation, useFetchProfileQuery, useSetProfileMutation } = firestoreApi;
