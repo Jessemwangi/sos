@@ -1,16 +1,31 @@
+div.sosButtonContainer {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
 button.sosButton {
-    height: 200px;
+    height: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     line-height: 200px;
-    width: 350px;
+    width: 35vw;
     border-radius: 50px;
     background-color: var(--red);
     color: white;
-
-    display: flex;
-    justify-content: center;
-    text-align: center;
+    box-shadow:
+        inset rgb(222, 17, 17) 0 2px 35px,
+        inset rgba(0, 0, 0, 0.15) 0px -10px 20px,
+        inset rgb(245, 240, 240, 0.9) 0 0 5px,
+        rgba(25, 10, 25, 0.65) 5px 5px 15px;
+    text-shadow: 1px 1px 1px black;
     margin: 1rem;
-    border: solid 3px red;
+    border: solid 1px red;
+
+
 }
 
 button.sosButton span {
@@ -21,8 +36,17 @@ button.sosButton span {
 
 button.sosButton:hover {
     background-color: red;
+    box-shadow: rgba(0, 0, 0, 0.8) 0 0 8px,
+        inset rgba(0, 0, 0, 0.15) 0px -10px 20px;
 }
 
+button.sosButton:active {
+    box-shadow: rgba(255, 255, 255, 0.25) 0px 1px 0px,
+        inset rgba(255, 255, 255, 0.03) 0px 20px 0px,
+        inset rgba(0, 0, 0, 0.15) 0px -20px 20px,
+        inset rgba(255, 255, 255, 0.05) 0px 20px 20px;
+
+}
 
 button.sosButton.flash {
     animation: flash 0.5s linear infinite;
@@ -36,5 +60,26 @@ button.sosButton.flash {
     to {
         background-color: var(--orange);
         box-shadow: 5px 5px 5px var(--orange);
+
+    }
+}
+
+@media screen and (max-width: 850px) {
+    button.sosButton {
+        height: 30vh;
+        width: 50vw;
+        font-size: 50px;
+
+    }
+}
+
+@media screen and (max-width: 600px) {
+    button.sosButton {
+        height: 25vh;
+        width: 70vw;
+    }
+
+    button.sosButton span {
+        font-size: 50px;
     }
 }

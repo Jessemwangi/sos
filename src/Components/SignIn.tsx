@@ -1,10 +1,11 @@
-import { toggleSigninModal } from '../features/headerSlice';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  SignInData, SignUpData, SosUser } from '../app/model';
-import { signInUser } from '../app/services/FirebaseAuth';
-import React from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+
+import { toggleSigninModal } from '../features/headerSlice';
+import { SignInData } from '../app/model';
+import { auth, signInUser } from '../app/services/FirebaseAuth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const SignIn = () => {
 
@@ -19,8 +20,7 @@ const SignIn = () => {
     //only for local state signin process
     const [signinData, setSigninData] = useState(init);
 
-    const sosUser: SosUser = useSelector((state: any) => state.user.sosUser)
-    const loggedIn: boolean = useSelector((state: any) => state.user.loggedIn)
+    const [user] = useAuthState(auth);
 
     function changeHandler(e: any) {
         setSigninData({ ...signinData, [e.currentTarget.name]: e.currentTarget.value });
@@ -28,7 +28,12 @@ const SignIn = () => {
 
     function handleSignIn(e: any, signinData: SignInData) {
         e.preventDefault();
+
         signInUser(signinData.email, signinData.password)
+
+        //TOFIX: error alert if account doesn't exist
+
+
     }
 
     return (
@@ -38,7 +43,7 @@ const SignIn = () => {
             aria-labelledby="modal-register"
             aria-describedby="modal-modal-description">
             <DialogTitle>Sign In with Email</DialogTitle>
-            {!loggedIn ? (<>
+            {!user ? (<>
                 <DialogContent>
                     <DialogContentText>Enter your account email and password</DialogContentText>
                     <form>
@@ -75,7 +80,7 @@ const SignIn = () => {
                 </DialogActions>
             </>) : (<>
                 <DialogContent>
-                    <DialogContentText>{`Hi ${sosUser.name}, you have been signed in. `}</DialogContentText>
+                    <DialogContentText>{`Hi ${user?.displayName}, you have been signed in. `}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button type="button" onClick={() => dispatch(toggleSigninModal(false))}>Close</Button>

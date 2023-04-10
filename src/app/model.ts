@@ -1,20 +1,3 @@
-
-export interface Guser {
-    name: string
-    email: null | string
-    picture: string
-    iat: number
-    iss: string
-    jti: string
-    sub: number | string
-}
-
-export interface SosUser {
-    name: null | string
-    email: null | string
-    uid: string
-}
-
 export interface SignUpData {
     email: string
     password: string
@@ -26,13 +9,11 @@ export interface SignUpData {
 export interface SignInData {
     email: string
     password: string
-
 }
 
 export type LoadingState = boolean
 
 export interface Profile {
-    /*  id: number | string */
     firstname?: string,
     lastname?: string,
     phone?: number | string | null,
@@ -60,34 +41,38 @@ export interface Recipient {
     city: string,
     postcode: string,
     userId: string,
-    email:string
+    email: string
 
 }
 
-export interface signalsList {
+export interface SignalsList {
     signalId: string,
     uid: string,
     name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
+    recipients: string[],
+    presetMsg?: string | undefined,
+    cstTextId?: string | undefined,
+    createdAt?: Date | string,
+    pinned: boolean
+    default: boolean
 }
 
-export interface geoCodes {
+export interface GeoCodes {
     lat: number,
     lon: number
 }
 
-export interface signal {
+export interface Signal {
     signalId: string,
     uid: string | undefined,
-    createdAt: Date,
-    geolocation: geoCodes
+    createdAt: Date | string,
+    geolocation: GeoCodes
 }
 
-export interface customTexts {
-    cstTextId: number
+export interface CustomText {
+    cstTextId: string
     message: string
     title: string
+    userId: string | undefined
+    default: boolean
 }

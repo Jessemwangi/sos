@@ -4,7 +4,7 @@ import '../styles/HowTo.css';
 
 const HowTo = () => {
     return (
-        <div className="howTo">
+        <div className="howTo" style={{padding: '2rem'}}>
             <Typography variant="h3">Help and Documentation</Typography>
             <Typography variant="h4">About SOS</Typography>
             <p>SOS Service provides a rapid and simple way of contacting multiple people with a predefined message in case of distress or emergency .</p>
