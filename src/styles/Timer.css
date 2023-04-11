@@ -1,21 +1,22 @@
 div.timer {
-    /* display: flex; */
+    display: flex;
     padding: 1rem 0;
     align-items: center-top;
     height: 160px;
     width: 160px;
+    cursor: pointer;
     position: relative;
     border-radius: 50%;
     background-color: rgba(25, 22, 22, 0.8);
     box-shadow: inset black 0 0 2px,
         inset rgba(15, 5, 15, 0.8) 0 0 38px,
         inset rgba(40, 40, 90, 0.5) 0 0 60px;
-    display: none;
+    /*  display: none; */
 
 }
 
 div.ticker {
-    display: none;
+    /* display: none; */
     height: 160px;
     width: 10px;
     background: linear-gradient(red, red 50%, rgba(25, 22, 22, 0.2) 50%, rgba(25, 22, 22, 0.2));

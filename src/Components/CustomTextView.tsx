@@ -1,37 +1,35 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Dialog, Button } from '@mui/material';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 import { db } from '../DataLayer/FirestoreInit';
-import { useFetchMessagesByIdQuery, resetForm, togglePopover, toggleDeletePopover } from '../features/customTextSlice';
-import { auth } from '../app/services/FirebaseAuth';
+import { customTextApi, resetForm, togglePopover, toggleDeletePopover } from '../features/customTextSlice';
 import { CustomText } from '../app/model';
 import DiscardPopover from '../Components/DiscardPopover';
 
+type CustomTexts = CustomText[];
+interface Props {
+  data: CustomTexts | undefined,
+  isFetching: boolean,
+  error: any
+}
 
-const CustomTextView = () => {
+const CustomTextView = ({ data, isFetching, error }: Props) => {
   /** Shows results from database
    * allows user to delete customTexts or edit in popover 
    */
 
   const dispatch = useDispatch();
-  const [user] = useAuthState(auth);
-  const uid = user?.uid;
   let open: boolean = useSelector((state: any) => state.customText.popoverState);
   const customText: CustomText = useSelector((state: any) => state.customText.customText)
   const [objectState, setObjectState] = useState(customText);
   const deletePopoverOpen = useSelector((state: any) => state.customText.deletePopoverOpen)
   const [deleteId, setDeleteId] = useState("");
 
-  const {
-    data,
-    isFetching,
-  } = useFetchMessagesByIdQuery({ id: uid });
-
+  const defaultText = data?.filter((item) => item.id === 'DEFAULT')[0];
 
   /*POPOVER FUNCTIONS FOR EDITING MESSAGES */
   function editButtonHandler(e: any, id: string) {
@@ -40,7 +38,6 @@ const CustomTextView = () => {
       const currentItem = (data.filter((item) => item.id === id))[0];
       setObjectState(currentItem);
     }
-
   }
 
   const handleChange = (e: any) => {
@@ -72,6 +69,7 @@ const CustomTextView = () => {
     }
     dispatch(resetForm());
     dispatch(togglePopover());
+    dispatch(customTextApi.util.invalidateTags(['Messages']))
   }
 
   /*END EDITPOPOVER FUNCTIONS */
@@ -81,13 +79,13 @@ const CustomTextView = () => {
 
   function deleteCloseHandler() {
     dispatch(toggleDeletePopover)
-
   }
 
   const yesHandler = async () => {
     try {
       await deleteDoc(doc(db, 'customTexts', deleteId))
         .then(() => console.log('id:', deleteId));
+      dispatch(customTextApi.util.invalidateTags(['Messages']))
 
     } catch (error: any) {
       console.log(error);
@@ -98,7 +96,6 @@ const CustomTextView = () => {
 
   const noHandler = () => {
     dispatch(toggleDeletePopover());
-    return
   }
 
 
@@ -130,6 +127,10 @@ const CustomTextView = () => {
         </TableBody>
       </Table>
 
+      <div style={{ margin: '5% 10%' }}><p>   Your current default text message is:
+        <span style={{ display: 'block', fontWeight: '800', margin: '2% 20%', padding: '2rem', border: '1px solid black' }}>{defaultText?.message}</span>
+        This is the message that will be sent if no specific signal type is chosen.
+        You can add personalised messages below.</p></div>
 
       <Dialog
         className="editMessagesDialog"

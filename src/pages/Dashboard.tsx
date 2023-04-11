@@ -16,10 +16,10 @@ const Dashboard = () => {
         clearTimeout(sosTimer);
     }
 
-/*     useEffect(() => {
+    useEffect(() => {
         if (active === true) { console.log('detecting active button') }
-    }, [dispatch, active])
- */
+    }, [active])
+
 
 
     /*   Checks on timer state, when ready fires post request to twilio server endpoint: */
@@ -41,11 +41,13 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="sosButtonContainer">
                 <SOSButton />
-                <div><Timer /></div>
+                {/*       <div><Timer /></div> */}
             </div>
 
-            {active ? (<div className="activation-text"><span >SOS has been activated. Select emergency type : </span>
-                <div className="sosMenuContainer"><SOSMenu />
+            {active ? (<div className="activation-text">
+                <span >SOS has been activated. Select emergency type : </span>
+                <div className="sosMenuContainer">
+                    <SOSMenu />
                 </div>
             </div>)
                 : (<></>

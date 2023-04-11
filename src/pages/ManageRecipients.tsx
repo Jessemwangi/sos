@@ -3,7 +3,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from '../app/services/FirebaseAuth'
 import RecipientEntryForm from '../Registration/RecipientEntryForm'
 import RecipientsView from '../Components/RecipientsView'
-import { Recipient } from '../app/model';
 import { useFetchRecipientsByIdQuery } from '../features/manageRecipientsSlice';
 
 const ManageRecipients = () => {

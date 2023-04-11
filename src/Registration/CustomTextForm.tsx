@@ -8,9 +8,14 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { db } from '../DataLayer/FirestoreInit';
 import { CustomText } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
-import { setCustomText, resetForm } from '../features/customTextSlice';
-import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
+import { customTextApi, setCustomText, resetForm } from '../features/customTextSlice';
 
+/* type CustomTexts = CustomText[];
+interface Props {
+  data: CustomTexts | undefined,
+  isFetching: boolean,
+  error: any
+} */
 
 export default function CustomTextForm() {
 
@@ -24,12 +29,9 @@ export default function CustomTextForm() {
   const customText: CustomText = useSelector((state: any) => state.customText.customText)
   // const [objectState, setObjectState] = useState(init);
 
-  const { data } = useFetchMessagesByIdQuery({ id: uid })
-
   const titleInput = useRef<HTMLInputElement>();
   const messageInput = useRef<HTMLInputElement>();
 
-  const defaultText = data?.filter((item) => item.id === 'DEFAULT_MESSAGE')[0];
 
   function handleChange(e: any) {
     dispatch(setCustomText({ [e.target.name]: e.target.value }))
@@ -64,6 +66,7 @@ export default function CustomTextForm() {
       .then(() => { console.log('submitted to firestore') })
       .catch((err) => alert(err));
     dispatch(resetForm());
+    dispatch(customTextApi.util.invalidateTags(['Messages']))
 
     console.log(customText);
   }
@@ -80,10 +83,7 @@ export default function CustomTextForm() {
       <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
         Add Customized Text
       </Typography>
-      <p>   Your current default text message is:
-        <span style={{ display: 'block', fontWeight: '800', margin: '5% 30%', padding: '2rem', border: '1px solid black' }}>{defaultText?.message}</span>
-        This is the message that will be sent if no specific signal type is chosen.
-        You can add personalised messages below.</p>
+      
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>

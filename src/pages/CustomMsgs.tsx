@@ -1,29 +1,29 @@
 import React from 'react';
 import CustomTextView from '../Components/CustomTextView';
 import CustomTextEntryForm from '../Registration/CustomTextForm';
-import { connect } from 'react-redux';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../app/services/FirebaseAuth';
+import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 
-type Props = {
-    reload: boolean
-}
-
-
-const CustomMsgs = ({ reload }: Props) => {
+const CustomMsgs = () => {
     //For managing custom messages
 
+    const [user] = useAuthState(auth);
+    const uid = user?.uid;
 
+    const {
+        data,
+        isFetching,
+        error
+    } = useFetchMessagesByIdQuery({ id: uid });
+
+  
     return (
         <div style={{ padding: '2rem' }}>
-            <CustomTextView />
+            <CustomTextView data={data} isFetching={isFetching} error={error} />
             <CustomTextEntryForm />
         </div>
     );
 
 };
-const mapStateToProps = function (state: any) {
-    return {
-        customText: state.customText.customText,
-        reload: state.customText.reload
-    }
-}
-export default connect(mapStateToProps)(CustomMsgs);
+export default CustomMsgs
