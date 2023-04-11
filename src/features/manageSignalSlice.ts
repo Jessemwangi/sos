@@ -1,9 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignalsList } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
-import { where, query, collection, getDocs, doc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
-import { FlashAutoRounded } from '@mui/icons-material';
+import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 
 
 type UserSignals = SignalsList[];

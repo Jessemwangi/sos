@@ -123,7 +123,6 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
 
   const noHandler = () => {
     dispatch(toggleDeletePopover());
-    return
   }
 
 

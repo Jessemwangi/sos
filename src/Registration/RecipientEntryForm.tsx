@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 import {
-  doc, setDoc, serverTimestamp, Timestamp
+  doc, setDoc, /* serverTimestamp, Timestamp */
 } from "@firebase/firestore";
 
 import { db } from '../DataLayer/FirestoreInit';

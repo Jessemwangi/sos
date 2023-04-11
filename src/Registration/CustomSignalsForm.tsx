@@ -8,8 +8,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 import { SignalsList } from '../app/model';
 import { db } from '../DataLayer/FirestoreInit';
-import { setStoreSignalsList, resetForm} from '../features/manageSignalSlice';
-//import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
+import { setStoreSignalsList, signalsListApi, resetForm } from '../features/manageSignalSlice';
 
 const CustomSignalsForm = () => {
 
@@ -20,8 +19,6 @@ const CustomSignalsForm = () => {
     const storeSignal: SignalsList = useSelector((state: any) => state.storeSignalsList);
     const [user] = useAuthState(auth);
     const uid = user?.uid;
-
-    // const {data} = useFetchMessagesByIdQuery({ id: uid });
 
     function handleChange(e: any) {
         dispatch(setStoreSignalsList({ [e.target.name]: e.target.value }))
@@ -46,6 +43,7 @@ const CustomSignalsForm = () => {
             }, { merge: true })
                 .then(() => { console.log('submitted to firestore') })
             dispatch(resetForm());
+            dispatch(signalsListApi.util.invalidateTags(['UserSignals']))
 
         }
         catch (error: any) {
