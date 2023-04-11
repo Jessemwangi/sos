@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Dialog, Button } from '@mui/material';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useSelector } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 import { db } from '../DataLayer/FirestoreInit';
-import { useFetchMessagesByIdQuery, resetForm, togglePopover } from '../features/customTextSlice';
+import { useFetchMessagesByIdQuery, resetForm, togglePopover, toggleDeletePopover } from '../features/customTextSlice';
 import { auth } from '../app/services/FirebaseAuth';
 import { CustomText } from '../app/model';
+import DiscardPopover from '../Components/DiscardPopover';
 
 
 const CustomTextView = () => {
@@ -24,6 +24,8 @@ const CustomTextView = () => {
   let open: boolean = useSelector((state: any) => state.customText.popoverState);
   const customText: CustomText = useSelector((state: any) => state.customText.customText)
   const [objectState, setObjectState] = useState(customText);
+  const deletePopoverOpen = useSelector((state: any) => state.customText.deletePopoverOpen)
+  const [deleteId, setDeleteId] = useState("");
 
   const {
     data,
@@ -31,11 +33,13 @@ const CustomTextView = () => {
   } = useFetchMessagesByIdQuery({ id: uid });
 
 
-    /*POPOVER FUNCTIONS FOR EDITING MESSAGES */
+  /*POPOVER FUNCTIONS FOR EDITING MESSAGES */
   function editButtonHandler(e: any, id: string) {
     dispatch(togglePopover());
-    const currentItem = (data!.filter((item) => item.cstTextId === id))[0];
-    setObjectState(currentItem);
+    if (data) {
+      const currentItem = (data.filter((item) => item.id === id))[0];
+      setObjectState(currentItem);
+    }
 
   }
 
@@ -47,20 +51,18 @@ const CustomTextView = () => {
     dispatch(togglePopover());
   }
 
+
   async function deleteHandler(e: any, id: string) {
-    try {
-      await deleteDoc(doc(db, 'customTexts', `${id}`))
-        .then(() => console.log('id:', id));
-    } catch (error: any) {
-      console.log(error)
-    }
+    setDeleteId(id);
+    dispatch(toggleDeletePopover());
+
   }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'customTexts', objectState.cstTextId), {
+      await updateDoc(doc(db, 'customTexts', objectState.id), {
         title: objectState.title,
         message: objectState.message,
         default: objectState.default,
@@ -72,7 +74,32 @@ const CustomTextView = () => {
     dispatch(togglePopover());
   }
 
-   /*END POPOVER FUNCTIONS */
+  /*END EDITPOPOVER FUNCTIONS */
+
+
+  /** Delete popover functions */
+
+  function deleteCloseHandler() {
+    dispatch(toggleDeletePopover)
+
+  }
+
+  const yesHandler = async () => {
+    try {
+      await deleteDoc(doc(db, 'customTexts', deleteId))
+        .then(() => console.log('id:', deleteId));
+
+    } catch (error: any) {
+      console.log(error);
+    }
+    setDeleteId("");
+    dispatch(toggleDeletePopover());
+  }
+
+  const noHandler = () => {
+    dispatch(toggleDeletePopover());
+    return
+  }
 
 
   return (
@@ -89,13 +116,13 @@ const CustomTextView = () => {
         </TableHead>
         <TableBody>
           {!isFetching && data?.length !== 0 ? (data?.map((row) => (
-            <TableRow key={row.cstTextId}>
+            <TableRow key={row.id}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
-              <TableCell><EditIcon className='icon' id={`icon${row.cstTextId}`}
-                onClick={(e) => editButtonHandler(e, row.cstTextId)} />
+              <TableCell><EditIcon className='icon' id={`icon${row.id}`}
+                onClick={(e) => editButtonHandler(e, row.id)} />
               </TableCell>
-              <TableCell> <DeleteIcon className='icon' id={`delete${row.cstTextId}`} onClick={(e) => deleteHandler(e, row.cstTextId)} /></TableCell>
+              <TableCell> <DeleteIcon className='icon' id={`delete${row.id}`} onClick={(e) => deleteHandler(e, row.id)} /></TableCell>
             </TableRow>
           )))
             : <></>
@@ -140,8 +167,12 @@ const CustomTextView = () => {
 
 
 
-
-
+      <DiscardPopover
+        yesHandler={yesHandler}
+        noHandler={noHandler}
+        deletePopoverOpen={deletePopoverOpen}
+        closeHandler={deleteCloseHandler}
+      />
 
 
     </React.Fragment >

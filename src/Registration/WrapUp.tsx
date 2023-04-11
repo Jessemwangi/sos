@@ -100,7 +100,7 @@ const WrapUp = () => {
             <TableBody>
               {messages &&
                 messages.map((msg) => (
-                  <StyledTableRow key={msg.cstTextId}>
+                  <StyledTableRow key={msg.id}>
                     <StyledTableCell component="th" scope="row">
                       {msg.title}
                     </StyledTableCell>
@@ -128,9 +128,9 @@ const WrapUp = () => {
             <TableBody>
               {messages &&
                 messages.map((msg) => (
-                  <StyledTableRow key={msg.cstTextId}>
+                  <StyledTableRow key={msg.id}>
                     <StyledTableCell component="th" scope="row">
-                      {msg.cstTextId}
+                      {msg.id}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {msg.title}

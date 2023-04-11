@@ -70,7 +70,7 @@ export interface Signal {
 }
 
 export interface CustomText {
-    cstTextId: string
+    id: string
     message: string
     title: string
     uid: string | undefined
