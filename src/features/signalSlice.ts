@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 
 const init: Signal = {
-    signalId: "",
+    id: "",
     uid: "",
     createdAt: "",
     geolocation: {

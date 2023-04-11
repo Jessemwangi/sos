@@ -25,15 +25,15 @@ const CustomSignalsForm = () => {
     }
 
     function completeSignal() {
-        dispatch(setStoreSignalsList({ uid: uid, signalId: uuidv4() }));
+        dispatch(setStoreSignalsList({ uid: uid, id: uuidv4() }));
 
     }
 
     async function handleSubmit() {
         completeSignal();
         try {
-            await setDoc(doc(db, 'signalsList', storeSignal.signalId), {
-                signalId: storeSignal.signalId,
+            await setDoc(doc(db, 'signalsList', storeSignal.id), {
+                id: storeSignal.id,
                 uid: user?.uid,
                 name: storeSignal.name,
                 recipients: storeSignal.recipients,

@@ -7,8 +7,8 @@ import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "
 
 type UserSignals = SignalsList[];
 const init: SignalsList = {
-    signalId: "",
-    uid: "", //firebase uid
+    id: "",
+    uid: "",
     name: "",
     recipients: [""],
     presetMsg: "",
@@ -51,7 +51,7 @@ export const signalsListApi = createApi({
                 try {
                     const q = query(
                         collection(db, 'signalsList'),
-                        where('uid', '==', id),
+                        where('uid', 'in', [id, 'ALL'])
                     );
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     querySnapshot?.forEach((doc) => {

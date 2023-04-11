@@ -50,7 +50,7 @@ const RecipientEntryForm = () => {
   // --> yes
 
   async function sendData() {
-    await setDoc(doc(db, 'recipients', recipient.id), {
+    await setDoc(doc(db, 'recipients', `${recipient.id}`), {
       id: recipient.id,
       createdAt: /* serverTimestamp() */"",
       name: recipient.name,
@@ -63,6 +63,7 @@ const RecipientEntryForm = () => {
     }).then(() => toast.success("Recipient created successfully!"))
       .catch((err) => alert(err));
     dispatch(resetForm());
+    setReadyState(false)
 
   }
 
@@ -70,7 +71,6 @@ const RecipientEntryForm = () => {
   useEffect(() => {
     sendData();
     dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
-    //setLoading(true)
     //eslint-disable-next-line
   }, [readyState])
 

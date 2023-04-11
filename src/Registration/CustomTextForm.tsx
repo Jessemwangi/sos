@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Grid, TextField, Button, /* Checkbox, FormControlLabel */ } from '@mui/material';
-import { doc, setDoc, /* collection, getDocs, query, where, updateDoc */ } from "@firebase/firestore";
+import { Typography, Grid, TextField, Button } from '@mui/material';
+import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -9,13 +9,6 @@ import { db } from '../DataLayer/FirestoreInit';
 import { CustomText } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { customTextApi, setCustomText, resetForm } from '../features/customTextSlice';
-
-/* type CustomTexts = CustomText[];
-interface Props {
-  data: CustomTexts | undefined,
-  isFetching: boolean,
-  error: any
-} */
 
 export default function CustomTextForm() {
 
@@ -56,7 +49,8 @@ export default function CustomTextForm() {
   }
 
   async function sendData() {
-    await setDoc(doc(db, 'customTexts', customText.id), {
+    let docRef = doc(db, 'customTexts', `${customText.id}`);
+    await setDoc(docRef, {
       id: customText.id,
       message: customText.message,
       title: customText.title,
@@ -66,14 +60,11 @@ export default function CustomTextForm() {
       .then(() => { console.log('submitted to firestore') })
       .catch((err) => alert(err));
     dispatch(resetForm());
+    setReadyState(false)
     dispatch(customTextApi.util.invalidateTags(['Messages']))
-
-    console.log(customText);
   }
 
-
   useEffect(() => {
-
     sendData();
     //eslint-disable-next-line
   }, [readyState])
@@ -83,7 +74,6 @@ export default function CustomTextForm() {
       <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
         Add Customized Text
       </Typography>
-      
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>

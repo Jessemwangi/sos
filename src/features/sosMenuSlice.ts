@@ -7,7 +7,7 @@ import { SignalsList } from '../app/model';
 //for maintaining the user's personalised emergency types/signals
 
 const init: SignalsList = {
-    signalId: "",
+    id: "",
     uid: "",
     name: "",
     recipients: [],
