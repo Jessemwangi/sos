@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Grid, TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
-import { doc, setDoc } from "@firebase/firestore";
+import { Typography, Grid, TextField, Button, /* Checkbox, FormControlLabel */ } from '@mui/material';
+import { doc, setDoc, /* collection, getDocs, query, where, updateDoc */ } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { db } from '../DataLayer/FirestoreInit';
 import { CustomText } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
-import { setText, clearText, triggerReload } from '../features/customTextSlice';
-import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
+import { customTextApi, setCustomText, resetForm } from '../features/customTextSlice';
 
-
+/* type CustomTexts = CustomText[];
+interface Props {
+  data: CustomTexts | undefined,
+  isFetching: boolean,
+  error: any
+} */
 
 export default function CustomTextForm() {
 
@@ -19,107 +23,68 @@ export default function CustomTextForm() {
   const uid = user?.uid;
   const dispatch = useDispatch();
   const [buttonAction] = useState<string>('Save Text')
-  const [ready, setReady] = useState<boolean>(false);
+  const [readyState, setReadyState] = useState<boolean>(false);
 
-  const storeText: CustomText = useSelector((state: any) => state.customText.customText);
 
-  const { data } = useFetchMessagesByIdQuery({ id: uid })
-  //const generic_message: CustomText = data 
+  const customText: CustomText = useSelector((state: any) => state.customText.customText)
+  // const [objectState, setObjectState] = useState(init);
 
-  const defaultMsg = data?.filter((msg) => { return msg.default === true });
-
-  const init: CustomText = {
-    cstTextId: "",//uuid generated id
-    message: "",
-    title: "",
-    userId: uid,
-    default: false
-  }
+  const titleInput = useRef<HTMLInputElement>();
+  const messageInput = useRef<HTMLInputElement>();
 
 
   function handleChange(e: any) {
-    dispatch(setText({ [e.target.name]: e.target.value }))
-    if (ready === true) { setReady(false) }
+    dispatch(setCustomText({ [e.target.name]: e.target.value }))
+    if (readyState === true) { setReadyState(false) }
 
   }
 
-  function handleChecked(e: any) {
-    dispatch(setText({ [e.target.name]: e.target.checked }))
-    console.log(e.currentTarget.name, e.target.checked);
-  }
-
-  function completeText() {
-    dispatch(setText({ userId: uid, cstTextId: uuidv4() }));
-    setReady(true);
+  function completeData() {
+    if (!titleInput.current!.value || !messageInput.current!.value) {
+      alert("Some fields are missing data");
+      return null;
+    } else {
+      dispatch(setCustomText({ uid: uid, id: uuidv4() }));
+      setReadyState(true);
+    }
 
   }
 
   async function handleSubmit() {
-    console.log('clicked')
-    completeText();
+    completeData();
 
   }
 
-
-/*
-
-db.collection("cities").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-        doc.ref.update({
-            capital: true
-        });
-    });
-});
-
-*/
-
-
-
   async function sendData() {
-    await setDoc(doc(db, 'customTexts', storeText.cstTextId), {
-      cstTextId: storeText.cstTextId,
-      message: storeText.message,
-      title: storeText.title,
-      userId: storeText.userId,
-      default: storeText.default
+    await setDoc(doc(db, 'customTexts', customText.id), {
+      id: customText.id,
+      message: customText.message,
+      title: customText.title,
+      uid: customText.uid,
+      default: customText.default
     }, { merge: true })
       .then(() => { console.log('submitted to firestore') })
       .catch((err) => alert(err));
-    dispatch(clearText());
-    dispatch(triggerReload());
-    console.log(storeText);
+    dispatch(resetForm());
+    dispatch(customTextApi.util.invalidateTags(['Messages']))
+
+    console.log(customText);
   }
 
 
   useEffect(() => {
 
     sendData();
-
-
-  }, [ready])
-
-
-
-  /* 
-    useEffect(() => {
-  
-      console.log('check text in store:', storeText);
-  
-    }, [storeText]) */
+    //eslint-disable-next-line
+  }, [readyState])
 
   return (
     <React.Fragment>
-
       <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
-
-
         Add Customized Text
       </Typography>
-      <p>   Your current default text message is:
-        <span>{ }</span>
-        This is the message that will be sent if no specific signal type is chosen.
-        You can add personalised messages below.</p>
-      <p>If you wish to set a message as your default message, toggle the checkbox.</p>
+      
+
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <TextField
@@ -127,10 +92,10 @@ db.collection("cities").get().then(function(querySnapshot) {
             id="title"
             name="title"
             label="Title"
+            inputRef={titleInput}
             fullWidth
             autoComplete="cc-title"
             variant="standard"
-            defaultValue={storeText.title}
             onChange={handleChange}
           />
         </Grid>
@@ -140,16 +105,12 @@ db.collection("cities").get().then(function(querySnapshot) {
             id="message"
             name="message"
             label="Message"
+            inputRef={messageInput}
             fullWidth
             autoComplete="cc-Message"
             variant="standard"
-            defaultValue={storeText.message}
             onChange={handleChange}
           />
-        </Grid>
-        <Grid item>
-          <FormControlLabel control={<Checkbox id="default" name="default" onChange={handleChecked} />} label="Set as default message" />
-
         </Grid>
 
         <Grid item xs={12}>

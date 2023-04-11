@@ -12,13 +12,13 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import { useFetchRecipientsQuery } from "../app/services/firestoreAPI";
+import { useFetchRecipientsByIdQuery } from "../features/manageRecipientsSlice";
 
 const WrapUp = () => {
   const [user] = useAuthState(auth);
   const uid = user?.uid;
   const messages_Data = useFetchMessagesByIdQuery({ id: uid });
-  const recipients_Data = useFetchRecipientsQuery({ para1: uid });
+  const recipients_Data = useFetchRecipientsByIdQuery({ id: uid });
   const messages = messages_Data.data;
   const recipients = recipients_Data.data;
   console.log(recipients);
@@ -100,7 +100,7 @@ const WrapUp = () => {
             <TableBody>
               {messages &&
                 messages.map((msg) => (
-                  <StyledTableRow key={msg.cstTextId}>
+                  <StyledTableRow key={msg.id}>
                     <StyledTableCell component="th" scope="row">
                       {msg.title}
                     </StyledTableCell>
@@ -128,9 +128,9 @@ const WrapUp = () => {
             <TableBody>
               {messages &&
                 messages.map((msg) => (
-                  <StyledTableRow key={msg.cstTextId}>
+                  <StyledTableRow key={msg.id}>
                     <StyledTableCell component="th" scope="row">
-                      {msg.cstTextId}
+                      {msg.id}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {msg.title}

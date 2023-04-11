@@ -1,45 +1,110 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
-import { auth } from '../app/services/FirebaseAuth';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Dialog, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
+import { db } from '../DataLayer/FirestoreInit';
+import { customTextApi, resetForm, togglePopover, toggleDeletePopover } from '../features/customTextSlice';
+import { CustomText } from '../app/model';
+import DiscardPopover from '../Components/DiscardPopover';
 
+type CustomTexts = CustomText[];
+interface Props {
+  data: CustomTexts | undefined,
+  isFetching: boolean,
+  error: any
+}
 
-const CustomTextView = () => {
+const CustomTextView = ({ data, isFetching, error }: Props) => {
+  /** Shows results from database
+   * allows user to delete customTexts or edit in popover 
+   */
 
-  const [user] = useAuthState(auth);
-  const uid = user?.uid;
-  const reload = useSelector((state: any) => state.customText.reload)
-  const [shouldReload, setShouldReload] = useState(0);
+  const dispatch = useDispatch();
+  let open: boolean = useSelector((state: any) => state.customText.popoverState);
+  const customText: CustomText = useSelector((state: any) => state.customText.customText)
+  const [objectState, setObjectState] = useState(customText);
+  const deletePopoverOpen = useSelector((state: any) => state.customText.deletePopoverOpen)
+  const [deleteId, setDeleteId] = useState("");
 
-  const {
-    data,
-    isFetching,
-  } = useFetchMessagesByIdQuery({ id: uid });
+  const defaultText = data?.filter((item) => item.id === 'DEFAULT')[0];
 
-  const editButtonHandler = (e: any, id: string) => {
-    console.log('edit')
-    //TODO
+  /*POPOVER FUNCTIONS FOR EDITING MESSAGES */
+  function editButtonHandler(e: any, id: string) {
+    dispatch(togglePopover());
+    if (data) {
+      const currentItem = (data.filter((item) => item.id === id))[0];
+      setObjectState(currentItem);
+    }
   }
 
-  const deleteHandler = (e: any, id: string) => {
-    console.log('delete')
-    //TODO
+  const handleChange = (e: any) => {
+    setObjectState({ ...objectState, [e.target.name]: e.target.value });
+  };
+
+  function closeHandler() {
+    dispatch(togglePopover());
   }
 
-  //TOFIX not rerendering on update
-  useEffect(() => { setShouldReload((shouldReload + 1)) }, [reload])
+
+  async function deleteHandler(e: any, id: string) {
+    setDeleteId(id);
+    dispatch(toggleDeletePopover());
+
+  }
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      await updateDoc(doc(db, 'customTexts', objectState.id), {
+        title: objectState.title,
+        message: objectState.message,
+        default: objectState.default,
+      })
+    } catch (error: any) {
+      alert(error)
+    }
+    dispatch(resetForm());
+    dispatch(togglePopover());
+    dispatch(customTextApi.util.invalidateTags(['Messages']))
+  }
+
+  /*END EDITPOPOVER FUNCTIONS */
+
+
+  /** Delete popover functions */
+
+  function deleteCloseHandler() {
+    dispatch(toggleDeletePopover)
+  }
+
+  const yesHandler = async () => {
+    try {
+      await deleteDoc(doc(db, 'customTexts', deleteId))
+        .then(() => console.log('id:', deleteId));
+      dispatch(customTextApi.util.invalidateTags(['Messages']))
+
+    } catch (error: any) {
+      console.log(error);
+    }
+    setDeleteId("");
+    dispatch(toggleDeletePopover());
+  }
+
+  const noHandler = () => {
+    dispatch(toggleDeletePopover());
+  }
+
 
   return (
     <React.Fragment>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Available Messaging Text
       </Typography>
-      <Table size="small">
+      <Table size="small" className="viewsTable">
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
@@ -48,19 +113,67 @@ const CustomTextView = () => {
         </TableHead>
         <TableBody>
           {!isFetching && data?.length !== 0 ? (data?.map((row) => (
-            <TableRow key={row.cstTextId}>
+            <TableRow key={row.id}>
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.message}</TableCell>
-              <TableCell><EditIcon id={`icon${row.cstTextId}`}
-                onClick={(e) => editButtonHandler(e, row.cstTextId)} />
+              <TableCell><EditIcon className='icon' id={`icon${row.id}`}
+                onClick={(e) => editButtonHandler(e, row.id)} />
               </TableCell>
-              <TableCell> <DeleteIcon id={`delete${row.cstTextId}`} onClick={(e) => deleteHandler(e, row.cstTextId)} /></TableCell>
+              <TableCell> <DeleteIcon className='icon' id={`delete${row.id}`} onClick={(e) => deleteHandler(e, row.id)} /></TableCell>
             </TableRow>
           )))
             : <></>
           }
         </TableBody>
       </Table>
+
+      <div style={{ margin: '5% 10%' }}><p>   Your current default text message is:
+        <span style={{ display: 'block', fontWeight: '800', margin: '2% 20%', padding: '2rem', border: '1px solid black' }}>{defaultText?.message}</span>
+        This is the message that will be sent if no specific signal type is chosen.
+        You can add personalised messages below.</p></div>
+
+      <Dialog
+        className="editMessagesDialog"
+        open={open}
+        onClose={closeHandler}
+        PaperProps={{
+          sx: {
+            height: '400px'
+          }
+        }}
+      >
+        {customText ?
+          <form onChange={handleChange}>
+            <label htmlFor="name">Title</label><input
+              defaultValue={objectState.title}
+              type="text"
+              name="title"
+              id="titleInput"></input>
+
+            <label htmlFor="phone">Message</label><input
+              type="text"
+              name="message"
+              id="messageInput"
+              defaultValue={objectState.message}
+            ></input>
+
+            <div>
+              <Button type="submit" onClick={handleSubmit}>Save</Button>
+              <Button onClick={closeHandler}>Close</Button>
+            </div>
+          </form>
+          : <p>Awaiting data</p>
+        }
+      </Dialog >
+
+
+
+      <DiscardPopover
+        yesHandler={yesHandler}
+        noHandler={noHandler}
+        deletePopoverOpen={deletePopoverOpen}
+        closeHandler={deleteCloseHandler}
+      />
 
 
     </React.Fragment >

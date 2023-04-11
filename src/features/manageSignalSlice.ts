@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignalsList } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
-import { where, query, collection, getDocs, doc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
+import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 
 
 type UserSignals = SignalsList[];
@@ -24,12 +24,14 @@ const userSignals: UserSignals = [];
 const manageSignalSlice = createSlice({
     name: 'manageSignals',
     initialState: {
-        storeSignalsList: init
+        storeSignalsList: init,
+        popoverState: false
     },
     reducers: {
         setStoreSignalsList: (state, action) => {
             state.storeSignalsList = { ...state.storeSignalsList, ...action.payload };
         },
+        togglePopover: (state) => { state.popoverState = !state.popoverState },
         resetForm: (state) => {
             state.storeSignalsList = init;
         }
@@ -43,7 +45,7 @@ export const signalsListApi = createApi({
     reducerPath: "signalsListApi",
 
     endpoints: (builder) => ({
-        fetchSignalsListById: builder.query<UserSignals, { id: string }>({
+        fetchSignalsListById: builder.query<UserSignals, { id: string | undefined }>({
             async queryFn(arg) {
                 const { id } = arg;
                 try {

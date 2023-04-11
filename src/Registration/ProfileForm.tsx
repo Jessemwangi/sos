@@ -9,7 +9,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { doc, updateDoc, setDoc } from "@firebase/firestore";
 
 import { db } from '../DataLayer/FirestoreInit';
-import { useFetchProfileQuery } from '../app/services/firestoreAPI';
+import { useFetchProfileQuery } from '../features/profileApi';
 import { auth } from "../app/services/FirebaseAuth";
 import { setProfile, updateProfile } from "../features/profileSlice";
 
@@ -17,16 +17,16 @@ const ProfileForm = () => {
 
   const dispatch = useDispatch();
   const [user] = useAuthState(auth);
+  const uid = user?.uid!;
+
   const storeProfile = useSelector((state: any) => state.profile.userProfile);
   const [datePickerValue, setDatePickerValue] = useState<Dayjs | null | Date>(dayjs());
   const [loadingState, setLoading] = useState<boolean>(true)
   const [profileError, setProfileError] = useState<any>()
 
-  const uid = user?.uid ? user.uid : '';
-
   const [buttonAction, setButtonAction] = useState<string>('Save Profile')
 
-  const { data, error, isFetching } = useFetchProfileQuery(uid); //pull uid from store instead of auth user object to avoid uid load errors
+  const { data, error, isFetching } = useFetchProfileQuery(uid);
   useEffect(() => {
     if (!user) {
       return;
@@ -105,7 +105,7 @@ const ProfileForm = () => {
                         name="firstname"
                         label="First name"
                         fullWidth
-                        value={storeProfile.firstname} //u
+                        defaultValue={storeProfile.firstname} //u
                         autoComplete="given-name"
                         variant="standard"
                         onChange={(e) => { handleChange(e) }}

@@ -1,19 +1,27 @@
-import { Typography } from '@mui/material';
-import { auth } from '../app/services/FirebaseAuth'
 import { useAuthState } from "react-firebase-hooks/auth";
-import RecipientEntryForm from '../Registration/RecipientEntryForm';
+
+import { auth } from '../app/services/FirebaseAuth'
+import RecipientEntryForm from '../Registration/RecipientEntryForm'
+import RecipientsView from '../Components/RecipientsView'
+import { useFetchRecipientsByIdQuery } from '../features/manageRecipientsSlice';
 
 const ManageRecipients = () => {
 
     const [user] = useAuthState(auth);
+    const uid = user?.uid ? user.uid : '';
+    const {
+        data,
+        isFetching,
+        error
+    } = useFetchRecipientsByIdQuery({ id: uid });
 
     if (!user) { return <><h3>Please log in first to manage your contacts.</h3></> }
 
+
+
     return (
         <div style={{ padding: '2rem' }}>
-            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                Available Recipients
-            </Typography>
+            <RecipientsView data={data} isFetching={isFetching} error={error} />
             <RecipientEntryForm />
         </div>
     );

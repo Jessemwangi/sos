@@ -3,16 +3,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CustomText } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
-import { where, query, collection, getDocs, doc, QuerySnapshot, DocumentData, setDoc } from "@firebase/firestore";
+import { where, query, collection, getDocs, QuerySnapshot, DocumentData, } from "@firebase/firestore";
 
 
 type Messages = CustomText[];
 
 const init: CustomText = {
-    cstTextId: "",//uuid generated id
+    id: "",//uuid generated id
     message: "",
     title: "",
-    userId: "",
+    uid: "",
     default: false,
 }
 
@@ -20,13 +20,14 @@ export const customTextSlice = createSlice({
     name: 'customText',
     initialState: {
         customText: init,
-        reload: false
+        popoverState: false,
+        deletePopoverOpen: false
     },
     reducers: {
-        setText: (state: any, action: PayloadAction<object>) => { state.customText = { ...state.customText, ...action.payload } },
-        clearText: (state) => { state.customText = init },
-        triggerReload: (state) => { state.reload = !state.reload }
-
+        setCustomText: (state: any, action: PayloadAction<object>) => { state.customText = { ...state.customText, ...action.payload } },
+        togglePopover: (state) => { state.popoverState = !state.popoverState },
+        resetForm: (state) => { state.customText = init },
+        toggleDeletePopover: (state) => { state.deletePopoverOpen = !state.deletePopoverOpen },
     }
 });
 
@@ -42,7 +43,7 @@ export const customTextApi = createApi({
                 try {
                     const q = query(
                         collection(db, 'customTexts'),
-                        where('userId', 'in', [id, 'ALL'])
+                        where('uid', 'in', [id, 'ALL'])
                     );
 
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
@@ -57,29 +58,12 @@ export const customTextApi = createApi({
             },
             providesTags: ['Messages'],
         }),
-        setMessage: builder.mutation({
-            async queryFn({ docId, details }) {
-                try {
-                    await setDoc(doc(db, 'customTexts', docId), {
-                        details
-                    }, { merge: true });
-                    return { data: null };
-                }
-                catch (error: any) {
-                    return { error: error.message }
-                }
-            },
-            invalidatesTags: ['Messages'],
-        }),
-
-
-
     })
 });
 
 
-export const { useFetchMessagesByIdQuery, useSetMessageMutation } = customTextApi;
+export const { useFetchMessagesByIdQuery } = customTextApi;
 
 
-export const { setText, clearText, triggerReload } = customTextSlice.actions;
+export const { setCustomText, resetForm, togglePopover, toggleDeletePopover } = customTextSlice.actions;
 export default customTextSlice.reducer;

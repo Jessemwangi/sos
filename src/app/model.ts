@@ -14,14 +14,14 @@ export interface SignInData {
 export type LoadingState = boolean
 
 export interface Profile {
-    firstname?: string,
-    lastname?: string,
-    phone?: number | string | null,
+    firstname: string,
+    lastname: string,
+    phone: number | string | null,
     altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
-    uid?: string,
-    email?: string,
+    uid: string | undefined,
+    email: string,
     username?: string,
     addressline1?: string,
     addressline2?: string,
@@ -40,14 +40,14 @@ export interface Recipient {
     phone: string,
     city: string,
     postcode: string,
-    userId: string,
+    uid: string,
     email: string
 
 }
 
 export interface SignalsList {
     signalId: string,
-    uid: string,
+    uid: string | undefined,
     name: string,
     recipients: string[],
     presetMsg?: string | undefined,
@@ -70,9 +70,9 @@ export interface Signal {
 }
 
 export interface CustomText {
-    cstTextId: string
+    id: string
     message: string
     title: string
-    userId: string | undefined
+    uid: string | undefined
     default: boolean
 }

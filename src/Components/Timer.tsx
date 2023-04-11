@@ -8,7 +8,11 @@ const Timer = () => {
     return (
         <div className="timer-container">
             <div className="timer">
-                <div className="ticker"></div>
+            <span>SOS</span>
+                <div className="ticker">
+
+                    
+                </div>
 
             </div>
 
