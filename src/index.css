@@ -26,3 +26,14 @@ body {
 a {
   text-decoration: none;
 }
+
+
+.viewsTable tbody :first-child :not(only-child, .icon) {
+  background-color: rgba(125, 125, 255, 0.5);
+  ;
+}
+
+.icon {
+  background: transparent;
+  cursor: pointer;
+}

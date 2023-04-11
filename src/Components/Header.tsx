@@ -41,8 +41,9 @@ const Header = () => {
                 <div className="signInDiv">
                     {user ? (<Button style={{ color: 'white', marginLeft: '2rem', border: '2px solid white' }} onClick={handleSignOut}>Sign Out</Button>) : (
 
-                        <><Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
-                            <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                        <> <Button style={{ color: 'white', marginLeft: '2rem', border: '2px solid white' }} onClick={() => dispatch(toggleSigninModal(true))}>Sign In</Button>
+                            <Button style={{ color: 'white' }} onClick={() => dispatch(toggleSignupModal(true))}>Create Account</Button>
+
                         </>)
                     }
 
