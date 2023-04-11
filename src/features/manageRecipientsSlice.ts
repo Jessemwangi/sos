@@ -22,7 +22,8 @@ const init: Recipient = {
 const initialState = {
     popoverState: false,
     recipient: init,
-    currentId: ""
+    currentId: "",
+    deletePopoverOpen: false
 
 }
 
@@ -37,7 +38,8 @@ export const manageRecipientsSlice = createSlice({
         },
         resetForm: (state) => {
             state.recipient = init;
-        }
+        },
+        toggleDeletePopover: (state) => { state.deletePopoverOpen = !state.deletePopoverOpen },
     },
 });
 
@@ -49,7 +51,6 @@ export const manageRecipientsApi = createApi({
     reducerPath: "manageRecipientsApi",
 
     endpoints: (builder) => ({
-
         fetchRecipientsById: builder.query<Recipients, { id: string | undefined }>({
             async queryFn(arg) {
                 const { id } = arg; //get the value from the object you provide as argument
@@ -63,16 +64,17 @@ export const manageRecipientsApi = createApi({
                     querySnapshot?.forEach((doc) => {
                         recipients.push({ id: doc.id, ...doc.data() } as Recipient)
                     });
-                    return { data: recipients };
+                    return { data: recipients as Recipients };
                 } catch (error: any) {
                     return { error: error.message };
                 }
             },
             providesTags: ['Recipients'],
         }),
+
     })
 })
 
-export const { togglePopover, setRecipient, resetForm } = manageRecipientsSlice.actions;
+export const { togglePopover, setRecipient, resetForm, toggleDeletePopover } = manageRecipientsSlice.actions;
 export const { useFetchRecipientsByIdQuery } = manageRecipientsApi;
 export default manageRecipientsSlice.reducer

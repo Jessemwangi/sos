@@ -15,6 +15,7 @@ import { db } from '../DataLayer/FirestoreInit';
 import { Recipient } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { resetForm, setRecipient } from '../features/manageRecipientsSlice';
+import { manageRecipientsApi } from '../features/manageRecipientsSlice';
 
 const RecipientEntryForm = () => {
   //used for creating and adding a new recipient to the database
@@ -67,7 +68,8 @@ const RecipientEntryForm = () => {
 
 
   useEffect(() => {
-    sendData()
+    sendData();
+    dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
     //setLoading(true)
     //eslint-disable-next-line
   }, [readyState])

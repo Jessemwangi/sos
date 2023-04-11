@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { LinearProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,29 +10,27 @@ import {
 
 import '../styles/RecipientsView.css';
 import { db } from '../DataLayer/FirestoreInit';
-import { auth } from "../app/services/FirebaseAuth";
 import { Recipient } from '../app/model';
-import { useFetchRecipientsByIdQuery } from '../features/manageRecipientsSlice';
-import { resetForm, togglePopover } from '../features/manageRecipientsSlice';
+import { manageRecipientsApi, resetForm, togglePopover, toggleDeletePopover } from '../features/manageRecipientsSlice';
+import DiscardPopover from '../Components/DiscardPopover';
 
+type Recipients = Recipient[]
+interface Props {
+  data: Recipients | undefined,
+  isFetching: boolean,
+  error: any
+}
 
-const RecipientsView = () => {
+const RecipientsView = ({ data, isFetching, error }: Props) => {
   /** Shows results retrieved from database
-   * allows editing and deleting of database data
+   * allows editing and deleting of database dat
    */
   const dispatch = useDispatch();
-  const [user] = useAuthState(auth);
-  const uid = user?.uid ? user.uid : '';
   let open: boolean = useSelector((state: any) => state.manageRecipients.popoverState);
+  const deletePopoverOpen = useSelector((state: any) => state.manageRecipients.deletePopoverOpen)
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
   const [objectState, setObjectState] = useState(recipient);
-
-  const {
-    data,
-    isFetching,
-    error
-  } = useFetchRecipientsByIdQuery({ id: uid });
-
+  const [deleteId, setDeleteId] = useState("");
 
   if (isFetching) {
     return <LinearProgress color="secondary" />;
@@ -48,9 +45,11 @@ const RecipientsView = () => {
 
   function editButtonHandler(e: any, id: string) {
     /** filters db data and stores current object in local state, opens popover */
-    const currentItem = (data!.filter((item) => item.id === id))[0];
-    setObjectState(currentItem);
-    dispatch(togglePopover());
+    if (data) {
+      const currentItem = (data.filter((item: any) => item.id === id))[0];
+      setObjectState(currentItem);
+      dispatch(togglePopover());
+    }
   }
 
   function closeHandler() {
@@ -84,6 +83,7 @@ const RecipientsView = () => {
     dispatch(resetForm());
     setObjectState(recipient);
     dispatch(togglePopover());
+    dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
   }
 
 
@@ -93,12 +93,38 @@ const RecipientsView = () => {
     try {
       await deleteDoc(doc(db, 'recipients', docId))
         .then(() => console.log('id:', docId));
+      dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
     } catch (error: any) {
       console.log(error)
     }
   }
 
   /*END POPOVER FUNCTIONS */
+
+  /** Delete popover functions */
+
+  function deleteCloseHandler() {
+    dispatch(toggleDeletePopover)
+
+  }
+
+  const yesHandler = async () => {
+    try {
+      await deleteDoc(doc(db, 'customTexts', deleteId))
+        .then(() => console.log('id:', deleteId));
+
+    } catch (error: any) {
+      console.log(error);
+    }
+    setDeleteId("");
+    dispatch(toggleDeletePopover());
+
+  }
+
+  const noHandler = () => {
+    dispatch(toggleDeletePopover());
+    return
+  }
 
 
   return (
@@ -120,7 +146,7 @@ const RecipientsView = () => {
           </TableHead>
           <TableBody>
 
-            {!isFetching && data?.length !== 0 ? (data?.map((item) => (
+            {!isFetching && data?.length !== 0 ? (data?.map((item: any) => (
               <TableRow key={item.id} >
                 <TableCell>{item.createdAt}</TableCell>
                 <TableCell>{item.name}</TableCell>
@@ -192,6 +218,13 @@ const RecipientsView = () => {
           : <p>Awaiting data</p>
         }
       </Dialog >
+
+      <DiscardPopover
+        yesHandler={yesHandler}
+        noHandler={noHandler}
+        deletePopoverOpen={deletePopoverOpen}
+        closeHandler={deleteCloseHandler}
+      />
 
     </>)
 
