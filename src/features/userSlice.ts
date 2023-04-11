@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Profile } from "../app/model";
+/* import { Profile } from "../app/model";
 
 
 export const userSlice = createSlice({
@@ -16,4 +16,4 @@ export const userSlice = createSlice({
   },
 });
 export const { setLoggedIn } = userSlice.actions;
-export default userSlice.reducer;
+export default userSlice.reducer; */

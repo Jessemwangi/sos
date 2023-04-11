@@ -12,11 +12,10 @@ export const sosButtonSlice = createSlice({
     name: 'sosButton',
     initialState,
     reducers: {
-        activate: (state, action) => {
-            state = { ...state, active: action.payload }
-        }
+        activate: (state, action) => { state.active = action.payload }
     }
-});
+}
+);
 
 
 export const { activate } = sosButtonSlice.actions;
