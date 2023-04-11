@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 import {
-  doc, setDoc, serverTimestamp
+  doc, setDoc, serverTimestamp, Timestamp
 } from "@firebase/firestore";
 
 import { db } from '../DataLayer/FirestoreInit';
@@ -24,7 +24,6 @@ const RecipientEntryForm = () => {
   const [user] = useAuthState(auth);
   const uid = user?.uid;
 
-  //const [loading, setLoading] = useState(false);
   const [buttonAction] = useState('Save Recipient');
   const [readyState, setReadyState] = useState<boolean>(false);
   const recipient: Recipient = useSelector((state: any) => state.manageRecipients.recipient);
@@ -70,6 +69,7 @@ const RecipientEntryForm = () => {
   useEffect(() => {
     sendData()
     //setLoading(true)
+    //eslint-disable-next-line
   }, [readyState])
 
 
