@@ -4,8 +4,6 @@ import { SignalsList } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 
-
-type UserSignals = SignalsList[];
 const init: SignalsList = {
     id: "",
     uid: "",
@@ -17,27 +15,29 @@ const init: SignalsList = {
     pinned: false,
     default: false
 }
-const userSignals: UserSignals = [];
 
 //modify a signal, delete a signal, add a new signal to signalsList
 
 const manageSignalSlice = createSlice({
     name: 'manageSignals',
     initialState: {
-        SignalsList: init,
+        signalsList: init,
         popoverState: false
     },
     reducers: {
         setSignalsList: (state, action) => {
-            state.SignalsList = { ...state.SignalsList, ...action.payload };
+            state.signalsList = { ...state.signalsList, ...action.payload };
         },
         togglePopover: (state) => { state.popoverState = !state.popoverState },
         resetForm: (state) => {
-            state.SignalsList = init;
+            state.signalsList = init;
         }
     }
 });
 
+
+type UserSignals = SignalsList[];
+const userSignals: UserSignals = [];
 
 export const signalsListApi = createApi({
     baseQuery: fakeBaseQuery(),

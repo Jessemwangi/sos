@@ -1,6 +1,4 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-
-/* import userSlice from '../features/userSlice'; */
 import profileSlice from '../features/profileSlice';
 import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRecipientsSlice';
@@ -12,11 +10,8 @@ import { sosSignalApi } from '../features/sosMenuSlice';
 import { customTextApi, } from '../features/customTextSlice';
 import manageSignalSlice, { signalsListApi } from '../features/manageSignalSlice';
 
-
-
 export const store = configureStore({
   reducer: {
-    /*     user: userSlice, */
     profile: profileSlice,
     sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,

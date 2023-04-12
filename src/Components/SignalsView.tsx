@@ -9,8 +9,6 @@ import {
 import { SignalsList, CustomText, Recipient } from '../app/model';
 import { db } from '../DataLayer/FirestoreInit';
 
-import { setSignalsList, resetForm, useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
-
 interface Props {
     messages: CustomText[],
     signals: SignalsList[]
@@ -20,16 +18,18 @@ const SignalsView = ({ messages, signals }: Props) => {
     const dispatch = useDispatch();
     const signalsList: SignalsList = useSelector((state: any) => state.signalsList);
 
-    const filteredMessage = (textId: string): string => {
-        return (
-            messages?.filter((item) => item.id === textId)[0].message)
-    }
-    //console.log(message);
-    //console.log(message.message);
+    /* const filteredMessage = (id: string): string => {
+        const message: CustomText[] = messages?.filter((item) => item.id === id);
+        console.log(message);
+        console.log(message[0].message);
+        if (message) { return message[0].message } else { return "message unavailable" }
+    } */
 
+    //console.log(filteredMessage('cd3e4603-2302-4b4e-878c-122e98519c0c'));
 
+    function editButtonHandler(e: any, id: string) { }
 
-    console.log(filteredMessage('cd3e4603-2302-4b4e-878c-122e98519c0c'));
+    function deleteHandler(e: any, id: string) { }
 
     return (
         <div>
@@ -42,6 +42,7 @@ const SignalsView = ({ messages, signals }: Props) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Name</TableCell>
+                                <TableCell>Message Id</TableCell>
                                 <TableCell>Message</TableCell>
                                 <TableCell>Recipients</TableCell>
                             </TableRow>
@@ -49,16 +50,17 @@ const SignalsView = ({ messages, signals }: Props) => {
                         <TableBody>
 
                             {signals?.length !== 0 ? (signals?.map((item: any) => (
-                                <TableRow key={item.id} >
+                                <TableRow key={item.name} >
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>{/* {()=>filteredMessage(item.cstTextId)} */}</TableCell>
-                                    <TableCell>{item.recipients}</TableCell>
+                                    <TableCell>{item.cstTextId}</TableCell>
+                                    <TableCell>{item.presetMsg}</TableCell>
+                                    <TableCell>{item.recipients ? (item.recipients?.join(', ')) : (<>empty</>)}</TableCell>
                                     <TableCell>
-                                        {/*   <EditIcon className='icon' id={`icon${item.id}`}
-                                        onClick={(e) => editButtonHandler(e, item.id)} /> */}
+                                        <EditIcon className='icon' id={`icon${item.id}`}
+                                            onClick={(e) => editButtonHandler(e, item.id)} />
                                     </TableCell>
                                     <TableCell>
-                                        {/* <DeleteIcon className='icon' style={{ cursor: 'hover' }} id={`delete${item.id}`} onClick={(e) => deleteHandler(e, item.id)} /> */}
+                                        <DeleteIcon className='icon' style={{ cursor: 'hover' }} id={`delete${item.id}`} onClick={(e) => deleteHandler(e, item.id)} />
                                     </TableCell>
                                 </TableRow>
                             ))) : (<></>)}
@@ -67,7 +69,7 @@ const SignalsView = ({ messages, signals }: Props) => {
                 </Grid>
             </React.Fragment >
 
-        </div>
+        </div >
     );
 };
 
