@@ -1,15 +1,41 @@
 import React from 'react';
-import CustomSignalsView from '../Registration/CustomSignalsForm';
+import SignalsView from '../Components/SignalsView';
 import SetPinnedSignals from '../Components/SetPinnedSignals';
+import CustomSignalsForm from '../Registration/CustomSignalsForm';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+import { auth } from '../app/services/FirebaseAuth';
+import { SignalsList, CustomText, Recipient } from '../app/model';
+import { db } from '../DataLayer/FirestoreInit';
+
+import { setSignalsList, resetForm, useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
+import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
+import { useFetchRecipientsByIdQuery } from "../features/manageRecipientsSlice";
+import ComposeSignals from '../Components/ComposeSignals';
+import { Typography } from '@mui/material';
 
 const ManageSignals = () => {
 
-    //Is this for viewing and managing a user's signal templates?
+
+    const [user] = useAuthState(auth);
+    const uid = user?.uid;
+    const messages_Data = useFetchMessagesByIdQuery({ id: uid });
+    const signals_Data = useFetchSignalsListByIdQuery({ id: uid });
+    const recipients_Data = useFetchRecipientsByIdQuery({ id: uid });
+    const messages = messages_Data.data as CustomText[];
+    const recipients = recipients_Data.data as Recipient[];
+    const signals = signals_Data.data as SignalsList[];
+
+    if (!user) {
+        return (<Typography component="h2" variant="h6" color="primary" gutterBottom>Please sign in to manage your signals</Typography>)
+    }
 
     return (
         <div style={{ padding: '2rem' }}>
-            <CustomSignalsView />
+            <SignalsView messages={messages} signals={signals} />
+            {/*     <CustomSignalsForm /> */}
             <SetPinnedSignals />
+            <ComposeSignals messages={messages} recipients={recipients} signals={signals} />
 
         </div>
     );

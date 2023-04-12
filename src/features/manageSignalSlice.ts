@@ -24,16 +24,16 @@ const userSignals: UserSignals = [];
 const manageSignalSlice = createSlice({
     name: 'manageSignals',
     initialState: {
-        storeSignalsList: init,
+        SignalsList: init,
         popoverState: false
     },
     reducers: {
-        setStoreSignalsList: (state, action) => {
-            state.storeSignalsList = { ...state.storeSignalsList, ...action.payload };
+        setSignalsList: (state, action) => {
+            state.SignalsList = { ...state.SignalsList, ...action.payload };
         },
         togglePopover: (state) => { state.popoverState = !state.popoverState },
         resetForm: (state) => {
-            state.storeSignalsList = init;
+            state.SignalsList = init;
         }
     }
 });
@@ -70,5 +70,5 @@ export const signalsListApi = createApi({
 export const { useFetchSignalsListByIdQuery } = signalsListApi;
 
 
-export const { setStoreSignalsList, resetForm } = manageSignalSlice.actions;
+export const { setSignalsList, resetForm } = manageSignalSlice.actions;
 export default manageSignalSlice.reducer

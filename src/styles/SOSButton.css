@@ -50,6 +50,7 @@ button.sosButton:active {
 
 button.sosButton.flash {
     animation: flash 0.5s linear infinite;
+    pointer-events: none;
 }
 
 @keyframes flash {
@@ -60,6 +61,29 @@ button.sosButton.flash {
     to {
         background-color: var(--orange);
         box-shadow: 5px 5px 5px var(--orange);
+
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow:
+            inset rgb(222, 17, 17) 0 2px 35px,
+            inset rgba(0, 0, 0, 0.15) 0px -10px 20px,
+            inset rgb(245, 240, 240, 0.9) 0 0 5px,
+            0 0 1px 3px white,
+            0 0 20px rgba(243, 6, 6, 1);
+
+    }
+
+    100% {
+        box-shadow:
+            inset rgb(222, 17, 17) 0 2px 35px,
+            inset rgba(0, 0, 0, 0.15) 0px -10px 20px,
+            inset rgb(245, 240, 240, 0.9) 0 0 5px,
+            0 0 7px 10px white,
+            0 0 20px rgba(243, 6, 6, 1),
+            0 0 40px rgba(133, 2, 2, 1);
 
     }
 }
@@ -82,4 +106,12 @@ button.sosButton.flash {
     button.sosButton span {
         font-size: 50px;
     }
+}
+
+@media (prefers-reduced-motion) {
+    button.sosButton.flash {
+        animation: pulse 2s ease-in-out infinite alternate;
+        background: linear-gradient(270deg, var(--orange), red);
+    }
+
 }
