@@ -7,7 +7,7 @@ import {
     doc, updateDoc, deleteDoc
 } from "@firebase/firestore";
 import { SignalsList, CustomText, Recipient } from '../app/model';
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 
 interface Props {
     messages: CustomText[],

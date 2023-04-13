@@ -1,30 +1,19 @@
 import { Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import React from 'react';
+import { useFetchSignalsByIdQuery } from '../features/signalHistorySlice';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../app/services/FirebaseAuth';
 
 
 
 /* export interface Signal {
-    signalId: string,
+    id: string,
     uid: string | undefined,
-    createdAt: Date,
+    createdAt: Date | string,
     geolocation: GeoCodes
+    signalType:    //this is for the emergency type, from signalsList.name 
 } */
 
-/*
-export interface SignalsList {
-    signalId: string,
-    uid: string,
-    name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
-}
-
-interface GeoCodes {
-    lat: number,
-    lon: number
-}*/
 
 //TOFIX: Add emergency type to signal model?
 //TODO: how is response to signal collected?
@@ -32,29 +21,27 @@ interface GeoCodes {
 const SignalHistory = () => {
     //a log of sent SOSs
 
+    const [user] = useAuthState(auth);
+    const uid = user?.uid;
 
-    const [data] = [[{
-        id: "",
-        createdAt: "",
-        geolocation: "",
-        recipients: ["", ""],
-        name: ""
+    const { data, isFetching, error } = useFetchSignalsByIdQuery(uid);
+    console.log(data);
+
+    if (isFetching) { }
 
 
-    }]]
+    if (error) { }
 
     return (
-        <div style={{padding: '2rem'}}>
+        <div style={{ padding: '2rem' }}>
             <Typography>Signal Log</Typography>
-
-            <p>Your sent signals:</p>
 
             <Table size="medium">
                 <TableHead>
                     <TableRow>
                         <TableCell>Date sent</TableCell>
-                        <TableCell>Emergency type</TableCell>
-                        <TableCell>Message recipients</TableCell>
+                        <TableCell>Signal Id</TableCell>
+                        <TableCell>Signal Type</TableCell>
                         <TableCell>Sent from location</TableCell>
                         <TableCell>Response</TableCell>
                     </TableRow>
@@ -63,13 +50,11 @@ const SignalHistory = () => {
 
                     {data && data.map((signal) => (
                         <TableRow key={signal.id} >
-                            <TableCell>{signal.createdAt}</TableCell>
-                            <TableCell>{signal.name}</TableCell>
-                            <TableCell>{signal.recipients}</TableCell>
-                            <TableCell>{signal.geolocation}</TableCell>
+                            <TableCell>{/* {signal.createdAt} */}</TableCell>
+                            <TableCell>{signal.id}</TableCell>
+                            <TableCell>{signal.signalType}</TableCell>
+                            <TableCell>{`${signal.geolocation.lon}, ${signal.geolocation.lat}`}</TableCell>
                             <TableCell></TableCell>
-
-
                         </TableRow>
                     ))}
                 </TableBody>

@@ -5,10 +5,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { customTextApi, resetForm, togglePopover, toggleDeletePopover } from '../features/customTextSlice';
 import { CustomText } from '../app/model';
-import DiscardPopover from '../Components/DiscardPopover';
+import DiscardPopover from './DiscardPopover';
 
 type CustomTexts = CustomText[];
 interface Props {

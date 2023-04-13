@@ -66,7 +66,8 @@ export interface Signal {
     id: string,
     uid: string | undefined,
     createdAt: Date | string,
-    geolocation: GeoCodes
+    geolocation: GeoCodes,
+    signalType: string
 }
 
 export interface CustomText {

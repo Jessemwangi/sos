@@ -5,7 +5,7 @@ import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from "react-toastify"
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { CustomText } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { customTextApi, setCustomText, resetForm } from '../features/customTextSlice';

@@ -1,12 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import profileSlice from '../features/profileSlice';
-import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRecipientsSlice';
+import profileSlice, { profileApi } from '../features/profileSlice';
 import headerSlice from '../features/headerSlice';
-import customTextSlice from '../features/customTextSlice';
-import signalSlice from '../features/signalSlice';
-import dashboardSlice, { sosSignalApi } from '../features/dashboardSlice';
-import { profileApi } from '../features/profileApi';
-import { customTextApi} from '../features/customTextSlice';
+import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRecipientsSlice';
+import customTextSlice, { customTextApi } from '../features/customTextSlice';
+import signalHistorySlice, { signalHistoryApi } from '../features/signalHistorySlice';
+import dashboardSlice from '../features/dashboardSlice';
 import manageSignalSlice, { signalsListApi } from '../features/manageSignalSlice';
 
 
@@ -17,16 +15,16 @@ export const store = configureStore({
     header: headerSlice,
     customText: customTextSlice,
     manageSignals: manageSignalSlice,
-    signal: signalSlice,
+    sosSignal: signalHistorySlice,
     dashboard: dashboardSlice,
     [profileApi.reducerPath]: profileApi.reducer,
-    [sosSignalApi.reducerPath]: sosSignalApi.reducer,
+    [signalHistoryApi.reducerPath]: signalHistoryApi.reducer,
     [customTextApi.reducerPath]: customTextApi.reducer,
     [signalsListApi.reducerPath]: signalsListApi.reducer,
     [manageRecipientsApi.reducerPath]: manageRecipientsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(profileApi.middleware).concat(sosSignalApi.middleware).concat(customTextApi.middleware).concat(signalsListApi.middleware).concat(manageRecipientsApi.middleware)
+    getDefaultMiddleware().concat(profileApi.middleware).concat(signalHistoryApi.middleware).concat(customTextApi.middleware).concat(signalsListApi.middleware).concat(manageRecipientsApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -8,11 +8,11 @@ import SosIcon from '@mui/icons-material/Sos';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import ProfileForm from '../Registration/ProfileForm';
-import RecipientEntryForm from '../Registration/RecipientEntryForm';
-import CustomTextForm from '../Registration/CustomTextForm';
-import CustomSignalsForm from '../Registration/CustomSignalsForm';
-import WrapUp from '../Registration/WrapUp';
+import ProfileForm from '../registration/ProfileForm';
+import RecipientEntryForm from '../registration/RecipientEntryForm';
+import CustomTextForm from '../registration/CustomTextForm';
+import CustomSignalsForm from '../registration/CustomSignalsForm';
+import WrapUp from '../registration/WrapUp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 
@@ -120,8 +120,8 @@ const CompleteReg = () => {
                       variant="contained"
                       onClick={handleNext}
                       sx={{ mt: 3, ml: 1 }}
-                        >
-                        
+                    >
+
                       {activeStep === steps.length - 2 ? 'View Summary' : activeStep === steps.length - 1 ? 'Done' : 'Next'}
                     </Button>
                   </Box>

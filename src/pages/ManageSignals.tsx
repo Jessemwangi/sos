@@ -1,6 +1,6 @@
 import React from 'react';
-import SignalsView from '../Components/SignalsView';
-import SetPinnedSignals from '../Components/SetPinnedSignals';
+import SignalsView from '../components/SignalsView';
+import SetPinnedSignals from '../components/SetPinnedSignals';
 //import CustomSignalsForm from '../Registration/CustomSignalsForm';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -10,7 +10,7 @@ import { SignalsList, CustomText, Recipient } from '../app/model';
 import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 import { useFetchRecipientsByIdQuery } from "../features/manageRecipientsSlice";
-import ComposeSignals from '../Components/ComposeSignals';
+import ComposeSignals from '../components/ComposeSignals';
 import { Typography } from '@mui/material';
 
 const ManageSignals = () => {

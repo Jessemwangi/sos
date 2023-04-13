@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomTextView from '../Components/CustomTextView';
-import CustomTextEntryForm from '../Registration/CustomTextForm';
+import CustomTextView from '../components/CustomTextView';
+import CustomTextEntryForm from '../registration/CustomTextForm';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
@@ -17,7 +17,7 @@ const CustomMsgs = () => {
         error
     } = useFetchMessagesByIdQuery({ id: uid });
 
-  
+
     return (
         <div style={{ padding: '2rem' }}>
             <CustomTextView data={data} isFetching={isFetching} error={error} />

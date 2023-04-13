@@ -7,7 +7,7 @@ import { doc, setDoc } from "@firebase/firestore";
 import { toast } from 'react-toastify';
 import { auth } from '../app/services/FirebaseAuth';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { setSignalsList, resetForm, signalsListApi } from '../features/manageSignalSlice';
 
 interface Props {

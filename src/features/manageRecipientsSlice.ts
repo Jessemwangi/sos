@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Recipient } from "../app/model";
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { db } from "../DataLayer/FirestoreInit";
+import { db } from "../dataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 
 

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignalsList } from '../app/model';
-import { db } from "../DataLayer/FirestoreInit";
+import { db } from "../dataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 
 const init: SignalsList = {

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { SignalsList } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { setSignalsList, signalsListApi, resetForm } from '../features/manageSignalSlice';
 
 const CustomSignalsForm = () => {

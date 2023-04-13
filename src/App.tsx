@@ -10,7 +10,7 @@ import {
 import { AuthProvider } from './app/services/FirebaseProvider';
 
 
-import Layout from './Components/Layout';
+import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ManageProfile from './pages/ManageProfile';
 import ManageRecipients from './pages/ManageRecipients';

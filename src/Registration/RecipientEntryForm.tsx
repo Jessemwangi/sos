@@ -11,7 +11,7 @@ import {
   doc, setDoc, /* serverTimestamp, Timestamp */
 } from "@firebase/firestore";
 
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { Recipient } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { resetForm, setRecipient } from '../features/manageRecipientsSlice';

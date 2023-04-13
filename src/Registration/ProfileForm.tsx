@@ -8,8 +8,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { doc, updateDoc, setDoc } from "@firebase/firestore";
 
-import { db } from '../DataLayer/FirestoreInit';
-import { useFetchProfileQuery } from '../features/profileApi';
+import { db } from '../dataLayer/FirestoreInit';
+import { profileApi, useFetchProfileQuery } from '../features/profileSlice';
 import { auth } from "../app/services/FirebaseAuth";
 import { setProfile, updateProfile } from "../features/profileSlice";
 
@@ -55,11 +55,13 @@ const ProfileForm = () => {
       if (data?.email) {
         await updateDoc(doc(db, 'profile', uid), { ...storeProfile })
         toast.success("Information updated successfully!")
+        dispatch(profileApi.util.invalidateTags(['Profile']));
       }
       else {
 
         await setDoc(doc(db, 'profile', uid), { ...storeProfile })
-        toast.success("Profile created successfully!")
+        toast.success("Profile created successfully!");
+        dispatch(profileApi.util.invalidateTags(['Profile']));
       }
     } catch (error: any) {
       console.log(error)
