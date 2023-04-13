@@ -111,7 +111,7 @@ button.sosButton.flash {
 @media (prefers-reduced-motion) {
     button.sosButton.flash {
         animation: pulse 2s ease-in-out infinite alternate;
-        background: linear-gradient(270deg, var(--orange), red);
+        background: linear-gradient(180deg, rgb(222, 17, 17), var(--red));
     }
 
 }

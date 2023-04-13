@@ -1,6 +1,6 @@
 .dashboard {
     width: 100%;
-    min-height: 75vh;
+    min-height: 80vh;
     background: rgba(125, 125, 255, 0.5);
     background: linear-gradient(to bottom, rgba(125, 125, 255, 0.5) 70%, rgba(125, 125, 255, 0.1));
     padding: 2rem;
@@ -14,11 +14,9 @@
     align-items: center;
     justify-content: center; */
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
     height: 50vh;
-
-
 }
 
 .sosMenuContainer {
@@ -29,7 +27,6 @@
 div.activation-text {
     display: flex;
     flex-direction: column;
-
 }
 
 div.activation-text span {

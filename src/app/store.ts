@@ -1,24 +1,24 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import profileSlice from '../features/profileSlice';
-import sosButtonSlice from '../features/sosButtonSlice';
 import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRecipientsSlice';
 import headerSlice from '../features/headerSlice';
 import customTextSlice from '../features/customTextSlice';
 import signalSlice from '../features/signalSlice';
+import dashboardSlice, { sosSignalApi } from '../features/dashboardSlice';
 import { profileApi } from '../features/profileApi';
-import { sosSignalApi } from '../features/sosMenuSlice';
-import { customTextApi, } from '../features/customTextSlice';
+import { customTextApi} from '../features/customTextSlice';
 import manageSignalSlice, { signalsListApi } from '../features/manageSignalSlice';
+
 
 export const store = configureStore({
   reducer: {
     profile: profileSlice,
-    sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,
     customText: customTextSlice,
     manageSignals: manageSignalSlice,
     signal: signalSlice,
+    dashboard: dashboardSlice,
     [profileApi.reducerPath]: profileApi.reducer,
     [sosSignalApi.reducerPath]: sosSignalApi.reducer,
     [customTextApi.reducerPath]: customTextApi.reducer,

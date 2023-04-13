@@ -1,14 +1,13 @@
 import React from 'react';
 import SignalsView from '../Components/SignalsView';
 import SetPinnedSignals from '../Components/SetPinnedSignals';
-import CustomSignalsForm from '../Registration/CustomSignalsForm';
+//import CustomSignalsForm from '../Registration/CustomSignalsForm';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { auth } from '../app/services/FirebaseAuth';
 import { SignalsList, CustomText, Recipient } from '../app/model';
-import { db } from '../DataLayer/FirestoreInit';
 
-import { setSignalsList, resetForm, useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
+import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 import { useFetchMessagesByIdQuery } from '../features/customTextSlice';
 import { useFetchRecipientsByIdQuery } from "../features/manageRecipientsSlice";
 import ComposeSignals from '../Components/ComposeSignals';

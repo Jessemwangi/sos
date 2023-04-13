@@ -1,10 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+import { SignalsList } from '../app/model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../DataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
-import { SignalsList } from '../app/model';
 
-//for maintaining the user's personalised emergency types/signals
+export interface DashboardState {
+    activeSos: boolean;
+    signal: SignalsList;
+}
 
 const init: SignalsList = {
     id: "",
@@ -13,27 +16,31 @@ const init: SignalsList = {
     recipients: [],
     presetMsg: "",
     cstTextId: "",
-    createdAt: new Date(),
+    createdAt: "",
     pinned: false,
     default: false
 }
 
-type Signals = SignalsList[];
+//type Signals = SignalsList[] | undefined;
 
 
-export const sosMenuSlice = createSlice({
-    name: 'sosMenu',
-    initialState: {
-        signals: init,
-    },
+const initialState: DashboardState = {
+    activeSos: false,
+    signal: init,
+};
+
+
+export const dashboardSlice = createSlice({
+    name: 'dashboard',
+    initialState,
     reducers: {
-        selectSos: (state, action: PayloadAction<number>) => {
-
-        }
-    }
-
-
-})
+        activate: (state, action) => { state.activeSos = action.payload }
+    },
+    /*  selectSos: (state, action: PayloadAction<SignalsList>) => {
+         state.signal = {state.signal, ...action.payload}
+     } */
+}
+);
 
 export const sosSignalApi = createApi({
     baseQuery: fakeBaseQuery(),
@@ -47,12 +54,12 @@ export const sosSignalApi = createApi({
                 try {
                     const q = query(
                         collection(db, 'signalsList'),
-                        where('uid', '==', id),
+                        where('uid', 'in', [id, 'ALL']),
                     );
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-                    let signals: Signals = [];
+                    let signals: SignalsList[] = [];
                     querySnapshot?.forEach((doc) => {
-                        signals.push({ ...doc.data() } as SignalsList)
+                        signals!.push({ ...doc.data() } as SignalsList)
                     })
                     return { data: signals };
                 }
@@ -67,11 +74,7 @@ export const sosSignalApi = createApi({
 })
 
 
-
-
-
-export const { selectSos } = sosMenuSlice.actions;
-export default sosMenuSlice.reducer;
-
-
 export const { useFetchSignalsListByIdQuery } = sosSignalApi;
+
+export const { activate } = dashboardSlice.actions;
+export default dashboardSlice.reducer;

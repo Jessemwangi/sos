@@ -3,17 +3,48 @@ import SOSButton from '../Components/SOSButton';
 import SOSMenu from '../Components/SOSMenu';
 import '../styles/Dashboard.css'
 import { useSelector, useDispatch } from 'react-redux';
+import { activate } from '../features/dashboardSlice';
+import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from '../app/services/FirebaseAuth'
+import { SignalsList } from '../app/model';
 
 
 const Dashboard = () => {
     const dispatch = useDispatch();
-    const active = useSelector((state: any) => state.sosButton.active);
-    console.log(active)
-  
+    const activeSos = useSelector((state: any) => state.dashboard.activeSos);
+    console.log(activeSos)
+    const [user] = useAuthState(auth);
+    const uid = user?.uid ? user.uid : '';
+
+    const {
+        data
+    } = useFetchSignalsListByIdQuery({ id: uid });
+
+    console.log('signals data', data);
+
+    function activateSosButton(e: any) {
+        e.currentTarget.classList.toggle('flash')
+        dispatch(activate(true));
+    }
+
+    const sosTimer = setTimeout(() => { }, 120 * 1000);
+
+    function cancelSos(e: any) {
+        clearTimeout(sosTimer);
+        dispatch(activate(false));
+        /*    e.currentTarget.classList.toggle('invisible') */
+        alert('cancelling sos...')
+    }
+
+    function clickHandler(e: any) {
+        //dispatch(selectSos(e.target.key));
+        e.target.classList.toggle('selected');
+    }
 
     useEffect(() => {
-        if (active === true) { console.log('detecting active button') }
-    }, [active])
+        if (activeSos === true) { console.log('detecting active button') }
+    }, [activeSos])
 
 
 
@@ -35,13 +66,13 @@ const Dashboard = () => {
     return (
         <div className="dashboard">
             <div className="sosButtonContainer">
-                <SOSButton />
+      <SOSButton clickHandler={activateSosButton}></SOSButton>
             </div>
 
-            {active ? (<div className="activation-text">
+            {activeSos ? (<div className="activation-text">
                 <span >SOS has been activated. Select emergency type : </span>
                 <div className="sosMenuContainer">
-                    <SOSMenu />
+                    {data ? (<SOSMenu signals={data} clickHandler={clickHandler} />) : (<></>)}
                 </div>
             </div>)
                 : (<></>

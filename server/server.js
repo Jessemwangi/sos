@@ -34,8 +34,8 @@ app.post('/sms', (req, res) => {
             .create({
                 body: req.body.body,
                 from: `${twilio_number}`,
-                to: `${my_number}` //req.body.recipients
-            }).then(message => console.log(message.sid))
+                to: `${my_number}` //for testing, will be req.body.recipients
+            }).then(message => console.log('sending...'))
             .then(() => { res.send(JSON.stringify({ success: true })) })
 
     }
