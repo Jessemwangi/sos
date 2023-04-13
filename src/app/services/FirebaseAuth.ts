@@ -41,10 +41,9 @@ async function signInUser(email: string, password: string) {
         return user;
       })
     .catch((error) => {
-      const errorMessage = error.message;
-      console.log(error);
-
-      return (errorMessage)
+      let errorMessage = error.message;
+      errorMessage = errorMessage.substring(errorMessage.indexOf(' '));
+      toast.error(errorMessage)
     })
 }
 

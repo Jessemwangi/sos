@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import SOSButton from '../Components/SOSButton';
 import SOSMenu from '../Components/SOSMenu';
-import Timer from '../Components/Timer';
 import '../styles/Dashboard.css'
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -10,11 +9,7 @@ const Dashboard = () => {
     const dispatch = useDispatch();
     const active = useSelector((state: any) => state.sosButton.active);
     console.log(active)
-    const sosTimer = setTimeout(() => { }, 120 * 1000);
-
-    function cancelSos() {
-        clearTimeout(sosTimer);
-    }
+  
 
     useEffect(() => {
         if (active === true) { console.log('detecting active button') }
@@ -41,7 +36,6 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="sosButtonContainer">
                 <SOSButton />
-                {/*       <div><Timer /></div> */}
             </div>
 
             {active ? (<div className="activation-text">

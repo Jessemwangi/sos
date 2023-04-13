@@ -50,27 +50,28 @@ const RecipientEntryForm = () => {
   // --> yes
 
   async function sendData() {
-    await setDoc(doc(db, 'recipients', recipient.id), {
-      id: recipient.id,
-      createdAt: /* serverTimestamp() */"",
-      name: recipient.name,
-      address: recipient.address,
-      phone: recipient.phone,
-      city: recipient.city,
-      postcode: recipient.postcode,
-      uid: recipient.uid,
-      email: recipient.email
-    }).then(() => toast.success("Recipient created successfully!"))
-      .catch((err) => alert(err));
-    dispatch(resetForm());
-
+    if (recipient.id) {
+      await setDoc(doc(db, 'recipients', `${recipient.id}`), {
+        id: recipient.id,
+        createdAt: /* serverTimestamp() */"",
+        name: recipient.name,
+        address: recipient.address,
+        phone: recipient.phone,
+        city: recipient.city,
+        postcode: recipient.postcode,
+        uid: recipient.uid,
+        email: recipient.email
+      }).then(() => toast.success("Recipient created successfully!"))
+        .catch((err) => alert(err));
+      dispatch(resetForm());
+      setReadyState(false)
+    }
   }
 
 
   useEffect(() => {
     sendData();
     dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
-    //setLoading(true)
     //eslint-disable-next-line
   }, [readyState])
 

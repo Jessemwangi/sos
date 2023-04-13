@@ -8,59 +8,6 @@ import { auth } from '../app/services/FirebaseAuth'
 import { useFetchSignalsListByIdQuery } from '../features/manageSignalSlice';
 
 
-
-const emergencyList: SignalsList[] = [
-    {
-        signalId: '4',
-        uid: '',
-        name: 'Fire',
-        recipients: [],
-        presetMsg: 'string',
-        cstTextId: '',
-        createdAt: new Date(),
-        pinned: true,
-        default: false
-    },
-    {
-        signalId: '45',
-        uid: '',
-        name: 'Medical Emergency',
-        recipients: [],
-        presetMsg: 'string',
-        cstTextId: '',
-        createdAt: new Date(),
-        pinned: true,
-        default: false
-    },
-
-    {
-        signalId: '657',
-        uid: '',
-        name: 'Home Invasion',
-        recipients: [],
-        presetMsg: 'string',
-        cstTextId: '',
-        createdAt: new Date(),
-        pinned: true,
-        default: false
-    },
-    {
-        signalId: '789',
-        uid: '4',
-        name: 'Custom Field',
-        recipients: [],
-        presetMsg: 'string',
-        cstTextId: '567sd',
-        createdAt: new Date(),
-        pinned: true,
-        default: false
-    }
-]
-
-
-//TODO: fetch emergency list from db
-
-
 const SOSMenu = () => {
 
     const [user] = useAuthState(auth);
@@ -68,22 +15,19 @@ const SOSMenu = () => {
     const dispatch = useDispatch();
 
     const {
-        data,
-        isFetching,
-        error
+        data
     } = useFetchSignalsListByIdQuery({ id: uid });
+    console.log('signals data', data);
 
     function clickHandler(e: any) {
         //dispatch(selectSos(e.target.key));
         e.target.classList.toggle('selected');
     }
 
-
-    console.log(data);
     return (
         <div className="sosMenu">
-            {emergencyList.map((item) => (
-                <button key={item.signalId} onClick={clickHandler}>{item.name}</button>))}
+            {data?.map((item) => (
+                <button key={item.id} onClick={clickHandler}>{item.name}</button>))}
         </div>
     );
 };

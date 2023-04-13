@@ -25,10 +25,10 @@ export interface Profile {
     username?: string,
     addressline1?: string,
     addressline2?: string,
-    city?: string,
+    city: string,
     state_province?: string,
     postcode?: string
-    country?: string
+    country: string
     createdAt?: Date | null | string
 }
 
@@ -46,12 +46,12 @@ export interface Recipient {
 }
 
 export interface SignalsList {
-    signalId: string,
+    id: string,
     uid: string | undefined,
     name: string,
     recipients: string[],
     presetMsg?: string | undefined,
-    cstTextId?: string | undefined,
+    cstTextId: string | undefined,
     createdAt?: Date | string,
     pinned: boolean
     default: boolean
@@ -63,7 +63,7 @@ export interface GeoCodes {
 }
 
 export interface Signal {
-    signalId: string,
+    id: string,
     uid: string | undefined,
     createdAt: Date | string,
     geolocation: GeoCodes

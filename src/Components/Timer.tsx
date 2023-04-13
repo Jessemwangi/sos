@@ -1,21 +1,16 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import '../styles/Timer.css'
 
-const Timer = () => {
+const Timer = ({ clickHandler }: any) => {
 
 
     return (
-        <div className="timer-container">
+        <div className="timer-container" onClick={clickHandler}>
             <div className="timer">
-            <span>SOS</span>
+                <span>SOS</span>
                 <div className="ticker">
-
-                    
                 </div>
-
             </div>
-
         </div>
     );
 };

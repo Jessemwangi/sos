@@ -4,11 +4,9 @@ import { SignalsList } from '../app/model';
 import { db } from "../DataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
 
-
-type UserSignals = SignalsList[];
 const init: SignalsList = {
-    signalId: "",
-    uid: "", //firebase uid
+    id: "",
+    uid: "",
     name: "",
     recipients: [""],
     presetMsg: "",
@@ -17,27 +15,29 @@ const init: SignalsList = {
     pinned: false,
     default: false
 }
-const userSignals: UserSignals = [];
 
 //modify a signal, delete a signal, add a new signal to signalsList
 
 const manageSignalSlice = createSlice({
     name: 'manageSignals',
     initialState: {
-        storeSignalsList: init,
+        signalsList: init,
         popoverState: false
     },
     reducers: {
-        setStoreSignalsList: (state, action) => {
-            state.storeSignalsList = { ...state.storeSignalsList, ...action.payload };
+        setSignalsList: (state, action) => {
+            state.signalsList = { ...state.signalsList, ...action.payload };
         },
         togglePopover: (state) => { state.popoverState = !state.popoverState },
         resetForm: (state) => {
-            state.storeSignalsList = init;
+            state.signalsList = init;
         }
     }
 });
 
+
+type UserSignals = SignalsList[];
+const userSignals: UserSignals = [];
 
 export const signalsListApi = createApi({
     baseQuery: fakeBaseQuery(),
@@ -51,7 +51,7 @@ export const signalsListApi = createApi({
                 try {
                     const q = query(
                         collection(db, 'signalsList'),
-                        where('uid', '==', id),
+                        where('uid', 'in', [id, 'ALL'])
                     );
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     querySnapshot?.forEach((doc) => {
@@ -70,5 +70,5 @@ export const signalsListApi = createApi({
 export const { useFetchSignalsListByIdQuery } = signalsListApi;
 
 
-export const { setStoreSignalsList, resetForm } = manageSignalSlice.actions;
+export const { setSignalsList, resetForm } = manageSignalSlice.actions;
 export default manageSignalSlice.reducer
