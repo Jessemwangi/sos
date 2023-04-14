@@ -16,7 +16,7 @@ const init: SignalsList = {
     default: false
 }
 
-//modify a signaltype, delete a signaltype, add a new signal to signalsList
+//modify a signal, delete a signal, add a new signal to signalsList
 
 const manageSignalSlice = createSlice({
     name: 'manageSignals',
@@ -34,6 +34,8 @@ const manageSignalSlice = createSlice({
         }
     }
 });
+
+
 type UserSignals = SignalsList[];
 const userSignals: UserSignals = [];
 

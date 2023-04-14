@@ -5,7 +5,8 @@ import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRe
 import customTextSlice, { customTextApi } from '../features/customTextSlice';
 import signalHistorySlice, { signalHistoryApi } from '../features/signalHistorySlice';
 import dashboardSlice from '../features/dashboardSlice';
-import manageSignalSlice, { signalsListApi } from '../features/manageSignalSlice';
+import manageSignalSlice from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi'
 
 
 export const store = configureStore({

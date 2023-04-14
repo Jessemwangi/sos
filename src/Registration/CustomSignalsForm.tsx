@@ -74,13 +74,13 @@ const CustomSignalsForm = () => {
                         <FormControlLabel control={<Checkbox id="" name="" onChange={handleChecked} />} label="Set as default signal" />
                     </Grid> */}
                     <Grid item xs={12}>
-                        {/*  <Button
+                        <Button
                             variant="contained"
                             onClick={handleSubmit}
                             sx={{ mt: 3, ml: 1 }}
                         >
                             {buttonAction}
-                        </Button> */}
+                        </Button>
                     </Grid>
                 </Grid>
             </>
