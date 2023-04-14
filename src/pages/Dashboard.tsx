@@ -69,7 +69,7 @@ const Dashboard = () => {
 
     function getGeolocation() {
         if (window.navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => console.log(position));
+            navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => console.log('lat: ', position.coords.latitude, ' lon: ', position.coords.longitude))
             //return(position);
         } else {
             alert('Your browser does not support geolocation')
@@ -139,14 +139,16 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="dashboardContainer">
 
+
                 <div className="sosButtonContainer">
                     <button ref={sosButtonRef} type="button" className="sosButton" id="sosButton" onClick={activateSosButton}>
                         <span>SOS</span>
                     </button>
                 </div>
-                {/*   <div className="timerContainer">
-                         <Timer clickHandler={cancelSos} /> 
-                </div> */}
+                <div className="timerContainer">
+                    <p>This app requires use of the geolocation API. By using this app you agree to allow the browser to use your location. </p>
+                    {/*       <Timer clickHandler={cancelSos} />*/}
+                </div>
             </div>
             {activeSos ? (<div className="activation-text">
                 <span> SOS has been activated. Select emergency type : </span>

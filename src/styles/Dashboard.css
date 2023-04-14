@@ -33,6 +33,8 @@ div.timerContainer {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-top: 1rem;
+    
 }
 
 div.activation-text {
