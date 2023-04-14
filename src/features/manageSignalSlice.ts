@@ -22,7 +22,8 @@ const manageSignalSlice = createSlice({
     name: 'manageSignals',
     initialState: {
         signalsList: init,
-        popoverState: false
+        popoverState: false,
+        deletePopoverOpen: false
     },
     reducers: {
         setSignalsList: (state, action) => {
@@ -31,15 +32,17 @@ const manageSignalSlice = createSlice({
         togglePopover: (state) => { state.popoverState = !state.popoverState },
         resetForm: (state) => {
             state.signalsList = init;
-        }
+        },
+        toggleDeletePopover: (state) => { state.deletePopoverOpen = !state.deletePopoverOpen },
+
     }
 });
 
 
-type UserSignals = SignalsList[];
-const userSignals: UserSignals = [];
+//type UserSignals = SignalsList[];
+//const userSignals: UserSignals = [];
 
-export const signalsListApi = createApi({
+/* export const signalsListApi = createApi({
     baseQuery: fakeBaseQuery(),
     tagTypes: ['UserSignals'],
     reducerPath: "signalsListApi",
@@ -67,8 +70,8 @@ export const signalsListApi = createApi({
     })
 });
 
-export const { useFetchSignalsListByIdQuery } = signalsListApi;
+export const { useFetchSignalsListByIdQuery } = signalsListApi; */
 
 
-export const { setSignalsList, resetForm } = manageSignalSlice.actions;
+export const { setSignalsList, resetForm, toggleDeletePopover, togglePopover } = manageSignalSlice.actions;
 export default manageSignalSlice.reducer

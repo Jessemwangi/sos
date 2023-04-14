@@ -12,7 +12,7 @@ import '../styles/RecipientsView.css';
 import { db } from '../dataLayer/FirestoreInit';
 import { Recipient } from '../app/model';
 import { manageRecipientsApi, resetForm, togglePopover, toggleDeletePopover } from '../features/manageRecipientsSlice';
-import DiscardPopover from './DiscardPopover';
+import DiscardPopover from './DeletePopover';
 
 type Recipients = Recipient[]
 interface Props {

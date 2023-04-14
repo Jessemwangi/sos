@@ -8,7 +8,7 @@ import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../dataLayer/FirestoreInit';
 import { customTextApi, resetForm, togglePopover, toggleDeletePopover } from '../features/customTextSlice';
 import { CustomText } from '../app/model';
-import DiscardPopover from './DiscardPopover';
+import DeletePopover from './DeletePopover';
 
 type CustomTexts = CustomText[];
 interface Props {
@@ -168,7 +168,7 @@ const CustomTextView = ({ data, isFetching, error }: Props) => {
 
 
 
-      <DiscardPopover
+      <DeletePopover
         yesHandler={yesHandler}
         noHandler={noHandler}
         deletePopoverOpen={deletePopoverOpen}

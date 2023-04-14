@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CustomText, Recipient, SignalsList } from '../app/model';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Typography, Grid, TextField, Button, FormControl, FormControlLabel, Checkbox, Select, InputLabel, MenuItem, FormGroup, Box } from '@mui/material';
+import { Typography, Grid, TextField, Button, FormControl, FormControlLabel, Checkbox, Select, InputLabel, MenuItem, FormGroup, } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { toast } from 'react-toastify';
 import { auth } from '../app/services/FirebaseAuth';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../dataLayer/FirestoreInit';
-import { setSignalsList, resetForm, signalsListApi } from '../features/manageSignalSlice';
+import { setSignalsList, resetForm } from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi'
 import CustomTextForm from '../registration/CustomTextForm';
 
 type UserSignals = SignalsList[]

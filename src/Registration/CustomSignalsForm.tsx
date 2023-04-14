@@ -7,8 +7,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { SignalsList } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { db } from '../dataLayer/FirestoreInit';
-import { setSignalsList, signalsListApi, resetForm } from '../features/manageSignalSlice';
-
+import { setSignalsList, resetForm } from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi';
 const CustomSignalsForm = () => {
 
     //for creating user's custom emergency types

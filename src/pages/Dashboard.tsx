@@ -63,13 +63,7 @@ const Dashboard = () => {
     const data = signals_Data.data as UserSignals;
     console.log(data)
 
-    useEffect(() => {
-        if (data) {
-            setObjectState(data)
-
-        }
-
-    }, [uid])
+ 
     const sosButtonRef = useRef<HTMLButtonElement>(null);
 
     //const { data, isFetching } = useFetchSignalsListByIdQuery({ id: uid });
