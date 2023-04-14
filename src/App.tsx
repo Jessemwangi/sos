@@ -38,6 +38,7 @@ const router = createBrowserRouter(
       <Route path="/replytoSignal/:signalid" element={<AnsToSignals />}> </Route>
       <Route path="/regwizard" element={<CompleteReg />}>Initial Setup</Route>
       <Route path="/help" element={<HowTo />}>Help and Documentation</Route>
+      <Route path="/sos" element={<SOS />}></Route>{/* just for testing */}
       <Route path="/sos/:id" element={<SOS />}></Route>
       <Route path="*" element={<NotFound />}></Route>
     </Route>

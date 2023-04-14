@@ -53,7 +53,7 @@ const SignalHistory = () => {
                             <TableCell>{/* {signal.createdAt} */}</TableCell>
                             <TableCell>{signal.id}</TableCell>
                             <TableCell>{signal.signalType}</TableCell>
-                            <TableCell>{`${signal.geolocation.lon}, ${signal.geolocation.lat}`}</TableCell>
+                            <TableCell>{`${signal.geolocation.lng}, ${signal.geolocation.lat}`}</TableCell>
                             <TableCell></TableCell>
                         </TableRow>
                     ))}

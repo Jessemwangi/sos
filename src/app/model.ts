@@ -59,7 +59,7 @@ export interface SignalsList {
 
 export interface GeoCodes {
     lat: number,
-    lon: number
+    lng: number
 }
 
 export interface Signal {

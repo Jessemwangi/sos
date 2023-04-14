@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import '../styles/Dashboard.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuthState } from "react-firebase-hooks/auth";
 import Timer from '../components/Timer';
@@ -7,25 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
 import { activate } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
-import '../styles/Dashboard.css'
 
-/**
-
-
-export interface Signal {
-    id: string,
-    uid: string | undefined,
-    createdAt: Date | string,
-    geolocation: GeoCodes,
-    signalType: string
-}
- *    setSignal: (state: any, action) => {
-            state.signal = action.payload
-        },
-    //fetch corresponding message and recipients from db
-    //where is geolocation triggered? in Timeout function? Timer dispatches geolocation to store?
- * 
- *  */
 
 let sosTimer: any;
 let default_message: string | undefined = "";
@@ -61,47 +44,41 @@ const Dashboard = () => {
     type UserSignals = SignalsList[]
     const signals_Data = useFetchUserSignalsByIdQuery({ id: uid });
     const data = signals_Data.data as UserSignals;
-    console.log(data)
-
- 
-    const sosButtonRef = useRef<HTMLButtonElement>(null);
+    //console.log(data)
 
     //const { data, isFetching } = useFetchSignalsListByIdQuery({ id: uid });
-    //    console.log(data)
-    //type SignalsList[]
-    //const signals = signals_Data.data as SignalsList[];
-    //console.log('signals data', signals);
 
+
+    const sosButtonRef = useRef<HTMLButtonElement>(null);
 
 
     if (data) {
-        const default_signal: SignalsList = (data?.filter((item) => item.default === true))[0];
-        console.log(default_signal); //debugging
-        // default_message = default_signal.presetMsg;
+        const default_signal: SignalsList = (data?.filter((item) => item.id === "DEFAULT"))[0];
+        default_message = default_signal.presetMsg; 
 
     }
-    console.log(default_message); //debugging;
+    //console.log(default_message); //debugging;
 
+    /** sosButton onClick starts timer*/
     function activateSosButton(e: any) {
         sosButtonRef.current!.classList.toggle('flash')
         dispatch(activate(true));
-        sosTimer = setTimeout(sendSosDefault, 10 * 1000);
+        sosTimer = setTimeout(sendSosDefault, 4 * 1000);
 
     }
 
     function getGeolocation() {
         if (window.navigator.geolocation) {
-
             navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => console.log(position));
-            /**
-           .
-             */
+            //return(position);
         } else {
-            alert('Unfortunately your browser does not support geolocation API')
+            alert('Your browser does not support geolocation')
         }
     }
 
+    /**sends default signal if timer expires */
     async function sendSosDefault() {
+        getGeolocation();
         const body_params = {
             message: "",//default message
 

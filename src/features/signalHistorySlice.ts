@@ -13,7 +13,7 @@ const init: Signal = {
     createdAt: "",
     geolocation: {
         lat: 0,
-        lon: 0
+        lng: 0
     },
     signalType: ""
 }
