@@ -67,5 +67,5 @@ export const signalHistoryApi = createApi({
 
 export const { useFetchSignalsByIdQuery } = signalHistoryApi;
 
-export const { } = signalHistorySlice.actions;
+//export const { } = signalHistorySlice.actions;
 export default signalHistorySlice.reducer;

@@ -53,10 +53,10 @@ const Dashboard = () => {
 
 
     if (data) {
-        const default_signal: SignalsList = (data?.filter((item) => item.id === "DEFAULT"))[0];
-        default_message = default_signal.presetMsg; 
-
+        const default_signal: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
+        default_message = default_signal.presetMsg;
     }
+
     //console.log(default_message); //debugging;
 
     /** sosButton onClick starts timer*/
