@@ -29,9 +29,8 @@ export const signalHistorySlice = createSlice({
     reducers: {
 
 
-    }
+    },
 })
-
 
 export const signalHistoryApi = createApi({
     baseQuery: fakeBaseQuery(),
@@ -39,14 +38,12 @@ export const signalHistoryApi = createApi({
     reducerPath: "SignalHistoryApi",
 
     endpoints: (builder) => ({
-        fetchSignalsById: builder.query({
-            async queryFn(arg) {
-                const { uid } = arg;
-
+        fetchSignalsById: builder.query<SignalHistory, { id: string | undefined }>({
+            async queryFn(id) {
                 try {
                     const q = query(
                         collection(db, 'signals'),
-                        where('uid', '==', uid),
+                        where('uid', '==', id),
                     );
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     let signalHistory: SignalHistory = [];

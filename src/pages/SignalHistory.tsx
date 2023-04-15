@@ -1,9 +1,8 @@
-import { Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Typography, LinearProgress, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import React from 'react';
 import { useFetchSignalsByIdQuery } from '../features/signalHistorySlice';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
-
 
 
 /* export interface Signal {
@@ -15,7 +14,6 @@ import { auth } from '../app/services/FirebaseAuth';
 } */
 
 
-//TOFIX: Add emergency type to signal model?
 //TODO: how is response to signal collected?
 
 const SignalHistory = () => {
@@ -27,10 +25,14 @@ const SignalHistory = () => {
     const { data, isFetching, error } = useFetchSignalsByIdQuery(uid);
     console.log(data);
 
-    if (isFetching) { }
+    if (isFetching) {
+        return <LinearProgress color="secondary" />;
+    }
 
+    if (error) {
+        return <p>Error: An Error Occurred</p>;
+    }
 
-    if (error) { }
 
     return (
         <div style={{ padding: '2rem' }}>

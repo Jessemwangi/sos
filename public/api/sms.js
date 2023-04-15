@@ -14,7 +14,7 @@ async function sendSms(req, res) {
         .create({
             from: process.env.REACT_APP_TWILIO_NUMBER,
             to: process.env.REACT_APP_MY_NUMBER,
-            body: req.body.body,
+            body: req.body.message,
         })
         .then(() => {
             res.send(JSON.stringify({ success: true }));

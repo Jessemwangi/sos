@@ -2,17 +2,19 @@ import { useEffect, useState, useRef } from 'react';
 import '../styles/Dashboard.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuthState } from "react-firebase-hooks/auth";
-import Timer from '../components/Timer';
 import { useFetchUserSignalsByIdQuery } from '../features/signalsListApi';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
 import { activate } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
-
+import { useGeolocated } from "react-geolocated";
+import { doc, setDoc } from "@firebase/firestore";
+import { db } from '../dataLayer/FirestoreInit';
+import Timer from '../components/Timer';
 
 let sosTimer: any;
-let default_message: string | undefined = "";
-let geolocation: GeoCodes;
+let geolocation: GeoCodes = { lat: 0, lng: 0 }
+
 
 class SosSignal {
     id: string;
@@ -33,71 +35,137 @@ class SosSignal {
 
 const Dashboard = () => {
 
-
     const dispatch = useDispatch();
     const activeSos = useSelector((state: any) => state.dashboard.activeSos);
     const [user] = useAuthState(auth);
     const uid = user?.uid ? user.uid : '';
     const [objectState, setObjectState] = useState<UserSignals>([])
 
+    let default_message: string | undefined;
+
+
+
+
+    const { coords, isGeolocationAvailable, isGeolocationEnabled, getPosition } =
+        useGeolocated({
+            positionOptions: {
+                enableHighAccuracy: true,
+                timeout: 3000,
+            },
+            userDecisionTimeout: 5000,
+            watchPosition: true,
+            //suppressLocationOnMount: true
+        });
+
+
+
+    /*     useEffect(() => {
+            if (activeSos) {
+                getPosition()
+                if (coords) {
+                    let location = { lat: coords.latitude, lng: coords.longitude }
+                    console.log('location variable:', location)
+                    console.log('lat:', coords.latitude, 'lng:', coords.longitude);
+                    setGeolocation(() => ({
+                        ...location
+                    }))
+                }
+            }
+            // eslint-disable-next-line
+        }, [activeSos]) */
+
 
     type UserSignals = SignalsList[]
     const signals_Data = useFetchUserSignalsByIdQuery({ id: uid });
     const data = signals_Data.data as UserSignals;
-    //console.log(data)
-
     //const { data, isFetching } = useFetchSignalsListByIdQuery({ id: uid });
 
-
     const sosButtonRef = useRef<HTMLButtonElement>(null);
-
 
     if (data) {
         const default_signal: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
         default_message = default_signal.presetMsg;
     }
 
-    //console.log(default_message); //debugging;
-
     /** sosButton onClick starts timer*/
     function activateSosButton(e: any) {
         sosButtonRef.current!.classList.toggle('flash')
         dispatch(activate(true));
         sosTimer = setTimeout(sendSosDefault, 4 * 1000);
+    }
+
+    async function postData(signal: Signal) {
+        //for sending signal to db
+        console.log('check signal: ', signal);
+
+
+        try {
+            await setDoc(doc(db, 'signals', signal.id), {
+                id: signal.id,
+                uid: user?.uid,
+                createdAt: signal.createdAt,
+                geolocation: signal.geolocation,
+                signalType: signal.signalType
+
+
+            })
+                .then(() => { console.log('submitted to firestore') })
+        }
+        catch (error: any) {
+            return { error: error.message }
+        }
 
     }
 
     function getGeolocation() {
-        if (window.navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => console.log('lat: ', position.coords.latitude, ' lon: ', position.coords.longitude))
-            //return(position);
-        } else {
+        getPosition();
+        console.log(coords);
+        if (!isGeolocationEnabled) {
+            alert('You need to allow location permissions')
+        }
+
+        if (!isGeolocationAvailable) {
             alert('Your browser does not support geolocation')
+
+        }
+        if (coords) {
+            let location = { lat: coords.latitude, lng: coords.longitude }
+            console.log('location variable:', location)
+            console.log('lat:', coords.latitude, 'lng:', coords.longitude);
+            geolocation = location;
+
         }
     }
 
+
     /**sends default signal if timer expires */
+    //1. get users geolocation
+    //2. create Signal and send to db for log (maybe this should be a class?)
+    //3. compose params object with message body and recipients
     async function sendSosDefault() {
-        getGeolocation();
+        await getGeolocation();
+        console.log(geolocation);
+
         const body_params = {
-            message: "",//default message
+            message: default_message,//default message in this case
+            geolocation: geolocation,
+            recipients: [] //default recipients
 
         }
 
         const sosSignal = new SosSignal(
-            uuidv4(), uid, "", geolocation, 'Default'
+            uuidv4(), uid, "date", geolocation, 'Default'
         );
-        //1. get users geolocation
-        //2. create Signal and send to db for log (maybe this should be a class?)
-        //3. compose params object with message body and recipients
+        postData(sosSignal); //for signalHistory only
+
         console.log('sending default sos signal....')
         try {
-            const res = await fetch('./api/sms/', {
+            const res = await fetch('/api/sms/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(default_message)
+                body: JSON.stringify(body_params)
             })
 
 
@@ -116,6 +184,7 @@ const Dashboard = () => {
         sosButtonRef.current!.classList.toggle('flash')
         /*    e.currentTarget.classList.toggle('invisible') */
         alert('cancelling sos...')
+        //clear watchPosition
     }
 
     function selectSosType(e: any) {
@@ -124,9 +193,9 @@ const Dashboard = () => {
         console.log('button id:', e.target.id);
     }
 
-    useEffect(() => {
-        if (activeSos === true) { console.log('detecting active button') }
-    }, [activeSos])
+    /*  useEffect(() => {
+         if (activeSos === true) { console.log('detecting active button') }
+     }, [activeSos]) */
 
 
     /*  if (isFetching) {
@@ -138,15 +207,12 @@ const Dashboard = () => {
     return (
         <div className="dashboard">
             <div className="dashboardContainer">
-
-
                 <div className="sosButtonContainer">
                     <button ref={sosButtonRef} type="button" className="sosButton" id="sosButton" onClick={activateSosButton}>
                         <span>SOS</span>
                     </button>
                 </div>
                 <div className="timerContainer">
-                    <p>This app requires use of the geolocation API. By using this app you agree to allow the browser to use your location. </p>
                     {/*       <Timer clickHandler={cancelSos} />*/}
                 </div>
             </div>

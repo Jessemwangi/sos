@@ -23,7 +23,7 @@ const CustomSignalsForm = () => {
         dispatch(setSignalsList({ [e.target.name]: e.target.value }))
     }
 
-    function handleChecked(e: any) { }
+    //function handleChecked(e: any) { }
 
     function completeSignal() {
         dispatch(setSignalsList({ uid: uid, id: uuidv4() }));
