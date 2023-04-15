@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { SignalsList } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
-import { db } from '../DataLayer/FirestoreInit';
-import { setSignalsList, signalsListApi, resetForm } from '../features/manageSignalSlice';
-
+import { db } from '../dataLayer/FirestoreInit';
+import { setSignalsList, resetForm } from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi';
 const CustomSignalsForm = () => {
 
     //for creating user's custom emergency types
@@ -23,7 +23,7 @@ const CustomSignalsForm = () => {
         dispatch(setSignalsList({ [e.target.name]: e.target.value }))
     }
 
-    function handleChecked(e: any) { }
+    //function handleChecked(e: any) { }
 
     function completeSignal() {
         dispatch(setSignalsList({ uid: uid, id: uuidv4() }));
@@ -74,13 +74,13 @@ const CustomSignalsForm = () => {
                         <FormControlLabel control={<Checkbox id="" name="" onChange={handleChecked} />} label="Set as default signal" />
                     </Grid> */}
                     <Grid item xs={12}>
-                        {/*  <Button
+                        <Button
                             variant="contained"
                             onClick={handleSubmit}
                             sx={{ mt: 3, ml: 1 }}
                         >
                             {buttonAction}
-                        </Button> */}
+                        </Button>
                     </Grid>
                 </Grid>
             </>

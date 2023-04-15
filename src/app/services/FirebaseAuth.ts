@@ -9,7 +9,7 @@ import {
   signOut, updateProfile,
 } from "firebase/auth";
 
-import { app } from '../../DataLayer/FirestoreInit';
+import { app } from '../../dataLayer/FirestoreInit';
 import { toast } from "react-toastify";
 
 const provider = new GoogleAuthProvider();

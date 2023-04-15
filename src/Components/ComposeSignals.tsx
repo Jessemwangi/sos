@@ -2,18 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CustomText, Recipient, SignalsList } from '../app/model';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Typography, Grid, TextField, Button, FormControl, FormControlLabel, Checkbox, Select, InputLabel, MenuItem, FormGroup, Box } from '@mui/material';
+import { Typography, Grid, TextField, Button, FormControl, FormControlLabel, Checkbox, Select, InputLabel, MenuItem, FormGroup, } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { toast } from 'react-toastify';
 import { auth } from '../app/services/FirebaseAuth';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../DataLayer/FirestoreInit';
-import { setSignalsList, resetForm, signalsListApi } from '../features/manageSignalSlice';
+import { db } from '../dataLayer/FirestoreInit';
+import { setSignalsList, resetForm } from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi'
+import CustomTextForm from '../registration/CustomTextForm';
+
+type UserSignals = SignalsList[]
 
 interface Props {
     messages: CustomText[]
     recipients: Recipient[]
-    signals: SignalsList[]
+    signals: UserSignals
 }
 
 
@@ -41,7 +45,7 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
     function handleMessage(e: any) {
         if (readyState === true) { setReadyState(false) }
         console.log(e.target.value)
-        dispatch(setSignalsList({ presetMsg: e.target.value, cstTextId: e.target.key }))
+        dispatch(setSignalsList({ presetMsg: e.target.value }))
     }
 
     //would it be better for recipients to be an object array, each object with recipient name and id
@@ -84,7 +88,9 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                     recipients: signalsList.recipients,
                     presetMsg: signalsList.presetMsg,
                     cstTextId: signalsList.cstTextId,
-                    createdAt: ""
+                    createdAt: "",
+                    default: false,
+                    pinned: false
                 }, { merge: true })
                     .then(() => { toast.success('Successfully submitted to firestore') })
                 dispatch(resetForm());
@@ -101,6 +107,8 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
 
     useEffect(() => {
         postData();
+        dispatch(signalsListApi.util.invalidateTags(['UserSignals']))
+        dispatch(resetForm());
         //eslint-disable-next-line
     }, [readyState])
 
@@ -144,6 +152,7 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                     </Select>
                 </FormControl>
             </Grid>
+            <CustomTextForm />
 
             <Grid item xs={12} md={6}>
                 <Typography component="h2" variant="h6" color="primary" gutterBottom>Select the signal recipients</Typography>

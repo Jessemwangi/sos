@@ -2,7 +2,7 @@ import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CustomText } from '../app/model';
-import { db } from "../DataLayer/FirestoreInit";
+import { db } from "../dataLayer/FirestoreInit";
 import { where, query, collection, getDocs, QuerySnapshot, DocumentData, /* orderBy */ } from "@firebase/firestore";
 
 

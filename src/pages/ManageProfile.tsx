@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfileForm from '../Registration/ProfileForm';
+import ProfileForm from '../registration/ProfileForm';
 import { auth } from '../app/services/FirebaseAuth';
 import { useAuthState } from "react-firebase-hooks/auth";
 

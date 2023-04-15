@@ -10,7 +10,7 @@ import {
 import { AuthProvider } from './app/services/FirebaseProvider';
 
 
-import Layout from './Components/Layout';
+import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ManageProfile from './pages/ManageProfile';
 import ManageRecipients from './pages/ManageRecipients';
@@ -21,6 +21,7 @@ import CompleteReg from './pages/CompleteReg';
 import HowTo from './pages/HowTo';
 import NotFound from './pages/NotFound';
 import ManageSignals from './pages/ManageSignals';
+import SOS from './pages/SOS';
 
 import { store } from './app/store';
 
@@ -37,6 +38,8 @@ const router = createBrowserRouter(
       <Route path="/replytoSignal/:signalid" element={<AnsToSignals />}> </Route>
       <Route path="/regwizard" element={<CompleteReg />}>Initial Setup</Route>
       <Route path="/help" element={<HowTo />}>Help and Documentation</Route>
+      <Route path="/sos" element={<SOS />}></Route>{/* just for testing */}
+      <Route path="/sos/:id" element={<SOS />}></Route>
       <Route path="*" element={<NotFound />}></Route>
     </Route>
   )

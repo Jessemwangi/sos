@@ -9,10 +9,10 @@ import {
 } from "@firebase/firestore";
 
 import '../styles/RecipientsView.css';
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { Recipient } from '../app/model';
 import { manageRecipientsApi, resetForm, togglePopover, toggleDeletePopover } from '../features/manageRecipientsSlice';
-import DiscardPopover from '../Components/DiscardPopover';
+import DiscardPopover from './DeletePopover';
 
 type Recipients = Recipient[]
 interface Props {
@@ -133,10 +133,12 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
           Available Recipients
         </Typography>
         <Grid item xs={12} md={6}>
-          <Table size="small" className="viewsTable">
+          <Table size="small" className="viewsTable" style={{
+            display: 'block',
+            overflowX: 'auto'
+          }}>
             <TableHead>
               <TableRow>
-                <TableCell>Date</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Phone</TableCell>
@@ -148,7 +150,6 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
 
               {!isFetching && data?.length !== 0 ? (data?.map((item: any) => (
                 <TableRow key={item.id} >
-                  <TableCell>{item.createdAt}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.address}</TableCell>
                   <TableCell>{item.phone}</TableCell>

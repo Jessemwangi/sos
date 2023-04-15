@@ -6,17 +6,17 @@ interface Props {
     noHandler: any,
     deletePopoverOpen: boolean,
     closeHandler: any
-
 }
 
-const DiscardPopover = ({ yesHandler, noHandler, deletePopoverOpen, closeHandler }: Props) => {
+const DeletePopover = ({ yesHandler, noHandler, deletePopoverOpen, closeHandler }: Props) => {
     return (
         <Dialog
             open={deletePopoverOpen}
             onClose={closeHandler}
             PaperProps={{
                 sx: {
-                    height: '150px'
+                    height: '160px',
+                    padding: '1.5rem'
                 }
             }}
         >
@@ -34,4 +34,4 @@ const DiscardPopover = ({ yesHandler, noHandler, deletePopoverOpen, closeHandler
     );
 };
 
-export default DiscardPopover;
+export default DeletePopover;

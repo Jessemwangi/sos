@@ -7,19 +7,17 @@ function Copyright() {
 
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Group 5 SOS Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      <Link color="inherit" href='https://github.com/Jessemwangi/sos'>
+        Group 5 SOS Website | © Helsinki Business College {new Date().getFullYear()}
+      </Link>
     </Typography>
   );
 }
 const Footer = () => {
   return (
-    <div style={{ height: '5vh' }}>
+    <div style={{ height: '5vh'}}>
       <Copyright />
+      <Typography variant="body2" color="text.secondary" align="center">This app requires use of the geolocation API. By using this app you agree to allow the browser to use your location. </Typography>
     </div>
   );
 };
