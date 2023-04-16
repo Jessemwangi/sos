@@ -5,12 +5,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchUserSignalsByIdQuery } from '../features/signalsListApi';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
-import { activate, selectSos } from '../features/dashboardSlice';
+import { activate } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
 import { useGeolocated } from "react-geolocated";
 import { doc, setDoc } from "@firebase/firestore";
 import { db } from '../dataLayer/FirestoreInit';
-import Timer from '../components/Timer';
 import axios from 'axios';
 
 let sosTimer: any;
@@ -50,8 +49,9 @@ const Dashboard = () => {
 
 
     const sosButtonRef = useRef<HTMLButtonElement>(null);
+    const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
-    const { coords, isGeolocationAvailable, isGeolocationEnabled, getPosition } =
+    const { coords, isGeolocationAvailable, isGeolocationEnabled, /* getPosition */ } =
         useGeolocated({
             positionOptions: {
                 enableHighAccuracy: true,
@@ -64,16 +64,17 @@ const Dashboard = () => {
 
     /** sosButton onClick starts timer*/
     function activateSosButton(e: any) {
-        sosButtonRef.current!.classList.toggle('flash')
+        sosButtonRef.current!.classList.toggle('flash');
+        cancelButtonRef.current!.classList.toggle('active');
         dispatch(activate(true));
         sosTimer = setTimeout(sendSosDefault, 30 * 1000);
-        console.log('current signal in state: ', signal)//testing
+        console.log('current signal in state: ', signal)//debugging
     }
 
-    async function postData(signal: Signal) {
-        //for sending signal to db
-        console.log('check signal: ', signal);
 
+    /*for sending signal to db*/
+    async function postData(signal: Signal) {
+        console.log('check signal: ', signal);//debugging
         try {
             await setDoc(doc(db, 'signals', signal.id), {
                 id: signal.id,
@@ -87,15 +88,12 @@ const Dashboard = () => {
         catch (error: any) {
             return { error: error.message }
         }
-
     }
 
     function getGeolocation() {
-        //getPosition();
+        //getPosition(); //not working
         if (!isGeolocationEnabled) { alert('You need to allow location permissions') }
-
         if (!isGeolocationAvailable) { alert('Your browser does not support geolocation') }
-
         if (coords) {
             let location = { lat: coords.latitude, lng: coords.longitude }
             geolocation = location;
@@ -104,27 +102,25 @@ const Dashboard = () => {
 
     function selectSosType(e: any, name: string, id: string) {
         clearTimeout(sosTimer);
-        //dispatch(selectSos(id));
         e.target.classList.toggle('selected');
-        console.log('emergency name:', name);
-        console.log('emergency id:', id);
+        cancelButtonRef.current!.classList.toggle('active');
         const selected_signal: SignalsList = (data!.filter((item) => item.id === id))[0];
-        console.log('selected signal: ', selected_signal);
-
+        console.log('selected signal: ', selected_signal);//debugging
         setSignal((signal => ({ ...signal, ...selected_signal })));
         twilioMessage();
 
     }
 
-    useEffect(()=>{
-console.log('updated signal:', signal)
-    },[signal])
+    useEffect(() => {
+        console.log('updated signal:', signal)
+    }, [signal])
 
     /**sends default signal if timer expires */
     async function sendSosDefault() {
         getGeolocation();
-        console.log(geolocation);
-
+        console.log(geolocation);//debugging
+        sosButtonRef.current!.classList.toggle('flash')
+        cancelButtonRef.current!.classList.toggle('active');
         const sosSignal = new SosSignal(
             uuidv4(), uid, "date", geolocation, 'Default'
         );
@@ -137,7 +133,7 @@ console.log('updated signal:', signal)
 
     /**for posting to twilio-server and sending SMS */
     async function twilioMessage() {
-        console.log('signal in state: ', signal)
+        console.log('signal in state: ', signal)//debugging
         try {
             axios.post('http://localhost:3002/sms', {
                 message: signal!.presetMsg,
@@ -155,9 +151,9 @@ console.log('updated signal:', signal)
         clearTimeout(sosTimer);
         dispatch(activate(false));
         sosButtonRef.current!.classList.toggle('flash')
-        /*    e.currentTarget.classList.toggle('invisible') */
+        cancelButtonRef.current!.classList.toggle('active');
         alert('cancelling sos...')
-        //clear watchPosition
+        //clear watchPosition // to stop tracking geolocation, not working
     }
 
 
@@ -169,26 +165,29 @@ console.log('updated signal:', signal)
                     <button ref={sosButtonRef} type="button" className="sosButton" id="sosButton" onClick={activateSosButton}>
                         <span>SOS</span>
                     </button>
-                </div>
-                <div className="timerContainer">
-                    {/*       <Timer clickHandler={cancelSos} />*/}
+                    <div>  <button ref={cancelButtonRef} className="cancelButton" onClick={cancelSos}>
+                        <div className="div1"><span style={{ position: "relative", top: '15px' }}>CANCEL</span></div><div className="div2"></div>
+                    </button></div>
+
                 </div>
             </div>
-            {activeSos ? (<div className="activation-text">
-                <span> SOS has been activated. Select emergency type : </span>
+            {
+                activeSos ? (<div className="activation-text">
+                    <span> SOS has been activated. Select emergency type : </span>
 
-                <div className="sosMenuContainer">
-                    {data ? (
-                        <div className="sosMenu">
-                            {data?.map((item) => (
-                                <button key={item.id} onClick={(e) => selectSosType(e, item.name, item.id)}>{item.name}</button>))}
-                        </div>
-                    ) : (<></>)}
-                </div>
-            </div>)
-                : (<></>
+                    <div className="sosMenuContainer">
+                        {data ? (
+                            <div className="sosMenu">
+                                {data?.map((item) => (
+                                    <button key={item.id} onClick={(e) => selectSosType(e, item.name, item.id)}>{item.name}</button>))}
+                            </div>
+                        ) : (<></>)}
+                    </div>
+                </div>)
+                    : (<></>
 
-                )}
+                    )
+            }
         </div >
     );
 };

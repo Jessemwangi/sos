@@ -99,9 +99,10 @@ export default function CustomTextForm() {
             required
             id="message"
             name="message"
-            label="Message"
+            label="Message (max-length: 160 characters)"
             defaultValue={customText.message}
             inputRef={messageInput}
+            /*  inputProps={{ maxLength: '160' }} */
             fullWidth
             autoComplete="cc-Message"
             variant="standard"
