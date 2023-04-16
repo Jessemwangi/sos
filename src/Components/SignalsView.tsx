@@ -14,11 +14,17 @@ import { signalsListApi } from '../features/signalsListApi';
 
 type UserSignals = SignalsList[]
 interface Props {
-    messages: CustomText[],
-    signals: UserSignals
+    /*  messages: CustomText[], */
+    signals: UserSignals,
+    recipients: Recipient[]
 }
 
-const SignalsView = ({ messages, signals }: Props) => {
+/* interface DisplayRecipients {
+    name: string,
+    phone: string
+}
+ */
+const SignalsView = ({ recipients, signals }: Props) => {
     const dispatch = useDispatch();
     let open: boolean = useSelector((state: any) => state.manageSignals.popoverState);
     const signalsList: SignalsList = useSelector((state: any) => state.manageSignals.signalsList);
@@ -26,6 +32,7 @@ const SignalsView = ({ messages, signals }: Props) => {
     const [deleteId, setDeleteId] = useState<string>("");
     const [objectState, setObjectState] = useState<SignalsList>(signalsList);
 
+    // if (signals) { signals.forEach((signal) => formatRecipients(signal.recipients)); }
 
     /* const filteredMessage = (id: string): string => {
         const message: CustomText[] = messages?.filter((item) => item.id === id);
@@ -34,8 +41,23 @@ const SignalsView = ({ messages, signals }: Props) => {
         if (message) { return message[0].message } else { return "message unavailable" }
     } */
 
-    /**POPOVER FUNCTIONS
-     */
+    /*goes into map function where signals are rendered, formats data for recipients table column */
+    /**for use when signal.recipients is an array of phone numbers */
+    /*     function formatRecipients(recipientsArray: string[]) {
+            console.log(recipientsArray)
+            let displayRecipients: string[] = [];
+            recipientsArray.forEach((arrayItem) => {
+                const r = recipients.filter((recipient) => (
+                    recipient.phone === arrayItem))[0]
+                console.log(r)
+                displayRecipients.push(r.name)
+            })
+            console.log(displayRecipients)
+            return displayRecipients
+        } */
+
+
+    /**POPOVER FUNCTIONS*/
     function editButtonHandler(e: any, id: string) {
         dispatch(togglePopover());
         if (signals) {

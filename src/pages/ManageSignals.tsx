@@ -1,7 +1,6 @@
 import React from 'react';
 import SignalsView from '../components/SignalsView';
 import SetPinnedSignals from '../components/SetPinnedSignals';
-//import CustomSignalsForm from '../Registration/CustomSignalsForm';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { auth } from '../app/services/FirebaseAuth';
@@ -31,8 +30,7 @@ const ManageSignals = () => {
 
     return (
         <div style={{ padding: '2rem' }}>
-            <SignalsView messages={messages} signals={signals} />
-            {/*     <CustomSignalsForm /> */}
+            <SignalsView recipients={recipients} signals={signals} />
             <SetPinnedSignals />
             <ComposeSignals messages={messages} recipients={recipients} signals={signals} />
 

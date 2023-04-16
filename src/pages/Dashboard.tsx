@@ -128,7 +128,6 @@ const Dashboard = () => {
 
         console.log('sending default sos signal....')
         twilioMessage();
-
     }
 
     /**for posting to twilio-server and sending SMS */
@@ -144,7 +143,6 @@ const Dashboard = () => {
         } catch (err: any) {
             alert(err.message);
         }
-
     }
 
     function cancelSos(e: any) {

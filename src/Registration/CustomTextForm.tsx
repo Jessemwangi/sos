@@ -18,17 +18,14 @@ export default function CustomTextForm() {
   const [buttonAction] = useState<string>('Save Text')
   const [readyState, setReadyState] = useState<boolean>(false);
 
-
   const customText: CustomText = useSelector((state: any) => state.customText.customText)
 
   const titleInput = useRef<HTMLInputElement>();
   const messageInput = useRef<HTMLInputElement>();
 
-
   function handleChange(e: any) {
     dispatch(setCustomText({ [e.target.name]: e.target.value }))
     if (readyState === true) { setReadyState(false) }
-
   }
 
   function completeData() {
@@ -43,7 +40,6 @@ export default function CustomTextForm() {
 
   async function handleSubmit() {
     completeData();
-
   }
 
   async function sendData() {
@@ -61,15 +57,12 @@ export default function CustomTextForm() {
       //dispatch(resetForm());
       setReadyState(false)
       dispatch(resetForm());
-
     }
   }
-
 
   useEffect(() => {
     sendData();
     dispatch(customTextApi.util.invalidateTags(['Messages']))
-
     //eslint-disable-next-line
   }, [readyState])
 
