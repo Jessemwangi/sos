@@ -12,11 +12,9 @@ import {
 } from "@mui/material";
 
 import { createAccount } from "../app/services/FirebaseAuth";
-//import { CreateDocSetId } from '../app/services/DbFunctions';
 import { toggleSignupModal } from "../features/headerSlice";
 import { SignUpData } from "../app/model";
 import { toast } from "react-toastify";
-import { sign } from 'crypto';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../app/services/FirebaseAuth";
 
@@ -48,8 +46,6 @@ const SignUp = () => {
     dispatch(toggleSignupModal(false));
     navigate("/regwizard");
   }
-
-  // CreateDocSetId('profile', uid, { uid: uid })
 
   async function handleSignUp(e: any, signUpData: SignUpData) {
     e.preventDefault();
@@ -83,7 +79,7 @@ const SignUp = () => {
         fullname,
         signUpData.email,
         signUpData.password
-      ); //uid created by firebase
+      ); 
 
       console.log(firebaseUser);
     }

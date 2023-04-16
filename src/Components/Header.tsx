@@ -2,7 +2,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Popover, MenuList, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
 import { togglePopover, closePopover, toggleSignupModal, toggleSigninModal } from '../features/headerSlice';
 import { auth, signOutUser } from '../app/services/FirebaseAuth';
 import SignIn from './SignIn';
@@ -10,17 +9,13 @@ import SignUp from './SignUp';
 import '../styles/Header.css';
 import { useAuthState } from "react-firebase-hooks/auth";
 
-//const google_client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-
-
 const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const menuButton = document.getElementById('menuButton');
+    const [user] = useAuthState(auth);
 
     let openMenuPopover: boolean = useSelector((state: any) => state.header.popoverState.mainMenu);
-
-    const [user] = useAuthState(auth);
 
     function openMenu(e: any) {
         dispatch(togglePopover({ mainMenu: true }));
@@ -50,7 +45,7 @@ const Header = () => {
                 </div>
                 <Toolbar className="toolBar" >
                     <Button><MenuIcon id="menuButton" onClick={openMenu} /></Button>
-                    <Link to='/'><Typography variant="h3" sx={{ color: 'white' }}>SOS Service</Typography><p>To Dashboard</p></Link>
+                    <Link to='/' ><Typography variant="h3" sx={{ color: 'white', fontSize: '30px', fontWeight: '600', textShadow: '1px 1px black' }}>SOS Service</Typography><p>To Dashboard</p></Link>
                 </Toolbar>
             </AppBar>
             <Popover id="menuPopover" open={openMenuPopover} anchorEl={menuButton} onClose={closeMenu}>

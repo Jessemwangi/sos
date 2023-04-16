@@ -59,10 +59,8 @@ async function createAccount(displayName: string, email: string, password: strin
 
     })
     .catch((error) => {
-      // const errorCode = error.code;
       const errorMessage = error.message;
       console.log(error, errorMessage);
-
       toast.error(error.message)
     });
 }

@@ -1,5 +1,5 @@
 import { useAuthState } from "react-firebase-hooks/auth";
-
+import { Typography } from '@mui/material';
 import { auth } from '../app/services/FirebaseAuth'
 import RecipientEntryForm from '../registration/RecipientEntryForm'
 import RecipientsView from '../components/RecipientsView'
@@ -15,8 +15,9 @@ const ManageRecipients = () => {
         error
     } = useFetchRecipientsByIdQuery({ id: uid });
 
-    if (!user) { return <><h3>Please log in first to manage your contacts.</h3></> }
-
+    if (!user) {
+        return (<Typography component="h2" variant="h6" color="primary" gutterBottom>Please sign in to manage your recipients</Typography>)
+    }
 
 
     return (
