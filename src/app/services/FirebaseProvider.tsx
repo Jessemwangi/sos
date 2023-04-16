@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from './FirebaseAuth';
-/* import { setLoggedIn } from '../../features/userSlice'; */
 import { AuthContext } from './FirebaseContext';
 import { redirect } from "react-router-dom";
 

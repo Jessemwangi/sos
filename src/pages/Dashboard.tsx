@@ -5,16 +5,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchUserSignalsByIdQuery } from '../features/signalsListApi';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
-import { activate } from '../features/dashboardSlice';
+import { activate, selectSos } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
 import { useGeolocated } from "react-geolocated";
 import { doc, setDoc } from "@firebase/firestore";
 import { db } from '../dataLayer/FirestoreInit';
 import Timer from '../components/Timer';
+import axios from 'axios';
 
 let sosTimer: any;
 let geolocation: GeoCodes = { lat: 0, lng: 0 }
-
 
 class SosSignal {
     id: string;
@@ -29,75 +29,50 @@ class SosSignal {
         this.createdAt = createdAt;
         this.geolocation = geolocation;
         this.signalType = signalType;
-
     }
 }
 
 const Dashboard = () => {
-
     const dispatch = useDispatch();
     const activeSos = useSelector((state: any) => state.dashboard.activeSos);
     const [user] = useAuthState(auth);
     const uid = user?.uid ? user.uid : '';
-    const [objectState, setObjectState] = useState<UserSignals>([])
+    const [signal, setSignal] = useState<SignalsList>();
 
-    let default_message: string | undefined;
+    const { data } = useFetchUserSignalsByIdQuery({ id: uid });
+
+    useEffect(() => {
+        if (user && data) {
+            const default_signal: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
+            setSignal(default_signal);
+        }
+    }, [user, data])
 
 
-
+    const sosButtonRef = useRef<HTMLButtonElement>(null);
 
     const { coords, isGeolocationAvailable, isGeolocationEnabled, getPosition } =
         useGeolocated({
             positionOptions: {
                 enableHighAccuracy: true,
-                timeout: 3000,
+                timeout: 5000,
             },
             userDecisionTimeout: 5000,
             watchPosition: true,
             //suppressLocationOnMount: true
         });
 
-
-
-    /*     useEffect(() => {
-            if (activeSos) {
-                getPosition()
-                if (coords) {
-                    let location = { lat: coords.latitude, lng: coords.longitude }
-                    console.log('location variable:', location)
-                    console.log('lat:', coords.latitude, 'lng:', coords.longitude);
-                    setGeolocation(() => ({
-                        ...location
-                    }))
-                }
-            }
-            // eslint-disable-next-line
-        }, [activeSos]) */
-
-
-    type UserSignals = SignalsList[]
-    const signals_Data = useFetchUserSignalsByIdQuery({ id: uid });
-    const data = signals_Data.data as UserSignals;
-    //const { data, isFetching } = useFetchSignalsListByIdQuery({ id: uid });
-
-    const sosButtonRef = useRef<HTMLButtonElement>(null);
-
-    if (data) {
-        const default_signal: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
-        default_message = default_signal.presetMsg;
-    }
-
     /** sosButton onClick starts timer*/
     function activateSosButton(e: any) {
         sosButtonRef.current!.classList.toggle('flash')
         dispatch(activate(true));
-        sosTimer = setTimeout(sendSosDefault, 4 * 1000);
+        sosTimer = setTimeout(sendSosDefault, 30 * 1000);
+        console.log('current signal in state: ', signal)//testing
     }
 
     async function postData(signal: Signal) {
         //for sending signal to db
         console.log('check signal: ', signal);
-
 
         try {
             await setDoc(doc(db, 'signals', signal.id), {
@@ -106,8 +81,6 @@ const Dashboard = () => {
                 createdAt: signal.createdAt,
                 geolocation: signal.geolocation,
                 signalType: signal.signalType
-
-
             })
                 .then(() => { console.log('submitted to firestore') })
         }
@@ -118,40 +91,39 @@ const Dashboard = () => {
     }
 
     function getGeolocation() {
-        getPosition();
-        console.log(coords);
-        if (!isGeolocationEnabled) {
-            alert('You need to allow location permissions')
-        }
+        //getPosition();
+        if (!isGeolocationEnabled) { alert('You need to allow location permissions') }
 
-        if (!isGeolocationAvailable) {
-            alert('Your browser does not support geolocation')
+        if (!isGeolocationAvailable) { alert('Your browser does not support geolocation') }
 
-        }
         if (coords) {
             let location = { lat: coords.latitude, lng: coords.longitude }
-            console.log('location variable:', location)
-            console.log('lat:', coords.latitude, 'lng:', coords.longitude);
             geolocation = location;
-
         }
     }
 
+    function selectSosType(e: any, name: string, id: string) {
+        clearTimeout(sosTimer);
+        //dispatch(selectSos(id));
+        e.target.classList.toggle('selected');
+        console.log('emergency name:', name);
+        console.log('emergency id:', id);
+        const selected_signal: SignalsList = (data!.filter((item) => item.id === id))[0];
+        console.log('selected signal: ', selected_signal);
+
+        setSignal((signal => ({ ...signal, ...selected_signal })));
+        twilioMessage();
+
+    }
+
+    useEffect(()=>{
+console.log('updated signal:', signal)
+    },[signal])
 
     /**sends default signal if timer expires */
-    //1. get users geolocation
-    //2. create Signal and send to db for log (maybe this should be a class?)
-    //3. compose params object with message body and recipients
     async function sendSosDefault() {
-        await getGeolocation();
+        getGeolocation();
         console.log(geolocation);
-
-        const body_params = {
-            message: default_message,//default message in this case
-            geolocation: geolocation,
-            recipients: [] //default recipients
-
-        }
 
         const sosSignal = new SosSignal(
             uuidv4(), uid, "date", geolocation, 'Default'
@@ -159,18 +131,19 @@ const Dashboard = () => {
         postData(sosSignal); //for signalHistory only
 
         console.log('sending default sos signal....')
+        twilioMessage();
+
+    }
+
+    /**for posting to twilio-server and sending SMS */
+    async function twilioMessage() {
+        console.log('signal in state: ', signal)
         try {
-            const res = await fetch('/api/sms/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body_params)
-            })
-
-
-            const data = await res.json();
-            if (data.success) { console.log('message successfully sent') }
+            axios.post('http://localhost:3002/sms', {
+                message: signal!.presetMsg,
+                geolocation: geolocation,
+                recipients: signal!.recipients
+            }).then((res) => { console.log(res) })
 
         } catch (err: any) {
             alert(err.message);
@@ -187,22 +160,7 @@ const Dashboard = () => {
         //clear watchPosition
     }
 
-    function selectSosType(e: any) {
-        //dispatch(selectSos(e.target.key));
-        e.target.classList.toggle('selected');
-        console.log('button id:', e.target.id);
-    }
 
-    /*  useEffect(() => {
-         if (activeSos === true) { console.log('detecting active button') }
-     }, [activeSos]) */
-
-
-    /*  if (isFetching) {
-         return (
-             <>Fetching</>
-         )
-     } */
 
     return (
         <div className="dashboard">
@@ -223,7 +181,7 @@ const Dashboard = () => {
                     {data ? (
                         <div className="sosMenu">
                             {data?.map((item) => (
-                                <button key={item.id} onClick={(e) => selectSosType(e)}>{item.name}</button>))}
+                                <button key={item.id} onClick={(e) => selectSosType(e, item.name, item.id)}>{item.name}</button>))}
                         </div>
                     ) : (<></>)}
                 </div>
@@ -231,7 +189,6 @@ const Dashboard = () => {
                 : (<></>
 
                 )}
-
         </div >
     );
 };

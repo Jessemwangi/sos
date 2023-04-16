@@ -16,6 +16,10 @@
   width: 100vw;
 }
 
+.homeLink {
+  font-size: 10px;
+}
+
 .noDisplay {
   display: none;
 }

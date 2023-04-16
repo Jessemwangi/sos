@@ -15,7 +15,12 @@ const init: Signal = {
         lat: 0,
         lng: 0
     },
-    signalType: ""
+    signalType: "",
+    response: ""
+}
+
+export interface Id {
+    id: string | undefined
 }
 
 type SignalHistory = Signal[];
@@ -38,8 +43,9 @@ export const signalHistoryApi = createApi({
     reducerPath: "SignalHistoryApi",
 
     endpoints: (builder) => ({
-        fetchSignalsById: builder.query<SignalHistory, { id: string | undefined }>({
+        fetchSignalsById: builder.query<SignalHistory, { id: any }>({
             async queryFn(id) {
+                //const { id } = arg;
                 try {
                     const q = query(
                         collection(db, 'signals'),

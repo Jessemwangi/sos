@@ -44,7 +44,6 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
 
     function handleMessage(e: any) {
         if (readyState === true) { setReadyState(false) }
-        console.log(e.target.value)
         dispatch(setSignalsList({ presetMsg: e.target.value }))
     }
 
@@ -130,7 +129,9 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                     onChange={handleName}
                 />
             </Grid>
+            <CustomTextForm />
             <Grid item marginBottom={'1rem'}>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>Or select from your pre-defined Messages</Typography>
                 <FormControl fullWidth >
                     <InputLabel id="message">Message</InputLabel>
                     <Select
@@ -152,7 +153,8 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                     </Select>
                 </FormControl>
             </Grid>
-            <CustomTextForm />
+
+
 
             <Grid item xs={12} md={6}>
                 <Typography component="h2" variant="h6" color="primary" gutterBottom>Select the signal recipients</Typography>
