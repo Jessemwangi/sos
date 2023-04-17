@@ -5,7 +5,7 @@ import { GoogleMap, Marker, useJsApiLoader } from
     '@react-google-maps/api'
 import axios from 'axios';
 
-export interface mapOptions {
+export interface MapOptions {
     zoom: number,
     center: GeoCodes,
     mapId: string | undefined
@@ -19,11 +19,18 @@ const SOS = () => {
 
     //const mapRef = useRef<google.maps.Map>(null)
 
+    const { signalId } = useParams();
+    console.log(signalId);
+const server_dev_url = `http://localhost:3002/sms/${signalId}`
+const server_prod_url = `https://twilio-node-server.onrender.com/sms/${signalId}`
 
     useEffect(() => {
-        axios.get('http://localhost:3002/sms/:signalId')
-        //
+        axios.get(server_dev_url)
+        .then(function (response) {
+            console.log(response);
+          })
 
+//eslint-disable-next-line
     }, [])
 
     const center = {
@@ -37,31 +44,20 @@ const SOS = () => {
 
     const styles = {
         width: '400px',
-        height: '450px'
+        height: '550px'
     }
 
-
-
-    if (navigator.geolocation) { console.log('geolocation ok') }
     /*   const apiKey = process.env.REACT_APP_GOOGLE_CLIENTID as string;
    */
 
-    const { signalId } = useParams();
-
-    /*   const position: GeoCodes = {
-          lat: 65,
-          lng: 23
-      }
-   */
     if (!isLoaded) return (<>Nothing</>)
-
 
     return (
         <div style={{ display: 'flex', justifyContent: "center" }}>
-            <div><GoogleMap
+            <div style={{margin: '2rem'}}><GoogleMap
                 mapContainerStyle={styles}
                 center={center}
-                zoom={16}
+                zoom={18}
                 options={options as google.maps.MapOptions}
 
             />
