@@ -95,6 +95,10 @@ const Dashboard = () => {
 
     /** sosButton onClick starts timer */
     function activateSosButton(e: any) {
+        if (!user){
+            alert('You must be signed in to use SOS');
+            return 
+        }
         if (twilioReady === true) {
             setTwilioReady(false)}
         sosButtonRef.current!.classList.toggle('flash');
