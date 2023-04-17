@@ -13,6 +13,7 @@ import DeletePopover from './DeletePopover';
 import { signalsListApi } from '../features/signalsListApi';
 
 type UserSignals = SignalsList[]
+
 interface Props {
     /*  messages: CustomText[], */
     signals: UserSignals,
@@ -156,7 +157,7 @@ const SignalsView = ({ recipients, signals }: Props) => {
                                 </TableCell>
                             </TableRow>
                         )
-                        )) : (<></>)
+                        )) : (<LinearProgress />)
                         }
                     </TableBody>
                 </Table>
