@@ -25,7 +25,6 @@ const SignalHistory = () => {
     const uid = user?.uid;
 
     const { data, isFetching } = useFetchSignalsByIdQuery(uid as any);
-    console.log(data);
 
     if (isFetching) {
         return <LinearProgress color="secondary" />;

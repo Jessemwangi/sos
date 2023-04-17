@@ -174,7 +174,7 @@ button div.div1 {
 button div.div2 {
     max-height: 60px;
     border-radius: 0 0 10px 10px;
-    animation: grow 30s linear 1;
+    animation: grow 15s linear 1;
     background: radial-gradient(at center top, rgb(239, 106, 106), rgb(208, 33, 33));
     border-bottom: 1px solid red;
     box-sizing: content-box;

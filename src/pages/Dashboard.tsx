@@ -5,7 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchUserSignalsByIdQuery } from '../features/signalsListApi';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
-import { activate } from '../features/dashboardSlice';
+import { activate, setSentSignalId } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
 import { useGeolocated } from "react-geolocated";
 import { doc, setDoc } from "@firebase/firestore";
@@ -13,6 +13,8 @@ import { db } from '../dataLayer/FirestoreInit';
 import axios from 'axios';
 
 let sosTimer: any;
+const server_dev_url:string = 'http://localhost:3002/sms';
+const server_prod_url:string = 'https://twilio-node-server.onrender.com/sms'
 
 /** class for signal sent to db  */
 class SosSignal {
@@ -32,22 +34,24 @@ class SosSignal {
 }
 
 /* class for signal sent to twilio server */
-class SMS_Signal {
+class SmsSignal {
     message:string | undefined;
     senderName: string | undefined | null;
     geolocation: GeoCodes;
     recipient: string;
     signalId: string;
+    signalType: string;
 
     constructor( message:string |undefined,
         senderName: string | undefined | null,
         geolocation: GeoCodes,
-        recipient: string, signalId: string){
+        recipient: string, signalId: string, signalType:string){
             this.message = message;
             this.senderName = senderName;
             this.geolocation = geolocation;
             this.recipient = recipient;
             this.signalId = signalId;
+            this.signalType = signalType;
         }
 }
 
@@ -56,11 +60,13 @@ class SMS_Signal {
 
 const Dashboard = () => {
     const dispatch = useDispatch();
-    const activeSos = useSelector((state: any) => state.dashboard.activeSos);
     const [user] = useAuthState(auth);
     const uid = user?.uid ? user.uid : '';
-    const [signal, setSignal] = useState<SignalsList>(); //this signal in state will be send to twilio
+    const activeSos = useSelector((state: any) => state.dashboard.activeSos);
+    const sentSignalId = useSelector((state:any)=> state.dashboard.sentSignalId);
+    const [signal, setSignal] = useState<SignalsList>(); //signaltype in state will be send to twilio
     const [geolocation, setGeolocation] = useState<GeoCodes>({ lat: 0, lng: 0 })
+    
     const [twilioReady, setTwilioReady] = useState<boolean>(false)
 
     const { data } = useFetchUserSignalsByIdQuery({ id: uid });
@@ -98,7 +104,7 @@ const Dashboard = () => {
     }
 
     /* for sending signal to db */
-    async function postData(signal: Signal) {
+    async function postDataToDb(signal: Signal) {
         try {
             await setDoc(doc(db, 'signals', signal.id), {
                 id: signal.id,
@@ -130,7 +136,6 @@ const Dashboard = () => {
         e.target.classList.toggle('selected');
         cancelButtonRef.current!.classList.toggle('active');
         const selected_signal: SignalsList = (data!.filter((item) => item.id === id))[0];
-        console.log('selected signal: ', selected_signal);//debugging
         setSignal(signal => ({ ...signal, ...selected_signal }));
         console.log('setting signal type of selected signal...');
         setTwilioReady(true);
@@ -148,17 +153,18 @@ const Dashboard = () => {
 
     /** for posting to twilio-server and sending SMS */
     async function twilioMessage(sms_signal:SignalsList | undefined) {
-        sms_signal?.recipients.forEach((recipient)=>{console.log(recipient);
-            let sendMe = new SMS_Signal(sms_signal.presetMsg, user?.displayName, geolocation, recipient, '100');
-
-            console.log(sendMe); //debugging
+        sms_signal?.recipients.forEach((recipient)=>{
+            let sendMe = new SmsSignal(sms_signal.presetMsg, user?.displayName, geolocation, recipient, sentSignalId, sms_signal.name);
+            console.log(sms_signal.name);
 
             try {
-                   axios.post('http://localhost:3002/sms', {
+                   axios.post(server_prod_url, {
                        message: sendMe.message, //extracted from signalsList object
-                       geolocation: geolocation,  //from local state
+                       geolocation: geolocation, 
                        senderName: sendMe.senderName,
-                       recipient: sendMe.recipient // extracted from signalsList object
+                       recipient: sendMe.recipient,
+                       signalId: sendMe.signalId,
+                       signalType: sendMe.signalType 
                    }).then((res) => { console.log(res) })
                  
        
@@ -169,8 +175,7 @@ const Dashboard = () => {
             
 console.log('setting twilioready to false');
             setTwilioReady(false);
-            dispatch(activate(false));
-        
+            dispatch(activate(false)); 
     }
 
     function cancelSos(e: any) {
@@ -192,21 +197,21 @@ console.log('setting twilioready to false');
 
     /* Making sure signal in state is ready to be fired to twilio */
     useEffect(() => {
-        console.log('updated signal:',signal);
-        if(twilioReady === true){twilioMessage(signal)}
-        else{console.log('twilio useEffect activated, message not ready')};
+        if(twilioReady === true){ 
+            twilioMessage(signal);
+            // postDataToDb(sosSignal);
+        }
+        else{
+            console.log('twilio useEffect activated, message not ready')};
             /* for signalHistory only: */
             const sosSignal = new SosSignal(
                 uuidv4(), uid, "date", geolocation, signal?.name
             );
-            postData(sosSignal); 
+            dispatch(setSentSignalId(sosSignal.id));
+            
 //eslint-disable-next-line
     },[twilioReady]);
 
-    /* Debugging */ 
-    useEffect(() => {
-        console.log('updated signal:', signal)
-    }, [signal]);
 
     return (
         <div className="dashboard">

@@ -15,18 +15,20 @@ export const dashboardSlice = createSlice({
     initialState: {
         selectedSignal: init,
         activeSos: false,
-        defaultSignal: init
+        defaultSignal: init,
+        sentSignalId: ""
     },
     reducers: {
         activate: (state, action) => { state.activeSos = action.payload },
         setDefaultSignal: (state, action) => { state.defaultSignal = ({ ...state.defaultSignal, ...action.payload }) },
         selectSos: (state, action) => {
             state.selectedSignal = { ...state.selectedSignal, ...action.payload }
-        }
+        },
+        setSentSignalId: (state, action) => {state.sentSignalId = action.payload}
 
     },
 }
 );
 
-export const { activate, setDefaultSignal, selectSos } = dashboardSlice.actions;
+export const { activate, setDefaultSignal, selectSos, setSentSignalId } = dashboardSlice.actions;
 export default dashboardSlice.reducer;
