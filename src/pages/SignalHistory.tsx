@@ -1,22 +1,9 @@
 import { Typography, LinearProgress, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import React from 'react';
 import { useFetchSignalsByIdQuery } from '../features/signalHistorySlice';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 
-
-
-/* export interface Signal {
-    id: string,
-    uid: string | undefined,
-    createdAt: Date | string,
-    geolocation: GeoCodes
-    signalType:    //this is for the emergency type, from signalsList.name 
-} */
-
-
-//TODO: how is response to signal collected? => when user responds to signal, modify document in db
-
+//TODO: how is response to signal collected? => when user responds to signal, need to modify document in db
 
 const SignalHistory = () => {
     //a log of sent SOSs
@@ -25,7 +12,6 @@ const SignalHistory = () => {
     const uid = user?.uid;
 
     const { data, isFetching } = useFetchSignalsByIdQuery(uid as any);
-    console.log(data);
 
     if (isFetching) {
         return <LinearProgress color="secondary" />;
@@ -64,12 +50,7 @@ const SignalHistory = () => {
                             ))}
                         </TableBody>
                     </Table>
-
-
                 </>)}
-
-
-
         </div>
     );
 };

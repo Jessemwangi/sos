@@ -8,7 +8,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       <Link color="inherit" href='https://github.com/Jessemwangi/sos'>
-        Group 5 SOS Website | © Helsinki Business College {new Date().getFullYear()}
+        Built by Jesse Mwangi and Anna Petelin | © Helsinki Business College {new Date().getFullYear()}
       </Link>
     </Typography>
   );

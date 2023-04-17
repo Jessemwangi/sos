@@ -1,8 +1,9 @@
 import React from 'react';
 
 const SetPinnedSignals = () => {
+//TODO:
+    //lets user select which signal types should be pinned to dashboard
 
-    //should be a component and included in manage signals page?
     return (
         <div>
 
