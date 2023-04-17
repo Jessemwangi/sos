@@ -94,6 +94,7 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
       await deleteDoc(doc(db, 'recipients', docId))
         .then(() => console.log('id:', docId));
       dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
+      //TODO: needs to also update recipient arrays in signalsList collection
     } catch (error: any) {
       console.log(error)
     }
@@ -105,7 +106,6 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
 
   function deleteCloseHandler() {
     dispatch(toggleDeletePopover)
-
   }
 
   const yesHandler = async () => {

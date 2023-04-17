@@ -31,7 +31,6 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
     const [buttonAction] = useState<string>('Save Signal')
     const [recipientList, setRecipientList] = useState<string[]>([])
 
-
     const nameInput = useRef<HTMLInputElement>();
     const messageSelect = useRef<HTMLInputElement>();
 
@@ -39,7 +38,6 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
     function handleName(e: any) {
         if (readyState === true) { setReadyState(false) }
         dispatch(setSignalsList({ name: e.target.value }))
-
     }
 
     function handleMessage(e: any) {
@@ -47,7 +45,7 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
         dispatch(setSignalsList({ presetMsg: e.target.value }))
     }
 
-    //would it be better for recipients to be an object array, each object with recipient name and id
+    //would it be better for recipients to be an object array, each object with recipient name and id, phone?
     function handleRecipients(e: React.ChangeEvent<HTMLInputElement>, id: string) {
         if (readyState === true) { setReadyState(false) }
         console.log(e.target.value, id)
@@ -58,7 +56,6 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
         }
         dispatch(setSignalsList({ [e.target.name]: e.target.checked }))
     }
-
 
     //TOFIX: cstTextId values 
     function completeSignal() {
@@ -135,7 +132,7 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                 <FormControl fullWidth >
                     <InputLabel id="message">Message</InputLabel>
                     <Select
-                        labelId="message"
+                        /* labelId="message" */
                         id="messageSelect"
                         inputRef={messageSelect}
                         name="presetMsg"
@@ -153,9 +150,6 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                     </Select>
                 </FormControl>
             </Grid>
-
-
-
             <Grid item xs={12} md={6}>
                 <Typography component="h2" variant="h6" color="primary" gutterBottom>Select the signal recipients</Typography>
                 <FormGroup>
@@ -163,8 +157,9 @@ const ComposeSignals = ({ messages, recipients, signals }: Props) => {
                         <FormControlLabel key={item.id} control={
                             <Checkbox
                                 key={item.id}
-                                id={item.id} name='recipient'
-                                value={item.name}
+                                id={item.id}
+                                name='recipient'
+                                value={item.phone}
                                 onChange={(e: any) => handleRecipients(e, item.id)} />
                         } label={item.name} />
                     ))

@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from './app/services/FirebaseProvider';
 
-
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ManageProfile from './pages/ManageProfile';
@@ -24,7 +23,6 @@ import ManageSignals from './pages/ManageSignals';
 import SOS from './pages/SOS';
 
 import { store } from './app/store';
-
 
 const router = createBrowserRouter(
   createRoutesFromElements(

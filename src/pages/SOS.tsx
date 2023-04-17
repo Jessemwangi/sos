@@ -1,20 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { GeoCodes, Signal } from '../app/model'
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
-
-
-/* The getCurrentPosition() method launches an asynchronous request that tries to find the location (latitude and longitude) of the current browser. This initial position uses efficient lookups like IP routing and may not be the most accurate. On browsers that support GPS (or other forms of triangulation), a secondary more accurate positions may be found using the watchPosition() method. */
+import { GoogleMap, Marker, useJsApiLoader } from
+    '@react-google-maps/api'
+import axios from 'axios';
 
 export interface mapOptions {
     zoom: number,
     center: GeoCodes,
     mapId: string | undefined
-
 }
 
 const SOS = () => {
-
     const { isLoaded } = useJsApiLoader({
         id: 'google-map',
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!
@@ -22,9 +19,16 @@ const SOS = () => {
 
     //const mapRef = useRef<google.maps.Map>(null)
 
+
+    useEffect(() => {
+        axios.get('http://localhost:3002/sms/:signalId')
+        //
+
+    }, [])
+
     const center = {
-        lat: 60,
-        lng: 24
+        lat: 61,
+        lng: 23
     }
 
     const options = {
