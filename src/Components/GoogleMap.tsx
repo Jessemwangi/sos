@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { LinearProgress } from '@mui/material';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import { GeoCodes } from '../app/model';
  
 interface Props {
@@ -19,10 +18,6 @@ const Google_Map = ({latlng}:Props) => {
    const centers: google.maps.LatLngLiteral = useMemo(() => (latlng), [latlng]);
 
   console.log(centers);
-/* Math.trunc(latlng.lat)
-
-  if (loadError) return <div>Error loading Google Maps API</div>;
-  if (!isLoaded) return <div><LinearProgress ></LinearProgress> Loading Google Maps API...</div>; */
     return (
         <>
     <GoogleMap zoom={16} center={centers} mapContainerStyle={{"width":"98%", "height":"40vh"}}>
