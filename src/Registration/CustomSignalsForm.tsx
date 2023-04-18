@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Typography, Grid, TextField, Button, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Typography, Grid, TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
-
-import { auth } from '../app/services/FirebaseAuth';
 import { SignalsList } from '../app/model';
-import { db } from '../DataLayer/FirestoreInit';
-import { setStoreSignalsList, signalsListApi, resetForm } from '../features/manageSignalSlice';
-
+import { auth } from '../app/services/FirebaseAuth';
+import { db } from '../dataLayer/FirestoreInit';
+import { setSignalsList, resetForm } from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi';
 const CustomSignalsForm = () => {
 
     //for creating user's custom emergency types
@@ -21,19 +20,21 @@ const CustomSignalsForm = () => {
     const uid = user?.uid;
 
     function handleChange(e: any) {
-        dispatch(setStoreSignalsList({ [e.target.name]: e.target.value }))
+        dispatch(setSignalsList({ [e.target.name]: e.target.value }))
     }
 
+    //function handleChecked(e: any) { }
+
     function completeSignal() {
-        dispatch(setStoreSignalsList({ uid: uid, signalId: uuidv4() }));
+        dispatch(setSignalsList({ uid: uid, id: uuidv4() }));
 
     }
 
     async function handleSubmit() {
         completeSignal();
         try {
-            await setDoc(doc(db, 'signalsList', storeSignal.signalId), {
-                signalId: storeSignal.signalId,
+            await setDoc(doc(db, 'signalsList', storeSignal.id), {
+                id: storeSignal.id,
                 uid: user?.uid,
                 name: storeSignal.name,
                 recipients: storeSignal.recipients,
@@ -44,7 +45,6 @@ const CustomSignalsForm = () => {
                 .then(() => { console.log('submitted to firestore') })
             dispatch(resetForm());
             dispatch(signalsListApi.util.invalidateTags(['UserSignals']))
-
         }
         catch (error: any) {
             return { error: error.message }
@@ -55,7 +55,7 @@ const CustomSignalsForm = () => {
         <div>
             <>
                 <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
-                    Add Customized Signals
+                    Add Customized Signal Name
                 </Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
@@ -63,44 +63,16 @@ const CustomSignalsForm = () => {
                             required
                             id="name"
                             name="name"
-                            label="Signal Name"
+                            label="Choose a name for the signal"
                             fullWidth
                             autoComplete="cc-name"
                             variant="standard"
                             onChange={handleChange}
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel id="message">Message</InputLabel>
-                            <Select
-                                labelId="message"
-                                id="messageSelect"
-
-                                label="Message"
-                                onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <TextField
-                            required
-                            id="recipients"
-                            name="recipients"
-                            label="Choose recipients"
-                            fullWidth
-                            autoComplete="cc-recipients"
-                            variant="standard"
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-
-                    </Grid>
-
+                    {/*   <Grid item xs={12} md={6}>
+                        <FormControlLabel control={<Checkbox id="" name="" onChange={handleChecked} />} label="Set as default signal" />
+                    </Grid> */}
                     <Grid item xs={12}>
                         <Button
                             variant="contained"
@@ -110,9 +82,7 @@ const CustomSignalsForm = () => {
                             {buttonAction}
                         </Button>
                     </Grid>
-
                 </Grid>
-
             </>
         </div>
     );

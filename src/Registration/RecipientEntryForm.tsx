@@ -11,7 +11,7 @@ import {
   doc, setDoc, /* serverTimestamp, Timestamp */
 } from "@firebase/firestore";
 
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { Recipient } from '../app/model';
 import { auth } from '../app/services/FirebaseAuth';
 import { resetForm, setRecipient } from '../features/manageRecipientsSlice';
@@ -50,27 +50,28 @@ const RecipientEntryForm = () => {
   // --> yes
 
   async function sendData() {
-    await setDoc(doc(db, 'recipients', recipient.id), {
-      id: recipient.id,
-      createdAt: /* serverTimestamp() */"",
-      name: recipient.name,
-      address: recipient.address,
-      phone: recipient.phone,
-      city: recipient.city,
-      postcode: recipient.postcode,
-      uid: recipient.uid,
-      email: recipient.email
-    }).then(() => toast.success("Recipient created successfully!"))
-      .catch((err) => alert(err));
-    dispatch(resetForm());
-
+    if (recipient.id) {
+      await setDoc(doc(db, 'recipients', `${recipient.id}`), {
+        id: recipient.id,
+        createdAt: /* serverTimestamp() */"",
+        name: recipient.name,
+        address: recipient.address,
+        phone: recipient.phone,
+        city: recipient.city,
+        postcode: recipient.postcode,
+        uid: recipient.uid,
+        email: recipient.email
+      }).then(() => toast.success("Recipient created successfully!"))
+        .catch((err) => alert(err));
+      dispatch(resetForm());
+      setReadyState(false)
+    }
   }
 
 
   useEffect(() => {
     sendData();
     dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
-    //setLoading(true)
     //eslint-disable-next-line
   }, [readyState])
 

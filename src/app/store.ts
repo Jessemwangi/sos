@@ -1,37 +1,31 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-
-/* import userSlice from '../features/userSlice'; */
-import profileSlice from '../features/profileSlice';
-import sosButtonSlice from '../features/sosButtonSlice';
-import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRecipientsSlice';
+import profileSlice, { profileApi } from '../features/profileSlice';
 import headerSlice from '../features/headerSlice';
-import customTextSlice from '../features/customTextSlice';
-import signalSlice from '../features/signalSlice';
-import { profileApi } from '../features/profileApi';
-import { sosSignalApi } from '../features/sosMenuSlice';
-import { customTextApi, } from '../features/customTextSlice';
-import manageSignalSlice, { signalsListApi } from '../features/manageSignalSlice';
-
+import manageRecipientsSlice, { manageRecipientsApi } from '../features/manageRecipientsSlice';
+import customTextSlice, { customTextApi } from '../features/customTextSlice';
+import signalHistorySlice, { signalHistoryApi } from '../features/signalHistorySlice';
+import dashboardSlice from '../features/dashboardSlice';
+import manageSignalSlice from '../features/manageSignalSlice';
+import { signalsListApi } from '../features/signalsListApi'
 
 
 export const store = configureStore({
   reducer: {
-    /*     user: userSlice, */
     profile: profileSlice,
-    sosButton: sosButtonSlice,
     manageRecipients: manageRecipientsSlice,
     header: headerSlice,
     customText: customTextSlice,
     manageSignals: manageSignalSlice,
-    signal: signalSlice,
+    sosSignal: signalHistorySlice,
+    dashboard: dashboardSlice,
     [profileApi.reducerPath]: profileApi.reducer,
-    [sosSignalApi.reducerPath]: sosSignalApi.reducer,
+    [signalHistoryApi.reducerPath]: signalHistoryApi.reducer,
     [customTextApi.reducerPath]: customTextApi.reducer,
     [signalsListApi.reducerPath]: signalsListApi.reducer,
     [manageRecipientsApi.reducerPath]: manageRecipientsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(profileApi.middleware).concat(sosSignalApi.middleware).concat(customTextApi.middleware).concat(signalsListApi.middleware).concat(manageRecipientsApi.middleware)
+    getDefaultMiddleware().concat(profileApi.middleware).concat(signalHistoryApi.middleware).concat(customTextApi.middleware).concat(signalsListApi.middleware).concat(manageRecipientsApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,85 +1,56 @@
-import { Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import React from 'react';
+import { Typography, LinearProgress, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { useFetchSignalsByIdQuery } from '../features/signalHistorySlice';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../app/services/FirebaseAuth';
 
-
-
-/* export interface Signal {
-    signalId: string,
-    uid: string | undefined,
-    createdAt: Date,
-    geolocation: GeoCodes
-} */
-
-/*
-export interface SignalsList {
-    signalId: string,
-    uid: string,
-    name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
-}
-
-interface GeoCodes {
-    lat: number,
-    lon: number
-}*/
-
-//TOFIX: Add emergency type to signal model?
-//TODO: how is response to signal collected?
+//TODO: how is response to signal collected? => when user responds to signal, need to modify document in db
 
 const SignalHistory = () => {
     //a log of sent SOSs
 
+    const [user] = useAuthState(auth);
+    const uid = user?.uid;
 
-    const [data] = [[{
-        id: "",
-        createdAt: "",
-        geolocation: "",
-        recipients: ["", ""],
-        name: ""
+    const { data, isFetching } = useFetchSignalsByIdQuery(uid as any);
 
+    if (isFetching) {
+        return <LinearProgress color="secondary" />;
+    }
 
-    }]]
+    if (!user) {
+        return (<Typography component="h2" variant="h6" color="primary" gutterBottom>Please sign in to manage your signals</Typography>)
+    }
 
     return (
-        <div style={{padding: '2rem'}}>
-            <Typography>Signal Log</Typography>
+        <div style={{ padding: '2rem' }}>
 
-            <p>Your sent signals:</p>
+            {!user ? (<Typography>Please sign in to view your signal history</Typography>) : (
 
-            <Table size="medium">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Date sent</TableCell>
-                        <TableCell>Emergency type</TableCell>
-                        <TableCell>Message recipients</TableCell>
-                        <TableCell>Sent from location</TableCell>
-                        <TableCell>Response</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
+                <> <Typography>Signal Log</Typography>
+                    <Table size="medium">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Date sent</TableCell>
+                                <TableCell>Signal Id</TableCell>
+                                <TableCell>Signal Type</TableCell>
+                                <TableCell>Sent from location</TableCell>
+                                <TableCell>Response</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
 
-                    {data && data.map((signal) => (
-                        <TableRow key={signal.id} >
-                            <TableCell>{signal.createdAt}</TableCell>
-                            <TableCell>{signal.name}</TableCell>
-                            <TableCell>{signal.recipients}</TableCell>
-                            <TableCell>{signal.geolocation}</TableCell>
-                            <TableCell></TableCell>
-
-
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-
-
-
-
-
-
+                            {data && data.map((signal) => (
+                                <TableRow key={signal.id} >
+                                    <TableCell>{/* {signal.createdAt} */}</TableCell>
+                                    <TableCell>{signal.id}</TableCell>
+                                    <TableCell>{signal.signalType}</TableCell>
+                                    <TableCell>{`${signal.geolocation.lng}, ${signal.geolocation.lat}`}</TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </>)}
         </div>
     );
 };

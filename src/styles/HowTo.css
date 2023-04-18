@@ -6,3 +6,7 @@
 h3 {
     text-align: center;
 }
+
+ol, li, p {
+    margin: 1rem;
+}

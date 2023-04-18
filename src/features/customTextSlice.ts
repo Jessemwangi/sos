@@ -2,14 +2,14 @@ import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CustomText } from '../app/model';
-import { db } from "../DataLayer/FirestoreInit";
-import { where, query, collection, getDocs, QuerySnapshot, DocumentData, } from "@firebase/firestore";
+import { db } from "../dataLayer/FirestoreInit";
+import { where, query, collection, getDocs, QuerySnapshot, DocumentData, /* orderBy */ } from "@firebase/firestore";
 
 
 type Messages = CustomText[];
 
 const init: CustomText = {
-    id: "",//uuid generated id
+    id: "",
     message: "",
     title: "",
     uid: "",
@@ -43,9 +43,8 @@ export const customTextApi = createApi({
                 try {
                     const q = query(
                         collection(db, 'customTexts'),
-                        where('uid', 'in', [id, 'ALL'])
+                        where('uid', 'in', [id, 'ALL']),
                     );
-
                     const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
                     let messages: Messages = [];
                     querySnapshot?.forEach((doc) => {

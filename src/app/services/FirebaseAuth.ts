@@ -9,7 +9,7 @@ import {
   signOut, updateProfile,
 } from "firebase/auth";
 
-import { app } from '../../DataLayer/FirestoreInit';
+import { app } from '../../dataLayer/FirestoreInit';
 import { toast } from "react-toastify";
 
 const provider = new GoogleAuthProvider();
@@ -41,10 +41,9 @@ async function signInUser(email: string, password: string) {
         return user;
       })
     .catch((error) => {
-      const errorMessage = error.message;
-      console.log(error);
-
-      return (errorMessage)
+      let errorMessage = error.message;
+      errorMessage = errorMessage.substring(errorMessage.indexOf(' '));
+      toast.error(errorMessage)
     })
 }
 
@@ -60,10 +59,8 @@ async function createAccount(displayName: string, email: string, password: strin
 
     })
     .catch((error) => {
-      // const errorCode = error.code;
       const errorMessage = error.message;
       console.log(error, errorMessage);
-
       toast.error(error.message)
     });
 }

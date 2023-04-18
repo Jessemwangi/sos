@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { LinearProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { LinearProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography, Grid } from "@mui/material";
 import { Button, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,10 +9,10 @@ import {
 } from "@firebase/firestore";
 
 import '../styles/RecipientsView.css';
-import { db } from '../DataLayer/FirestoreInit';
+import { db } from '../dataLayer/FirestoreInit';
 import { Recipient } from '../app/model';
 import { manageRecipientsApi, resetForm, togglePopover, toggleDeletePopover } from '../features/manageRecipientsSlice';
-import DiscardPopover from '../Components/DiscardPopover';
+import DiscardPopover from './DeletePopover';
 
 type Recipients = Recipient[]
 interface Props {
@@ -94,6 +94,7 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
       await deleteDoc(doc(db, 'recipients', docId))
         .then(() => console.log('id:', docId));
       dispatch(manageRecipientsApi.util.invalidateTags(['Recipients']));
+      //TODO: needs to also update recipient arrays in signalsList collection
     } catch (error: any) {
       console.log(error)
     }
@@ -105,7 +106,6 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
 
   function deleteCloseHandler() {
     dispatch(toggleDeletePopover)
-
   }
 
   const yesHandler = async () => {
@@ -132,35 +132,38 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
         <Typography component="h2" variant="h6" color="primary" gutterBottom>
           Available Recipients
         </Typography>
-        <Table size="small" className="viewsTable">
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Post Code</TableCell>
-              <TableCell>City</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-
-            {!isFetching && data?.length !== 0 ? (data?.map((item: any) => (
-              <TableRow key={item.id} >
-                <TableCell>{item.createdAt}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.address}</TableCell>
-                <TableCell>{item.phone}</TableCell>
-                <TableCell>{item.postcode}</TableCell>
-                <TableCell>{item.city}</TableCell>
-                <TableCell><EditIcon className='icon' id={`icon${item.id}`}
-                  onClick={(e) => editButtonHandler(e, item.id)} />
-                </TableCell>
-                <TableCell> <DeleteIcon className='icon' style={{ cursor: 'hover' }} id={`delete${item.id}`} onClick={(e) => deleteHandler(e, item.id)} /></TableCell>
+        <Grid item xs={12} md={6}>
+          <Table size="small" className="viewsTable" style={{
+            display: 'block',
+            overflowX: 'auto'
+          }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Address</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Post Code</TableCell>
+                <TableCell>City</TableCell>
               </TableRow>
-            ))) : (<></>)}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+
+              {!isFetching && data?.length !== 0 ? (data?.map((item: any) => (
+                <TableRow key={item.id} >
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.address}</TableCell>
+                  <TableCell>{item.phone}</TableCell>
+                  <TableCell>{item.postcode}</TableCell>
+                  <TableCell>{item.city}</TableCell>
+                  <TableCell><EditIcon className='icon' id={`icon${item.id}`}
+                    onClick={(e) => editButtonHandler(e, item.id)} />
+                  </TableCell>
+                  <TableCell> <DeleteIcon className='icon' style={{ cursor: 'hover' }} id={`delete${item.id}`} onClick={(e) => deleteHandler(e, item.id)} /></TableCell>
+                </TableRow>
+              ))) : (<></>)}
+            </TableBody>
+          </Table>
+        </Grid>
       </React.Fragment >
 
       <Dialog

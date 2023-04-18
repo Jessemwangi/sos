@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../app/services/FirebaseAuth";
-import { useFetchMessagesByIdQuery } from "../features/customTextSlice";
 import {
   Table,
   TableBody,
@@ -12,6 +11,7 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import { useFetchMessagesByIdQuery } from "../features/customTextSlice";
 import { useFetchRecipientsByIdQuery } from "../features/manageRecipientsSlice";
 
 const WrapUp = () => {
