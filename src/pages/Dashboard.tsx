@@ -13,8 +13,9 @@ import { db } from '../dataLayer/FirestoreInit';
 import axios from 'axios';
 
 let sosTimer: any;
-const server_dev_url:string = 'http://localhost:3002/sms';
+//const server_dev_url:string = 'http://localhost:3002/sms'
 const server_prod_url:string = 'https://twilio-node-server.onrender.com/sms'
+
 
 /** class for signal sent to db  */
 class SosSignal {
@@ -82,7 +83,7 @@ const Dashboard = () => {
         }
     }, [user, data])
 
-    const { coords, isGeolocationAvailable, isGeolocationEnabled, getPosition } =
+    const { coords, isGeolocationAvailable, isGeolocationEnabled, /* getPosition */ } =
         useGeolocated({
             positionOptions: {
                 enableHighAccuracy: true,
@@ -200,19 +201,18 @@ console.log('setting twilioready to false');
     }, [coords])
 
     /* Making sure signal in state is ready to be fired to twilio */
-    useEffect(() => {
-        if(twilioReady === true){ 
-            twilioMessage(signal);
-            // postDataToDb(sosSignal);
-        }
-        else{
-            console.log('twilio useEffect activated, message not ready')};
-            /* for signalHistory only: */
-            const sosSignal = new SosSignal(
+    useEffect(() => { 
+        const sosSignal = new SosSignal(
                 uuidv4(), uid, "date", geolocation, signal?.name
             );
+        if(twilioReady === true){ 
+            twilioMessage(signal);
+            postDataToDb(sosSignal);
             dispatch(setSentSignalId(sosSignal.id));
-            
+        }
+        else {
+            console.log('twilio useEffect activated, message not ready')};
+                
 //eslint-disable-next-line
     },[twilioReady]);
 
