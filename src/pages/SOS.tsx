@@ -2,15 +2,15 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Typography, Grid, TextField, Button, FormControl, FormControlLabel, Checkbox, Select, InputLabel, MenuItem, FormGroup } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { GeoCodes, Signal } from '../app/model'
-import { GoogleMap, MarkerF, useJsApiLoader } from
+import { GoogleMap, Marker, useJsApiLoader } from
     '@react-google-maps/api'
+    import JesseGoogleMap from '../components/GoogleMap';
 import axios from 'axios';
 import { db } from '../dataLayer/FirestoreInit';
 import { getDoc, doc } from "@firebase/firestore";
 import { CheckBox } from '@mui/icons-material';
 
 //can filter db for signalId matching params  - but can a user who is not logged in see it? 
-
 // need to change firebase rules to allow anyone access to signals collection
 
 export interface MapOptions {
@@ -20,15 +20,21 @@ export interface MapOptions {
 }
 
 const SOS = () => {
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map',
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!
-    })
+
+
+ const { isLoaded } = useJsApiLoader({
+        // id: 'google-map',
+        // googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!,
+        libraries:['places'],
+        id:'google-map'
+    }) 
 const [center, setCenter] = useState<GeoCodes>({lat: 0, lng: 0})
     //const mapRef = useRef<google.maps.Map>(null)
+    const [readySent, setReadySend] = useState()
 
     const { id } = useParams();
-    console.log(id);
+   
 const server_dev_url = `http://localhost:3002/sms/${id}`
 const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`;
 
@@ -48,7 +54,10 @@ async function getSignal(para:string | undefined){
     }
 }
 
-function handleChange (e:any){}
+function handleChange (e:any){
+    const response = e.target.value;
+    console.log(response);
+}
 
     useEffect(() => {
         getSignal(id);
@@ -81,18 +90,21 @@ function handleChange (e:any){}
                 <Typography component="h2" variant="h5" color="primary" gutterBottom={true}>Showing Sender's location</Typography>
                 </div>
             
-            <div style={{margin: '2rem', display: 'flex', justifyContent: 'center'}}><GoogleMap
+            <div style={{margin: '2rem', display: 'flex', justifyContent: 'center'}}>
+            <JesseGoogleMap latlng={center}/>
+                
+              {/*   <GoogleMap
                 mapContainerStyle={styles}
                 center={center}
                 zoom={18}
                 options={options as google.maps.MapOptions}
 
-            />
+            /> */}
             
-            <MarkerF position={center}  icon={{
+            <Marker position={center}  icon={{
         path: google.maps.SymbolPath.CIRCLE,
         scale: 7,
-      }}></MarkerF>
+      }}></Marker>
 
 
             </div>
@@ -105,17 +117,16 @@ function handleChange (e:any){}
                   
                         <FormControlLabel control={
                             <Checkbox
-                              
-                                id={''}
-                                name=''
-                                value={'code0'}
+                                id={'1'}
+                                name='no'
+                                value={'1'}
                                 onChange={(e: any) => handleChange(e)} />
                          } label={'Unable to assist'} />
                          <FormControlLabel control={
                         <Checkbox
-                              id={''}
-                              name=''
-                              value={'code1'}
+                              id={'2'}
+                              name='yes'
+                              value={'2'}
                               onChange={(e: any) => handleChange(e)} />
                       } label={'Coming immediately'} />
                     
