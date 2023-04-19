@@ -126,6 +126,11 @@ button.sosButton span {
     font-size: 82px;
 }
 
+button.sosButton span.suspend {
+    animation: spin 2s linear 20;
+   
+} 
+
 button.sosButton:hover {
     background-color: red;
     box-shadow: rgba(0, 0, 0, 0.8) 0 0 8px,
@@ -140,7 +145,7 @@ button.sosButton:active {
 }
 
 button.sosButton.flash {
-    animation: flash 0.5s linear infinite;
+    animation: flash 0.5s linear 20;
     pointer-events: none;
 }
 

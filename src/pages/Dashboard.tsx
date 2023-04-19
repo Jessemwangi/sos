@@ -5,7 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchUserSignalsByIdQuery } from '../features/signalsListApi';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
-import { activate, setSentSignalId } from '../features/dashboardSlice';
+import { setShowMenuButtons, setSentSignalId } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
 import { useGeolocated } from "react-geolocated";
 import { doc, setDoc } from "@firebase/firestore";
@@ -63,7 +63,7 @@ const Dashboard = () => {
     const dispatch = useDispatch();
     const [user] = useAuthState(auth);
     const uid = user?.uid ? user.uid : '';
-    const activeSos = useSelector((state: any) => state.dashboard.activeSos);
+    const showMenuButtons = useSelector((state: any) => state.dashboard.showMenuButtons);
     const sentSignalId = useSelector((state:any)=> state.dashboard.sentSignalId);
     const [signal, setSignal] = useState<SignalsList>(); //signaltype in state will be send to twilio
     const [geolocation, setGeolocation] = useState<GeoCodes>({ lat: 0, lng: 0 })
@@ -74,6 +74,7 @@ const Dashboard = () => {
     
     const sosButtonRef = useRef<HTMLButtonElement>(null);
     const cancelButtonRef = useRef<HTMLButtonElement>(null);
+    const sosSpanRef = useRef<HTMLSpanElement>(null)
 
     /**set default signal to be ready in state */
     useEffect(() => {
@@ -104,7 +105,7 @@ const Dashboard = () => {
             setTwilioReady(false)}
         sosButtonRef.current!.classList.toggle('flash');
         cancelButtonRef.current!.classList.toggle('active');
-        dispatch(activate(true)); //handles styling 
+        dispatch(setShowMenuButtons(true)); //handles styling 
         sosTimer = setTimeout(()=>(sendSosDefault(signal)), 15 * 1000);
     }
 
@@ -156,8 +157,9 @@ const Dashboard = () => {
         setTwilioReady(true);
     }
 
-    /** for posting to twilio-server and sending SMS */
-    async function twilioMessage(sms_signal:SignalsList | undefined) {
+    /** POST TO TWILIO SERVER, SEND SMS */
+
+    const twilioMessage = async ( sms_signal:SignalsList | undefined) => {
         sms_signal?.recipients.forEach((recipient)=>{
             let sendMe = new SmsSignal(sms_signal.presetMsg, user?.displayName, geolocation, recipient, sentSignalId, sms_signal.name);
             console.log(sms_signal.name);
@@ -172,7 +174,6 @@ const Dashboard = () => {
                        signalType: sendMe.signalType 
                    }).then((res) => { console.log(res) })
                  
-       
                } catch (err: any) {
                    alert(err.message);
                } 
@@ -180,12 +181,15 @@ const Dashboard = () => {
             
 console.log('setting twilioready to false');
             setTwilioReady(false);
-            dispatch(activate(false)); 
+            dispatch(setShowMenuButtons(false)); 
+            sosButtonRef.current!.classList.toggle('suspend');
+            sosSpanRef.current!.classList.toggle('suspend');
+            //change sosButton class to suspend
     }
 
     function cancelSos(e: any) {
         clearTimeout(sosTimer);
-        dispatch(activate(false));
+        dispatch(setShowMenuButtons(false));
         sosButtonRef.current!.classList.toggle('flash')
         cancelButtonRef.current!.classList.toggle('active');
         alert('cancelling sos...')
@@ -222,7 +226,7 @@ console.log('setting twilioready to false');
             <div className="dashboardContainer">
                 <div className="sosButtonContainer">
                     <button ref={sosButtonRef} type="button" className="sosButton" id="sosButton" onClick={activateSosButton}>
-                        <span>SOS</span>
+                        <span ref={sosSpanRef}>SOS</span>
                     </button>
                     <div>  <button ref={cancelButtonRef} className="cancelButton" onClick={cancelSos}>
                         <div className="div1"><span style={{ position: "relative", top: '15px' }}>CANCEL</span></div><div className="div2"></div>
@@ -230,7 +234,7 @@ console.log('setting twilioready to false');
 
                 </div>
             </div>
-            {     activeSos ? (<div className="activation-text">
+            {     showMenuButtons ? (<div className="activation-text">
                     <span> SOS has been activated. Select emergency type : </span>
 
                     <div className="sosMenuContainer">
