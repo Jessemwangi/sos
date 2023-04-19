@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Typography, Grid, TextField, Button, FormControlLabel, Checkbox, FormGroup, LinearProgress  } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { GoogleMap, Marker, LoadScript, useJsApiLoader } from
+import { GoogleMap, Marker, useJsApiLoader } from
 '@react-google-maps/api'
-import { getDoc, doc, updateDoc } from "@firebase/firestore";
-import Map from '../components/GoogleMap';
+import { getDoc, doc,setDoc } from "@firebase/firestore";
+//import Map from '../components/GoogleMap';
 import { GeoCodes, Signal } from '../app/model'
 import { db } from '../dataLayer/FirestoreInit';
 
@@ -28,7 +28,7 @@ const SOS = () => {
     console.log('recipient substring', rsp);
     const [center, setCenter] = useState<GeoCodes>({lat: 0, lng: 0});
     const [readySend, setReadySend] = useState(false);
-    const [response, setResponse] = useState<Response | undefined>({
+    const [response, setResponse] = useState<Response>({
         code: '',
         msg: '',
         responder: ''
@@ -54,6 +54,7 @@ const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`; */
 async function getSignal(para:string | undefined){
     /* gets sent signal from db */
     let stringId = para as string;
+    console.log(stringId);
     try {
         const docRef = doc(db, "signals", stringId);
         const docSnap = await getDoc(docRef);
@@ -68,19 +69,22 @@ async function getSignal(para:string | undefined){
     }
 }
 
-function handleChange (e:any){
+function handleChange (e:any) {
     console.log(e.target.value);
-    //setResponse(response => ({ ...response, [e.target.name]:e.target.value}))
+    let responseObject = {[e.target.name]:e.target.value}
+    console.log(responseObject)
+    setResponse(response => ({ ...response, ...responseObject}))
 }
 
 async function handleSubmit (e:any) {
     e.preventDefault();
+    console.log('signal id:', id)
     const signalId = id as string;
     try {
-        await updateDoc(doc(db, 'signals', signalId), {
+        await setDoc(doc(db, 'signals', signalId), {
          reponse: response?.code
-        })
-          .then(() => console.log('data subtmitted:'))
+        }, {merge:true})
+          .then(() => console.log('data subtmitted'))
   
       } catch (error: any) {
         alert(error)
@@ -131,7 +135,7 @@ setReadySend(true)
         path: google.maps.SymbolPath.CIRCLE,
         scale: 7,
       }}></Marker>  */}
-      <Marker position={center}>ooo</Marker>
+      <Marker position={center}></Marker>
       </> )
 )}
 </div>
