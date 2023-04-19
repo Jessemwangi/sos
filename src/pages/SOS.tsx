@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Grid,
@@ -7,12 +7,13 @@ import {
   FormControlLabel,
   Checkbox,
   FormGroup,
+  LinearProgress,
 } from "@mui/material";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getDoc, doc, setDoc } from "@firebase/firestore";
-import { GeoCodes, Signal } from "../app/model";
+import { GeoCodes } from "../app/model";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import axios from "axios";
 import { db } from "../dataLayer/FirestoreInit";
 
 export interface MapOptions {
@@ -27,22 +28,24 @@ export interface SosResponse {
   responder: string;
 }
 
+const server_prod_url: string = "https://twilio-node-server.onrender.com/sms";
+
 const SOS = () => {
   const { id } = useParams(); //auto decodes URI components
   const queryParams = new URLSearchParams(window.location.search);
-  const rsp = queryParams.get("rsp");
+  const rsp = queryParams.get("rsp") as string;
   console.log("recipient substring", rsp);
   const [center, setCenter] = useState<GeoCodes>({ lat: 0, lng: 0 });
   const [readySend, setReadySend] = useState(false);
   const [sosResponse, setSosResponse] = useState<SosResponse>({
     code: "",
     msg: "",
-    responder: "",
+    responder: rsp,
   });
 
   //const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`;
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!,
     id: "google-map",
   });
@@ -69,6 +72,20 @@ const SOS = () => {
     }
   }
 
+  /*   const twilioMessage = async (response: SosResponse) => {
+    try {
+      axios
+        .post(server_prod_url, {
+          message: response.msg,
+        })
+        .then((res: any) => {
+          console.log(res);
+        });
+    } catch (err: any) {
+      alert(err.message);
+    }
+  }; */
+
   function handleChange(e: any) {
     console.log(e.target.value);
     let responseObject = { [e.target.name]: e.target.value };
@@ -76,8 +93,14 @@ const SOS = () => {
     setSosResponse((response) => ({ ...response, ...responseObject }));
   }
 
-  async function handleSubmit(e: any) {
+  function handleSubmit(e: any) {
     e.preventDefault();
+    /*  console.log("signal id:", id);
+    const signalId = id as string; */
+    setReadySend(true);
+  }
+
+  async function sendResponseToDb() {
     console.log("signal id:", id);
     const signalId = id as string;
     try {
@@ -87,27 +110,33 @@ const SOS = () => {
           reponse: sosResponse?.code,
         },
         { merge: true }
-      ).then(() => console.log("data subtmitted"));
+      ).then(() => console.log("data submitted"));
+
+      /*   if (sosResponse.msg !== "") {
+        twilioMessage(sosResponse);
+      }
+       */
     } catch (error: any) {
       alert(error);
     }
-    setReadySend(true);
   }
 
+  /* when page loads get signal from database */
   useEffect(() => {
     getSignal(id);
-
+    console.log("getting signal with id: ", id); //debugging
     //eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    setReadySend(true);
+    console.log(sosResponse); //debugging
     //eslint-disable-next-line
   }, [sosResponse]);
 
   useEffect(() => {
     if (readySend === true) {
-      console.log("readysend true");
+      console.log("readysend true, sending to db");
+      sendResponseToDb();
     }
     //eslint-disable-next-line
   }, [readySend]);
@@ -128,17 +157,23 @@ const SOS = () => {
       <div
         style={{ margin: "2rem", display: "flex", justifyContent: "center" }}
       >
-        <GoogleMap
-          mapContainerStyle={styles}
-          center={center}
-          zoom={18}
-          options={options as google.maps.MapOptions}
-        />
-
-        <Marker
-          position={center}
-          icon={{ path: google.maps.SymbolPath.CIRCLE, scale: 7 }}
-        ></Marker>
+        {loadError ? (
+          <div>Error loading Google Maps API</div>
+        ) : !isLoaded ? (
+          <div>
+            <LinearProgress />
+          </div>
+        ) : (
+          <>
+            <GoogleMap
+              mapContainerStyle={styles}
+              center={center}
+              zoom={18}
+              options={options as google.maps.MapOptions}
+            />
+            <Marker position={center}></Marker>
+          </>
+        )}
 
         <div>
           <Typography
@@ -176,8 +211,25 @@ const SOS = () => {
               />
             </FormGroup>
           </Grid>
-          <Grid>
-            <Button type="submit" onSubmit={(e: any) => handleSubmit(e)}>
+          <Grid item xs={12}>
+            <TextField
+              required
+              id="msg"
+              name="msg"
+              label="Optional Message (max-length: 160 characters)"
+              inputProps={{ maxLength: "160" }}
+              fullWidth
+              autoComplete="cc-Message"
+              variant="standard"
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              onClick={(e) => handleSubmit(e)}
+              sx={{ mt: 3, ml: 1 }}
+            >
               Send
             </Button>
           </Grid>
