@@ -6,7 +6,7 @@ import { GeoCodes } from '../app/model';
 interface Props {
     location: GeoCodes
 }
-const Map = ({location}:Props) => {
+const JesseMap = ({location}:Props) => {
     console.log(location);
   const centers = useMemo(() => (location),[location]);
 
@@ -17,6 +17,6 @@ const Map = ({location}:Props) => {
     );
 };
 
-export default Map;
+export default JesseMap;
 
 
