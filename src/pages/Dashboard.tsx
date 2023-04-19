@@ -73,6 +73,7 @@ const Dashboard = () => {
     
     const sosButtonRef = useRef<HTMLButtonElement>(null);
     const cancelButtonRef = useRef<HTMLButtonElement>(null);
+    const sosSpanRef = useRef<HTMLSpanElement>(null)
 
     /**set default signal to be ready in state */
     useEffect(() => {
@@ -156,8 +157,9 @@ const Dashboard = () => {
         setTwilioReady(true);
     }
 
-    /** for posting to twilio-server and sending SMS */
-    async function twilioMessage(sms_signal:SignalsList | undefined) {
+    /** POST TO TWILIO SERVER, SEND SMS */
+
+    const twilioMessage = async ( sms_signal:SignalsList | undefined) => {
         sms_signal?.recipients.forEach((recipient)=>{
             let sendMe = new SmsSignal(sms_signal.presetMsg, user?.displayName,  recipient, geolocation, sentSignalId, sms_signal.name);
 
@@ -172,13 +174,15 @@ const Dashboard = () => {
                        signalType: sendMe.signalType 
                    }).then((res) => { console.log(res) })
                  
-       
                } catch (err: any) {
                    alert(err.message);
                } 
             })
             setTwilioReady(false);
             dispatch(setShowMenuButtons(false)); 
+            sosButtonRef.current!.classList.toggle('suspend');
+            sosSpanRef.current!.classList.toggle('suspend');
+            //change sosButton class to suspend
     }
 
     function cancelSos(e: any) {
@@ -222,7 +226,7 @@ const Dashboard = () => {
             <div className="dashboardContainer">
                 <div className="sosButtonContainer">
                     <button ref={sosButtonRef} type="button" className="sosButton" id="sosButton" onClick={activateSosButton}>
-                        <span>SOS</span>
+                        <span ref={sosSpanRef}>SOS</span>
                     </button>
                     <div>  <button ref={cancelButtonRef} className="cancelButton" onClick={cancelSos}>
                         <div className="div1"><span style={{ position: "relative", top: '15px' }}>CANCEL</span></div><div className="div2"></div>

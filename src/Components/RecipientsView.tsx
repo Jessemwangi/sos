@@ -100,10 +100,8 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
     }
   }
 
-  /*END POPOVER FUNCTIONS */
-
-  /** Delete popover functions */
-
+  /** DELETE POPOVER FUNCTIONS */
+  
   function deleteCloseHandler() {
     dispatch(toggleDeletePopover)
   }
