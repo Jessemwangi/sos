@@ -2,24 +2,44 @@
 
 ## About SOS
 
-SOS is a mobile-first web application built with Typescript and a Firebase Firestore backend. The app's purpose is to provide a very simple and rapid way to send a distress signal via SMS to a pre-defined list of contacts. 
+SOS is intended as a mobile-first web application, developed using Typescript and a Firebase Firestore backend. Its primary objective is to provide a quick and easy way to send a distress signal via SMS and email to a predefined list of contacts. The application is designed with simplicity in mind and optimized for use on mobile devices, making it easy to use even in high-stress situations. With SOS, users can quickly notify their contacts and seek help in emergencies with just a few taps on their phone.
 
-### How to use
+### Starting the application
+
+In development mode, the Node Twilio server and React frontend can be started simultaneously with the commmand
+```shell
+npm run all
+```
+which uses the <a href="https://github.com/mysticatea/npm-run-all">npm-run-all</a> package.
+
+To test the frontend only, use the standard react scripts startup command:
+```shell
+npm start
+```
+
+The server can be run with the command:
+```shell
+npm run server
+```
+By default, the server runs on port 3004. This can be changed from the server config file.
+Note that if running in development mode you will need a Twilio account and authToken to use the SMS functionality. These variables should be added to the .env file.
+
+### How to use the application
 
 #### Setup
 
-To use the system, the user must first authenticate their identity with OAuth and then create a profile containing their personal details. At least one emergency contact must also be provided at the time of registration. Optionally the user can also customise the signal types, ie emergency category, and content of the text message that will be sent. These can also be modifed at any time.
+To use the system, the user must first authenticate their identity with Firebase Auth and then create a profile containing their personal details. At least one emergency contact must also be provided at the time of registration. Optionally the user can also customise the signal types, ie emergency category, and content of the text message that will be sent. These can also be modifed at any time.
 
 #### Sending a distress signal / SOS
 
-The application dashboard contains a single large 'SOS' button. When pressed, the SOS distress is activated with a two-minute countdown timer. During this time the user has the option of defining their emergency type according to a maximum of five pre-defined categories. Each category has an associated list of contacts (maximum of five) who will be notified of the emergency. The recipients when will then recieve an SMS message notifiying them of the emergency type, or the user's custom text,  and the user's location. 
-If no emergency category is selected within two minutes, a 'generic emergency' will be issued. The user can define whether this signal will activate a call to emergency services (112 in Europe) or broadcast to a list of private contacts.
+The UI dashboard contains a single large 'SOS' button. When pressed, the SOS distress is activated with a 30-second countdown timer. During this time the user has the option of defining their emergency type according to a maximum of five pre-defined categories. Each category has an associated list of contacts (maximum of five) who will be notified of the emergency. The recipients will then recieve a SMS message notifiying them of the emergency type, with the user's custom text, and a link to a webpage displaying the sender's location. 
+If no emergency category is selected within 30 seconds, a 'generic emergency' will be issued. The user can define whether this signal will activate a call to emergency services (112 in Europe) or broadcast to a list of private contacts.
 The user may also cancel the signal before the count-down ends.  
 
 
 #### Receiving a distress signal
 
-When a recipient receives an SMS notification from the SOS service, they are requested to indicate their response. A link in the SMS message will display the location of the person in distress. A second link will direct the recipient to a simple response form in which they may indicate if or how they will respond to the emergency. The sender of the SOS will be notified of the recipient's response. 
+When a recipient receives an SMS notification from the SOS service, they are requested to navigate to the linked webpage and indicate their response via a simple form. The webpage will also display the location of the person in distress. The sender of the SOS will be notified of the recipient's response. 
 
 ### Resource permissions
 
@@ -54,14 +74,6 @@ Sample data:
      "name": "John Moreau",
      "phone": "+358987234567",
      "email" },
-
-    {
-      "rcpId": 2304958,
-      "uid": "34i99jhjni87893",
-      "name": "Summer Robers",
-      "phone": "+3584562378944",
-      "email": "endlessSummer@gmail.com"
-    },
   ],
 
   "statusCode": [
@@ -93,15 +105,6 @@ Sample data:
       "cstTextId": "",
       "createdAt": "timestamp"
     },
-    {
-      "signalId": 2,
-      "uid": "34i99jhjni87893",
-      "name": "Hiking Disaster",
-      "recipient": ["1230280", "2304958"],
-      "presetMsg": "Locate me, I need help",
-      "cstTextId": 2,
-      "createdAt": "timestamp"
-    }
   ],
 
   "signals": [
@@ -114,15 +117,6 @@ Sample data:
         "lng": "2-3445"
       }
     },
-    {
-      "signalsId": 2,
-      "uid": "34i99jhjnkhjhji87893",
-      "createdAt": "timestamp",
-      "geoLocation": {
-        "lat": "2-3445",
-        "lng": "2-3445"
-      }
-    }
   ],
   "customText": [
     {
@@ -151,13 +145,6 @@ Sample data:
         "statusCode": 2,
         "dateCreated": "timestamp",
         "transactedBy": "34i99jhjnkhjhji87893"
-      },{
-        "trackId": 3,
-        "uid": "34i99jhjni87893",
-        "signalsId": 2,
-        "statusCode": 3,
-        "dateCreated": "timestamp",
-        "transactedBy": "34i99jhjnkhjhji87893"
       }
   ]
 }
@@ -166,7 +153,8 @@ Sample data:
 ## Application Pages
 ### Profile
 
-Stores individual profile and account information, fetched from google authenticator data. 
+Stores individual profile and account information.
+Future implementation: also fetched from google authenticator data. 
 
 ### Recipients
 Contains a list of all recipients the user has added to their application data. The recipient list is stored in firebase according the user uid. 
@@ -181,7 +169,7 @@ Indicates the status of a sent distress signal. For example
 ### Signals List
 
 A preset list of messages and recipients for each emergency category.  
-A maximum of five signals list buttons will be displayed on the dashboard.  This signals/categories can be set in the user profile.  When a distress signal is sent, the send event is logged in the "signalsStatus" list, which records the trackId of all signals from (signals , signalsId).
+A maximum of five signals list buttons will be displayed on the dashboard.  This signals/categories can be set in the Manage Signal Types page.  When a distress signal is sent, the send event is logged in the "signalsStatus" list, which records the trackId of all signals from (signals , signalsId).
 
 ### Signals
 
@@ -195,3 +183,11 @@ Allows the user to customise the text of the SMS that will be sent to their nomi
 ### Signal Status
 
 Used to keep a state log of all sent distress signals. 
+
+
+### Project Sample Screenshot
+
+#### Dashboard
+
+![screenshot](https://github.com/andorjamb/sos/blob/master/screenshot_sos.png)
+

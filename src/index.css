@@ -11,6 +11,8 @@
   --blue: #4C49E5;
   --violet: #C299DB;
   --darkred: #620C0C;
+  --lightblue: #a09feb;
+  --blue-low-opacity: #a9a8ec6b;
 }
 
 body {
@@ -23,4 +25,15 @@ body {
 
 a {
   text-decoration: none;
+}
+
+
+.viewsTable tbody :first-child :not(only-child, .icon) {
+  background-color: rgba(125, 125, 255, 0.5);
+  ;
+}
+
+.icon {
+  background: transparent;
+  cursor: pointer;
 }

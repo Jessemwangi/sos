@@ -1,20 +1,3 @@
-
-export interface Guser {
-    name: string
-    email: null | string
-    picture: string
-    iat: number
-    iss: string
-    jti: string
-    sub: number | string
-}
-
-export interface SosUser {
-    name: null | string
-    email: null | string
-    uid: string
-}
-
 export interface SignUpData {
     email: string
     password: string
@@ -26,28 +9,26 @@ export interface SignUpData {
 export interface SignInData {
     email: string
     password: string
-
 }
 
 export type LoadingState = boolean
 
 export interface Profile {
-    /*  id: number | string */
-    firstname?: string,
-    lastname?: string,
-    phone?: number | string | null,
+    firstname: string,
+    lastname: string,
+    phone: number | string | null,
     altphone?: number | string | null,
     occupation?: string
     dob?: Date | null,
-    uid?: string,
-    email?: string,
+    uid: string | undefined,
+    email: string,
     username?: string,
     addressline1?: string,
     addressline2?: string,
-    city?: string,
+    city: string,
     state_province?: string,
     postcode?: string
-    country?: string
+    country: string
     createdAt?: Date | null | string
 }
 
@@ -59,35 +40,41 @@ export interface Recipient {
     phone: string,
     city: string,
     postcode: string,
-    userId: string,
-    email:string
+    uid: string,
+    email: string
 
 }
 
-export interface signalsList {
-    signalId: string,
-    uid: string,
+export interface SignalsList {
+    id: string,
+    uid: string | undefined,
     name: string,
-    recipientId: string[],
-    presetMsg: string,
-    cstTextId?: string,
-    createdAt?: Date
+    recipients: string[],
+    presetMsg?: string | undefined,
+    cstTextId: string | undefined,
+    createdAt?: Date | string,
+    pinned?: boolean
+    default?: boolean
 }
 
-interface geoCodes {
+export interface GeoCodes {
     lat: number,
-    lon: number
+    lng: number
 }
 
-export interface signals {
-    signalsId: string,
-    uid: string,
-    createdAt: Date,
-    geolocation: geoCodes
+export interface Signal {
+    id: string,
+    uid: string | undefined,
+    createdAt: Date | string,
+    geolocation: GeoCodes,
+    signalType: string | undefined
+    response?: string
 }
 
-export interface customTexts {
-    cstTextId: number
+export interface CustomText {
+    id: string
     message: string
     title: string
+    uid: string | undefined
+    default: boolean
 }

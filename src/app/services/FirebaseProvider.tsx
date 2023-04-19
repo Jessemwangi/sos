@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from './FirebaseAuth';
-import { setSosUser, setLoggedIn } from '../../features/userSlice';
 import { AuthContext } from './FirebaseContext';
 import { redirect } from "react-router-dom";
 
@@ -21,15 +20,10 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         onAuthStateChanged(auth, (user) => {
             if (auth.currentUser) {
                 setFirebaseUser(user);
-                dispatch(setSosUser({
-                    name: auth.currentUser.displayName,
-                    email: auth.currentUser.email,
-                    uid: auth.currentUser.uid
-                }));
-                dispatch(setLoggedIn(true))
+           /*      dispatch(setLoggedIn(true)) */
             } else {
                 setFirebaseUser(null);
-                dispatch(setLoggedIn(false));
+            /*     dispatch(setLoggedIn(false)); */
                 redirect('/');
             }
         });

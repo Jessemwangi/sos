@@ -1,6 +1,6 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import CssBaseline from '@mui/material/CssBaseline';
-import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography , LinearProgress} from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Paper, Stepper, Step, StepLabel, Button, Typography, LinearProgress } from '@mui/material';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ForumIcon from '@mui/icons-material/Forum';
@@ -8,11 +8,11 @@ import SosIcon from '@mui/icons-material/Sos';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import ProfileForm from '../Registration/ProfileForm';
-import RecipientEntryForm from '../Registration/RecipientEntryForm';
-import CustomTextForm from '../Registration/CustomTextEntryForm';
-import CustomSignals from '../Registration/CustomSignals';
-import WrapUp from '../Registration/WrapUp';
+import ProfileForm from '../registration/ProfileForm';
+import RecipientEntryForm from '../registration/RecipientEntryForm';
+import CustomTextForm from '../registration/CustomTextForm';
+import CustomSignalsForm from '../registration/CustomSignalsForm';
+import WrapUp from '../registration/WrapUp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../app/services/FirebaseAuth';
 
@@ -34,7 +34,7 @@ function getStepContent(step: number) {
     case 2:
       return <CustomTextForm />;
     case 3:
-      return <CustomSignals />;
+      return <CustomSignalsForm />;
     case 4:
       return <WrapUp />;
     default:
@@ -121,7 +121,8 @@ const CompleteReg = () => {
                       onClick={handleNext}
                       sx={{ mt: 3, ml: 1 }}
                     >
-                      {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+
+                      {activeStep === steps.length - 2 ? 'View Summary' : activeStep === steps.length - 1 ? 'Done' : 'Next'}
                     </Button>
                   </Box>
                 </React.Fragment>
