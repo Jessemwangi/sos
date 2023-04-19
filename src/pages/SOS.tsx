@@ -1,145 +1,186 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Typography, Grid, TextField, Button, FormControl, FormControlLabel, Checkbox, Select, InputLabel, MenuItem, FormGroup } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { GeoCodes, Signal } from '../app/model'
-import { GoogleMap, Marker, useJsApiLoader } from
-    '@react-google-maps/api'
-    import JesseGoogleMap from '../components/GoogleMap';
-import axios from 'axios';
-import { db } from '../dataLayer/FirestoreInit';
-import { getDoc, doc } from "@firebase/firestore";
-import { CheckBox } from '@mui/icons-material';
-
-//can filter db for signalId matching params  - but can a user who is not logged in see it? 
-// need to change firebase rules to allow anyone access to signals collection
+import React, { useRef, useEffect, useState } from "react";
+import {
+  Typography,
+  Grid,
+  TextField,
+  Button,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  Select,
+  InputLabel,
+  MenuItem,
+  FormGroup,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
+import { getDoc, doc, setDoc } from "@firebase/firestore";
+import { GeoCodes, Signal } from "../app/model";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import JesseGoogleMap from "../components/GoogleMap";
+import axios from "axios";
+import { db } from "../dataLayer/FirestoreInit";
 
 export interface MapOptions {
-    zoom: number,
-    center: GeoCodes,
-    mapId: string | undefined
+  zoom: number;
+  center: GeoCodes;
+  mapId: string | undefined;
+}
+
+export interface SosResponse {
+  code: string;
+  msg: string;
+  responder: string;
 }
 
 const SOS = () => {
+  const { id } = useParams(); //auto decodes URI components
+  const queryParams = new URLSearchParams(window.location.search);
+  const rsp = queryParams.get("rsp");
+  console.log("recipient substring", rsp);
+  const [center, setCenter] = useState<GeoCodes>({ lat: 0, lng: 0 });
+  const [readySend, setReadySend] = useState(false);
+  const [sosResponse, setSosResponse] = useState<SosResponse>({
+    code: "",
+    msg: "",
+    responder: "",
+  });
 
+  const { isLoaded } = useJsApiLoader({
+    // id: 'google-map',
+    // googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!,
+    libraries: ["places"],
+    id: "google-map",
+  });
 
- const { isLoaded } = useJsApiLoader({
-        // id: 'google-map',
-        // googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!,
-        libraries:['places'],
-        id:'google-map'
-    }) 
-const [center, setCenter] = useState<GeoCodes>({lat: 0, lng: 0})
-    //const mapRef = useRef<google.maps.Map>(null)
-    const [readySent, setReadySend] = useState()
+  const server_dev_url = `http://localhost:3002/sms/${id}`;
+  const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`;
 
-    const { id } = useParams();
-   
-const server_dev_url = `http://localhost:3002/sms/${id}`
-const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`;
-
-async function getSignal(para:string | undefined){
+  async function getSignal(para: string | undefined) {
     let stringId = para as string;
+    console.log(stringId);
     try {
-        const docRef = doc(db, "signals", stringId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            setCenter(docSnap.data().geolocation);
-        } else { 
-            console.log("No document found");
-        }
+      const docRef = doc(db, "signals", stringId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        setCenter(docSnap.data().geolocation);
+      } else {
+        console.log("No document found");
+      }
     } catch (error: any) {
-        return { error: error.message };
+      return { error: error.message };
     }
-}
+  }
 
-function handleChange (e:any){
-    const response = e.target.value;
-    console.log(response);
-}
+  function handleChange(e: any) {
+    console.log(e.target.value);
+    let responseObject = { [e.target.name]: e.target.value };
+    console.log(responseObject);
+    setSosResponse((response) => ({ ...response, ...responseObject }));
+  }
 
-    useEffect(() => {
-        getSignal(id);
-
-      /*   axios.get(server_dev_url)
-        .then(function (response) {
-            console.log(response);
-          }) */
-          
-          //eslint-disable-next-line
-    }, [])
-
-    const options = {
-
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+    console.log("signal id:", id);
+    const signalId = id as string;
+    try {
+      await setDoc(
+        doc(db, "signals", signalId),
+        {
+          reponse: sosResponse?.code,
+        },
+        { merge: true }
+      ).then(() => console.log("data subtmitted"));
+    } catch (error: any) {
+      alert(error);
     }
+    setReadySend(true);
+  }
 
-    const styles = {
-        width: '400px',
-        height: '550px'
-    }
+  useEffect(() => {
+    getSignal(id);
 
-    /*   const apiKey = process.env.REACT_APP_GOOGLE_CLIENTID as string;
-   */
+    //eslint-disable-next-line
+  }, []);
 
-    if (!isLoaded) return (<>Nothing</>)
+  const options = {};
 
-    return (
-        <div style={{margin: '2rem'}}>
-            <div>   
-                <Typography component="h2" variant="h5" color="primary" gutterBottom={true}>Showing Sender's location</Typography>
-                </div>
-            
-            <div style={{margin: '2rem', display: 'flex', justifyContent: 'center'}}>
-            <JesseGoogleMap latlng={center}/>
-                
-              {/*   <GoogleMap
-                mapContainerStyle={styles}
-                center={center}
-                zoom={18}
-                options={options as google.maps.MapOptions}
+  const styles = {
+    width: "400px",
+    height: "550px",
+  };
 
-            /> */}
-            
-            <Marker position={center}  icon={{
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 7,
-      }}></Marker>
+  if (!isLoaded) return <>Nothing</>;
 
+  return (
+    <div style={{ margin: "2rem" }}>
+      <div>
+        <Typography
+          component="h2"
+          variant="h5"
+          color="primary"
+          gutterBottom={true}
+        >
+          Showing Sender's location
+        </Typography>
+      </div>
 
-            </div>
-<div>
-    <Typography component="h2" variant="h5" color="primary" gutterBottom={true}>Please indicate your response</Typography>
+      <div
+        style={{ margin: "2rem", display: "flex", justifyContent: "center" }}
+      >
+        <GoogleMap
+          mapContainerStyle={styles}
+          center={center}
+          zoom={18}
+          options={options as google.maps.MapOptions}
+        />
 
-    <Grid item xs={12} md={6}>
-              
-                <FormGroup>
-                  
-                        <FormControlLabel control={
-                            <Checkbox
-                                id={'1'}
-                                name='no'
-                                value={'1'}
-                                onChange={(e: any) => handleChange(e)} />
-                         } label={'Unable to assist'} />
-                         <FormControlLabel control={
-                        <Checkbox
-                              id={'2'}
-                              name='yes'
-                              value={'2'}
-                              onChange={(e: any) => handleChange(e)} />
-                      } label={'Coming immediately'} />
-                    
-                </FormGroup>
-            </Grid>
-</div>
+        <Marker
+          position={center}
+          icon={{ path: google.maps.SymbolPath.CIRCLE, scale: 7 }}
+        ></Marker>
 
+        <div>
+          <Typography
+            component="h2"
+            variant="h5"
+            color="primary"
+            gutterBottom={true}
+          >
+            Please indicate your response
+          </Typography>
 
-        </div >
-    );
+          <Grid item xs={12} md={6}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    id={"1"}
+                    name="no"
+                    value={"1"}
+                    onChange={(e: any) => handleChange(e)}
+                  />
+                }
+                label={"Unable to assist"}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    id={"2"}
+                    name="yes"
+                    value={"2"}
+                    onChange={(e: any) => handleChange(e)}
+                  />
+                }
+                label={"Coming immediately"}
+              />
+            </FormGroup>
+          </Grid>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default SOS;
-
-
-

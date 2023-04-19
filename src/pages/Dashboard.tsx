@@ -65,10 +65,12 @@ const Dashboard = () => {
     const uid = user?.uid ? user.uid : '';
     const showMenuButtons = useSelector((state: any) => state.dashboard.showMenuButtons);
     const sentSignalId = useSelector((state:any)=> state.dashboard.sentSignalId);
-    const [signal, setSignal] = useState<SignalsList>(); //signaltype in state will be send to twilio
-    const [geolocation, setGeolocation] = useState<GeoCodes>({ lat: 0, lng: 0 })
-    
-    const [twilioReady, setTwilioReady] = useState<boolean>(false)
+    const [signalType, setSignalType] = useState<SignalsList>(); //signaltype in state will be send to twilio
+    const [geolocation, setGeolocation] = useState<GeoCodes>({ lat: 0, lng: 0 });
+    const [twilioReady, setTwilioReady] = useState<boolean>(false);
+    const [messageSent, setMessageSent] = useState<boolean>(false);
+
+    const timestamp_helper = serverTimestamp();
 
     const { data } = useFetchUserSignalsByIdQuery({ id: uid });
     
@@ -79,8 +81,8 @@ const Dashboard = () => {
     /**set default signal to be ready in state */
     useEffect(() => {
         if (user && data) {
-            const default_signal: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
-            setSignal(default_signal);
+            const default_signalType: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
+            setSignalType(default_signalType);
         }
     }, [user, data])
 
@@ -105,13 +107,31 @@ const Dashboard = () => {
             setTwilioReady(false)}
         sosButtonRef.current!.classList.toggle('flash');
         cancelButtonRef.current!.classList.toggle('active');
-        dispatch(setShowMenuButtons(true)); //handles styling 
-        sosTimer = setTimeout(()=>(sendSosDefault(signal)), 15 * 1000);
+        getGeolocation();
+        dispatch(setShowMenuButtons(true)); 
+        sosTimer = setTimeout(()=>(sendSosDefault(signalType)), 15 * 1000);
     }
+
+    /* 
+
+     const sosSignal = new SosSignal(
+        uuidv4(), 
+        uid, 
+        serverTimestamp() as Timestamp, 
+        geolocation, 
+        signalType?.name
+    );
+    postDataToDb(sosSignal);
+    dispatch(setSentSignalId(sosSignal.id));
+
+     */
 
     /* for sending signal to db */
     async function postDataToDb(signal: Signal) {
+
         try {
+            console.log('current database payload:', signal );
+            console.log('submitting signal with ID:', signal.id);
             await setDoc(doc(db, 'signals', signal.id), {
                 id: signal.id,
                 uid: user?.uid,
@@ -142,17 +162,39 @@ const Dashboard = () => {
         e.target.classList.toggle('selected');
         cancelButtonRef.current!.classList.toggle('active');
         const selected_signal: SignalsList = (data!.filter((item) => item.id === id))[0];
-        setSignal(signal => ({ ...signal, ...selected_signal }));
-        console.log('setting signal type of selected signal...');
+        setSignalType(signal => ({ ...signal, ...selected_signal }));
+
+        const sosSignal = new SosSignal(
+            uuidv4(), 
+            uid, 
+            serverTimestamp() as Timestamp, 
+            geolocation, 
+            signalType?.name
+            );
+            
+        postDataToDb(sosSignal);
+        dispatch(setSentSignalId(sosSignal.id));
+
         setTwilioReady(true);
     }
 
     /** send default signal if timer expires */
     async function sendSosDefault(signal:SignalsList | undefined) {
-        getGeolocation();
-        console.log(geolocation);//debugging
-        sosButtonRef.current!.classList.toggle('flash')
+       // sosButtonRef.current!.classList.toggle('flash')
         cancelButtonRef.current!.classList.toggle('active');
+        console.log(geolocation);
+
+        const sosSignal = new SosSignal(
+            uuidv4(), 
+            uid, 
+            serverTimestamp() as Timestamp, 
+            geolocation, 
+            signalType?.name
+            );
+
+        postDataToDb(sosSignal);
+        dispatch(setSentSignalId(sosSignal.id));
+        
         console.log('sending default sos signal....')
         setTwilioReady(true);
     }
@@ -160,9 +202,15 @@ const Dashboard = () => {
     /** POST TO TWILIO SERVER, SEND SMS */
 
     const twilioMessage = async ( sms_signal:SignalsList | undefined) => {
-        sms_signal?.recipients.forEach((recipient)=>{
-            let sendMe = new SmsSignal(sms_signal.presetMsg, user?.displayName, geolocation, recipient, sentSignalId, sms_signal.name);
-            console.log(sms_signal.name);
+        sms_signal?.recipients.forEach((recipient)=> {
+
+            let sendMe = new SmsSignal(
+                sms_signal.presetMsg, 
+                user?.displayName,  
+                recipient, 
+                geolocation, 
+                sentSignalId, 
+                sms_signal.name);
 
             try {
                    axios.post(server_prod_url, {
@@ -187,6 +235,9 @@ console.log('setting twilioready to false');
             //change sosButton class to suspend
     }
 
+
+
+
     function cancelSos(e: any) {
         clearTimeout(sosTimer);
         dispatch(setShowMenuButtons(false));
@@ -205,14 +256,13 @@ console.log('setting twilioready to false');
     }, [coords])
 
     /* Making sure signal in state is ready to be fired to twilio */
+
+
     useEffect(() => { 
-        const sosSignal = new SosSignal(
-                uuidv4(), uid, "date", geolocation, signal?.name
-            );
+
         if(twilioReady === true){ 
-            twilioMessage(signal);
-            postDataToDb(sosSignal);
-            dispatch(setSentSignalId(sosSignal.id));
+            twilioMessage(signalType);
+            console.log('sos signal type being sent to twilio:', signalType)
         }
         else {
             console.log('twilio useEffect activated, message not ready')};
