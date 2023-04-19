@@ -127,11 +127,6 @@ const CustomTextView = ({ data, isFetching, error }: Props) => {
         </TableBody>
       </Table>
 
-      <div style={{ margin: '5% 10%' }}><p>   Your current default text message is:
-        <span style={{ display: 'block', fontWeight: '800', margin: '2% 20%', padding: '2rem', border: '1px solid black' }}>{defaultText?.message}</span>
-        This is the message that will be sent if no specific signal type is chosen.
-        You can add personalised messages below.</p></div>
-
       <Dialog
         className="editMessagesDialog"
         open={open}

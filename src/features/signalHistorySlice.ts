@@ -2,15 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Signal } from '../app/model';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { db } from "../dataLayer/FirestoreInit";
-import { where, query, collection, getDocs, QuerySnapshot, DocumentData } from "@firebase/firestore";
+import { where, query, collection, getDocs, QuerySnapshot, DocumentData, Timestamp, serverTimestamp } from "@firebase/firestore";
 
 //used to fetch dispatched signal history from db
 
+const timestamp_helper = serverTimestamp();
 
 const init: Signal = {
     id: "",
     uid: "",
-    createdAt: "",
+    createdAt: new Timestamp(0, 0),
     geolocation: {
         lat: 0,
         lng: 0
