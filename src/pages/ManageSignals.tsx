@@ -31,7 +31,6 @@ const ManageSignals = () => {
     return (
         <div style={{ padding: '2rem' }}>
             <SignalsView recipients={recipients} signals={signals} />
-            <SetPinnedSignals />
             <ComposeSignals messages={messages} recipients={recipients} signals={signals} />
 
         </div>

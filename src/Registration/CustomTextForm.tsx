@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Grid, TextField, Button } from '@mui/material';
+import { Typography, Grid, TextField, Button, Box } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -68,14 +68,15 @@ export default function CustomTextForm() {
 
   return (
     <React.Fragment>
-      <Typography sx={{ mt: '3rem' }} component="h2" variant="h6" color="primary" gutterBottom>
+      <Typography component="h2" variant="h6" padding={3} color="primary" textAlign={"left"}>
         Add Customized Text
       </Typography>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+      <Grid container rowSpacing={3} padding={2} direction={"column"} display={"flex"}>
+    
           <TextField
-            required
+          required
+          sx={{mt:2}}
             id="title"
             name="title"
             label="Title"
@@ -84,15 +85,18 @@ export default function CustomTextForm() {
             fullWidth
             autoComplete="cc-title"
             variant="standard"
-            onChange={handleChange}
+          onChange={handleChange}
           />
-        </Grid>
-        <Grid item xs={12}>
+        <Box   sx={{mt:4}}>
+          
           <TextField
+              
             required
             id="message"
             name="message"
             label="Message (max-length: 160 characters)"
+            multiline
+            maxRows={6}
             defaultValue={customText.message}
             inputRef={messageInput}
             /*  inputProps={{ maxLength: '160' }} */
@@ -101,19 +105,18 @@ export default function CustomTextForm() {
             variant="standard"
             onChange={handleChange}
           />
-        </Grid>
+</Box>
 
-        <Grid item xs={12}>
-          <Button
+
+
+          <Button  
             variant="contained"
             onClick={handleSubmit}
-            sx={{ mt: 3, ml: 1 }}
+            sx={{ mt: 8, ml: 1 }}
           >
             {buttonAction}
           </Button>
         </Grid>
-
-      </Grid>
     </React.Fragment>
   );
 }
