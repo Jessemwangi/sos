@@ -5,10 +5,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchUserSignalsByIdQuery } from '../features/signalsListApi';
 import { v4 as uuidv4 } from 'uuid';
 import { auth } from '../app/services/FirebaseAuth'
-import { setShowMenuButtons, setSentSignalId } from '../features/dashboardSlice';
+import { setShowMenuButtons, setSentSignalId, setDefaultSignal } from '../features/dashboardSlice';
 import { SignalsList, Signal, GeoCodes } from '../app/model';
 import { useGeolocated } from "react-geolocated";
-import { doc, setDoc } from "@firebase/firestore";
+import { doc, setDoc, serverTimestamp, Timestamp } from "@firebase/firestore";
 import { db } from '../dataLayer/FirestoreInit';
 import axios from 'axios';
 
@@ -21,11 +21,11 @@ const server_prod_url:string = 'https://twilio-node-server.onrender.com/sms'
 class SosSignal {
     id: string;
     uid: string | undefined;
-    createdAt: Date | string;
+    createdAt: Timestamp;
     geolocation: GeoCodes;
     signalType: string | undefined;
 
-    constructor(id: string, uid: string, createdAt: Date | string, geolocation: GeoCodes, signalType: string | undefined) {
+    constructor(id: string, uid: string, createdAt: Timestamp, geolocation: GeoCodes, signalType: string | undefined) {
         this.id = id;
         this.uid = uid;
         this.createdAt = createdAt;
@@ -38,26 +38,24 @@ class SosSignal {
 class SmsSignal {
     message:string | undefined;
     senderName: string | undefined | null;
+    recipientPhone: string;
     geolocation: GeoCodes;
-    recipient: string;
     signalId: string;
     signalType: string;
 
-    constructor( message:string |undefined,
-        senderName: string | undefined | null,
-        geolocation: GeoCodes,
-        recipient: string, signalId: string, signalType:string){
+    constructor( 
+        message:string |undefined,
+        senderName: string | undefined | null, 
+        recipientPhone: string,  
+        geolocation: GeoCodes, signalId: string, signalType:string) {
             this.message = message;
             this.senderName = senderName;
+            this.recipientPhone = recipientPhone;
             this.geolocation = geolocation;
-            this.recipient = recipient;
             this.signalId = signalId;
             this.signalType = signalType;
         }
 }
-
-
-
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -78,12 +76,14 @@ const Dashboard = () => {
     const cancelButtonRef = useRef<HTMLButtonElement>(null);
     const sosSpanRef = useRef<HTMLSpanElement>(null)
 
-    /**set default signal to be ready in state */
+    /** set default signal to be ready in state */
     useEffect(() => {
         if (user && data) {
             const default_signalType: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
             setSignalType(default_signalType);
         }
+        if (messageSent === true) {setMessageSent(false)}
+        //eslint-disable-next-line
     }, [user, data])
 
     const { coords, isGeolocationAvailable, isGeolocationEnabled, /* getPosition */ } =
@@ -103,8 +103,8 @@ const Dashboard = () => {
             alert('You must be signed in to use SOS');
             return 
         }
-        if (twilioReady === true) {
-            setTwilioReady(false)}
+       /*  if (twilioReady === true) {
+            setTwilioReady(false)} */
         sosButtonRef.current!.classList.toggle('flash');
         cancelButtonRef.current!.classList.toggle('active');
         getGeolocation();
@@ -135,7 +135,7 @@ const Dashboard = () => {
             await setDoc(doc(db, 'signals', signal.id), {
                 id: signal.id,
                 uid: user?.uid,
-                createdAt: signal.createdAt,
+                createdAt: timestamp_helper,
                 geolocation: signal.geolocation,
                 signalType: signal.signalType
             })
@@ -213,21 +213,20 @@ const Dashboard = () => {
                 sms_signal.name);
 
             try {
+                console.log('Sending Twilio server payload:', sendMe);
                    axios.post(server_prod_url, {
-                       message: sendMe.message, //extracted from signalsList object
-                       geolocation: geolocation, 
+                       message: sendMe.message,
                        senderName: sendMe.senderName,
-                       recipient: sendMe.recipient,
+                       recipient: sendMe.recipientPhone,
+                       geolocation: geolocation, 
                        signalId: sendMe.signalId,
                        signalType: sendMe.signalType 
-                   }).then((res) => { console.log(res) })
+                   }).then((res) => { console.log(res); setMessageSent(true) })
                  
                } catch (err: any) {
                    alert(err.message);
                } 
             })
-            
-console.log('setting twilioready to false');
             setTwilioReady(false);
             dispatch(setShowMenuButtons(false)); 
             sosButtonRef.current!.classList.toggle('suspend');
@@ -265,8 +264,8 @@ console.log('setting twilioready to false');
             console.log('sos signal type being sent to twilio:', signalType)
         }
         else {
-            console.log('twilio useEffect activated, message not ready')};
-                
+            console.log('awaiting ready message')};
+                   
 //eslint-disable-next-line
     },[twilioReady]);
 
@@ -284,6 +283,9 @@ console.log('setting twilioready to false');
 
                 </div>
             </div>
+{ messageSent ? (<div className="activation-text">
+                    <span> SOS sent, awaiting response </span></div>):(<></>)}
+
             {     showMenuButtons ? (<div className="activation-text">
                     <span> SOS has been activated. Select emergency type : </span>
 

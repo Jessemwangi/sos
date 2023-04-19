@@ -4,19 +4,14 @@ import {
   Grid,
   TextField,
   Button,
-  FormControl,
   FormControlLabel,
   Checkbox,
-  Select,
-  InputLabel,
-  MenuItem,
   FormGroup,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { getDoc, doc, setDoc } from "@firebase/firestore";
 import { GeoCodes, Signal } from "../app/model";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import JesseGoogleMap from "../components/GoogleMap";
 import axios from "axios";
 import { db } from "../dataLayer/FirestoreInit";
 
@@ -45,16 +40,17 @@ const SOS = () => {
     responder: "",
   });
 
+  //const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`;
+
   const { isLoaded } = useJsApiLoader({
-    // id: 'google-map',
-    // googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS!,
-    libraries: ["places"],
     id: "google-map",
   });
-
-  const server_dev_url = `http://localhost:3002/sms/${id}`;
-  const server_prod_url = `https://twilio-node-server.onrender.com/sms/${id}`;
+  const styles = {
+    width: "98vw",
+    height: "40vh",
+  };
+  const options = {};
 
   async function getSignal(para: string | undefined) {
     let stringId = para as string;
@@ -63,10 +59,10 @@ const SOS = () => {
       const docRef = doc(db, "signals", stringId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
+        console.log("Firebase signal data:", docSnap.data());
         setCenter(docSnap.data().geolocation);
       } else {
-        console.log("No document found");
+        console.log("No such document found");
       }
     } catch (error: any) {
       return { error: error.message };
@@ -104,14 +100,17 @@ const SOS = () => {
     //eslint-disable-next-line
   }, []);
 
-  const options = {};
+  useEffect(() => {
+    setReadySend(true);
+    //eslint-disable-next-line
+  }, [sosResponse]);
 
-  const styles = {
-    width: "400px",
-    height: "550px",
-  };
-
-  if (!isLoaded) return <>Nothing</>;
+  useEffect(() => {
+    if (readySend === true) {
+      console.log("readysend true");
+    }
+    //eslint-disable-next-line
+  }, [readySend]);
 
   return (
     <div style={{ margin: "2rem" }}>
@@ -176,6 +175,11 @@ const SOS = () => {
                 label={"Coming immediately"}
               />
             </FormGroup>
+          </Grid>
+          <Grid>
+            <Button type="submit" onSubmit={(e: any) => handleSubmit(e)}>
+              Send
+            </Button>
           </Grid>
         </div>
       </div>

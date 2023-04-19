@@ -25,7 +25,7 @@ export const store = configureStore({
     [manageRecipientsApi.reducerPath]: manageRecipientsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(profileApi.middleware).concat(signalHistoryApi.middleware).concat(customTextApi.middleware).concat(signalsListApi.middleware).concat(manageRecipientsApi.middleware)
+    getDefaultMiddleware({serializableCheck:false}).concat(profileApi.middleware).concat(signalHistoryApi.middleware).concat(customTextApi.middleware).concat(signalsListApi.middleware).concat(manageRecipientsApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
