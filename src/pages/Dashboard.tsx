@@ -64,8 +64,10 @@ const Dashboard = () => {
     const showMenuButtons = useSelector((state: any) => state.dashboard.showMenuButtons);
     const sentSignalId = useSelector((state:any)=> state.dashboard.sentSignalId);
     const [signal, setSignal] = useState<SignalsList>(); //signaltype in state will be send to twilio
-    const [geolocation, setGeolocation] = useState<GeoCodes>({ lat: 0, lng: 0 })
-    const [twilioReady, setTwilioReady] = useState<boolean>(false)
+    const [geolocation, setGeolocation] = useState<GeoCodes>({ lat: 0, lng: 0 });
+    const [twilioReady, setTwilioReady] = useState<boolean>(false);
+    const [messageSent, setMessageSent] = useState<boolean>(false);
+
 
     const timestamp_helper = serverTimestamp();
 
@@ -75,12 +77,14 @@ const Dashboard = () => {
     const cancelButtonRef = useRef<HTMLButtonElement>(null);
     const sosSpanRef = useRef<HTMLSpanElement>(null)
 
-    /**set default signal to be ready in state */
+    /** set default signal to be ready in state */
     useEffect(() => {
         if (user && data) {
             const default_signal: SignalsList = (data.filter((item) => item.id === "DEFAULT"))[0];
             setSignal(default_signal);
         }
+        if (messageSent === true) {setMessageSent(false)}
+        //eslint-disable-next-line
     }, [user, data])
 
     const { coords, isGeolocationAvailable, isGeolocationEnabled, /* getPosition */ } =
@@ -100,8 +104,8 @@ const Dashboard = () => {
             alert('You must be signed in to use SOS');
             return 
         }
-        if (twilioReady === true) {
-            setTwilioReady(false)}
+       /*  if (twilioReady === true) {
+            setTwilioReady(false)} */
         sosButtonRef.current!.classList.toggle('flash');
         cancelButtonRef.current!.classList.toggle('active');
         getGeolocation();
@@ -112,7 +116,7 @@ const Dashboard = () => {
     /* for sending signal to db */
     async function postDataToDb(signal: Signal) {
         try {
-            console.log('sending database payload:', signal );
+            console.log('current database payload:', signal );
             await setDoc(doc(db, 'signals', signal.id), {
                 id: signal.id,
                 uid: user?.uid,
@@ -168,11 +172,11 @@ const Dashboard = () => {
                    axios.post(server_prod_url, {
                        message: sendMe.message,
                        senderName: sendMe.senderName,
-                       recipientPhone: sendMe.recipientPhone,
+                       recipient: sendMe.recipientPhone,
                        geolocation: geolocation, 
                        signalId: sendMe.signalId,
                        signalType: sendMe.signalType 
-                   }).then((res) => { console.log(res) })
+                   }).then((res) => { console.log(res); setMessageSent(true) })
                  
                } catch (err: any) {
                    alert(err.message);
@@ -212,11 +216,11 @@ const Dashboard = () => {
 
         if(twilioReady === true){ 
             twilioMessage(signal);
+            console.log('sos signal being sent to twilio:', signal)
         }
         else {
             console.log('awaiting ready message')};
-            console.log(signal);
-                
+                   
 //eslint-disable-next-line
     },[twilioReady]);
 
@@ -234,6 +238,9 @@ const Dashboard = () => {
 
                 </div>
             </div>
+{ messageSent ? (<div className="activation-text">
+                    <span> SOS sent, awaiting response </span></div>):(<></>)}
+
             {     showMenuButtons ? (<div className="activation-text">
                     <span> SOS has been activated. Select emergency type : </span>
 
