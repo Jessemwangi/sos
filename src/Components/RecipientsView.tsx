@@ -134,7 +134,6 @@ const RecipientsView = ({ data, isFetching, error }: Props) => {
         </Typography>
         <Grid item xs={12} md={6}>
           <Table size="small" className="viewsTable" style={{
-            display: 'block',
             overflowX: 'auto'
           }}>
             <TableHead>

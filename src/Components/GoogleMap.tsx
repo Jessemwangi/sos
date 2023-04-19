@@ -17,7 +17,6 @@ const Google_Map = ({latlng}:Props) => {
 
    const centers: google.maps.LatLngLiteral = useMemo(() => (latlng), [latlng]);
 
-  console.log(centers);
     return (
         <>
     <GoogleMap zoom={16} center={centers} mapContainerStyle={{"width":"98%", "height":"40vh"}}>
