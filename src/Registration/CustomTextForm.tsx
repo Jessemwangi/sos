@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Grid, TextField, Button, Box } from '@mui/material';
+import { Typography, Grid, TextField, Button, Box, TextareaAutosize } from '@mui/material';
 import { doc, setDoc } from "@firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -21,9 +21,10 @@ export default function CustomTextForm() {
   const customText: CustomText = useSelector((state: any) => state.customText.customText)
 
   const titleInput = useRef<HTMLInputElement>();
-  const messageInput = useRef<HTMLInputElement>();
+  const messageInput = React.useRef<HTMLTextAreaElement>(null)
 
   function handleChange(e: any) {
+
     dispatch(setCustomText({ [e.target.name]: e.target.value }))
     if (readyState === true) { setReadyState(false) }
   }
@@ -87,22 +88,19 @@ export default function CustomTextForm() {
             variant="standard"
           onChange={handleChange}
           />
-        <Box   sx={{mt:4}}>
+        <Box sx={{ mt: 4 }}
+        >
           
-          <TextField
-              
+          <TextareaAutosize
+               style={{ width: '98%', height: '250px' }}
             required
             id="message"
             name="message"
-            label="Message (max-length: 160 characters)"
-            multiline
             maxRows={6}
             defaultValue={customText.message}
-            inputRef={messageInput}
             /*  inputProps={{ maxLength: '160' }} */
-            fullWidth
+            ref={messageInput}
             autoComplete="cc-Message"
-            variant="standard"
             onChange={handleChange}
           />
 </Box>
