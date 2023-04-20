@@ -12,6 +12,7 @@ const SignalHistory = () => {
     const uid = user?.uid;
 
     const { data, isFetching } = useFetchSignalsByIdQuery(uid as any);
+console.log(data);
 
     if (isFetching) {
         return <LinearProgress color="secondary" />;
@@ -41,11 +42,11 @@ const SignalHistory = () => {
 
                             {data && data.map((signal) => (
                                 <TableRow key={signal.id} >
-                                    <TableCell>{/* {signal.createdAt} */}</TableCell>
+                                    <TableCell>{/* {signal.createdAt.toDateString()} */}</TableCell>
                                     <TableCell>{signal.id}</TableCell>
                                     <TableCell>{signal.signalType}</TableCell>
-                                    <TableCell>{`${signal.geolocation.lng}, ${signal.geolocation.lat}`}</TableCell>
-                                    <TableCell></TableCell>
+                                    <TableCell>{`${signal.geolocation.lng.toFixed(2)}, ${signal.geolocation.lat.toFixed(2)}`}</TableCell>
+                                    <TableCell>{signal.response}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

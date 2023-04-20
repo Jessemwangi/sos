@@ -1,3 +1,5 @@
+import { Timestamp } from "@firebase/firestore"; 
+
 export interface SignUpData {
     email: string
     password: string
@@ -65,7 +67,7 @@ export interface GeoCodes {
 export interface Signal {
     id: string,
     uid: string | undefined,
-    createdAt: Date | string,
+    createdAt: Timestamp,
     geolocation: GeoCodes,
     signalType: string | undefined
     response?: string
